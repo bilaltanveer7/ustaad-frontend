@@ -32,7 +32,7 @@ const menuSections = [
             { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
             { text: 'Parents', icon: <PeopleIcon />, path: '/parent-dashboard' },
             { text: 'Tutors', icon: <CalendarTodayIcon />, path: '/tutor-dashboard' },
-            { text: 'Transaction Log', icon: <ReceiptLongIcon />, path: '/transactions' },
+            { text: 'Transaction Log', icon: <ReceiptLongIcon />, path: '/transaction-dashboard' },
         ],
     },
     {
