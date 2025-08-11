@@ -29,7 +29,7 @@ const menuSections = [
     {
         title: 'GENERAL',
         items: [
-            { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
+            { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
             { text: 'Parents', icon: <PeopleIcon />, path: '/parent-dashboard' },
             { text: 'Tutors', icon: <CalendarTodayIcon />, path: '/tutor-dashboard' },
             { text: 'Transaction Log', icon: <ReceiptLongIcon />, path: '/transaction-dashboard' },

@@ -6,6 +6,7 @@ import ParentsProfile from './Parents/profile';
 import TutorDashboard from './Tutor/dashboard';
 import TutorsProfile from './Tutor/profile';
 import TransactionDashboard from './Transaction/dashboard';
+import LoginScreen from './Auth/Login'
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
         Ustaad
       </title>
       <Routes>
-        <Route path="/" element={<Dashboard/>} />
+        <Route path="/" element={<LoginScreen/>} />
+        <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/parent-dashboard" element={<ParentDashboard/>} />
         <Route path="/parent-profile" element={<ParentsProfile/>} />
         <Route path="/tutor-dashboard" element={<TutorDashboard/>} />
