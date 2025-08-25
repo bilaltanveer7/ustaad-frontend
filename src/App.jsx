@@ -6,7 +6,8 @@ import ParentsProfile from './Parents/profile';
 import TutorDashboard from './Tutor/dashboard';
 import TutorsProfile from './Tutor/profile';
 import TransactionDashboard from './Transaction/dashboard';
-import LoginScreen from './Auth/Login'
+import LoginScreen from './Auth/Login';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
@@ -15,13 +16,66 @@ function App() {
         Ustaad
       </title>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<LoginScreen/>} />
-        <Route path="/dashboard" element={<Dashboard/>} />
-        <Route path="/parent-dashboard" element={<ParentDashboard/>} />
-        <Route path="/parent-profile" element={<ParentsProfile/>} />
-        <Route path="/tutor-dashboard" element={<TutorDashboard/>} />
-        <Route path="/tutor-profile" element={<TutorsProfile/>} />
-        <Route path="/transaction-dashboard" element={<TransactionDashboard/>} />
+        
+        {/* Protected Routes */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <PrivateRoute>
+              <Dashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/parent-dashboard" 
+          element={
+            <PrivateRoute>
+              <ParentDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/parent-profile/:id" 
+          element={
+            <PrivateRoute>
+              <ParentsProfile/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/tutor-dashboard" 
+          element={
+            <PrivateRoute>
+              <TutorDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/tutor-profile/:id" 
+          element={
+            <PrivateRoute>
+              <TutorsProfile/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/transaction-dashboard" 
+          element={
+            <PrivateRoute>
+              <TransactionDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        {/* Catch all route - redirect to login */}
+        <Route path="*" element={<LoginScreen/>} />
       </Routes>
     </>
   );

@@ -11,16 +11,23 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import logo from "../assets/logo.png"
-import avatar from "../assets/Avatar.png"
+import avatarImg from "../assets/Avatar.png"
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
 
 const drawerWidth = 260;
 const selectedItem = 'Dashboard';
@@ -46,6 +53,29 @@ const menuSections = [
 export default function SideNav() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { user, logout } = useAuthStore();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    
+    const handleAvatarClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+        handleMenuClose();
+    };
+
+    const handleProfile = () => {
+        // Navigate to profile page (can be customized based on user role)
+        navigate('/profile');
+        handleMenuClose();
+    };
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -67,7 +97,62 @@ export default function SideNav() {
                         }}
                     >
                         <Box component="img" src={logo} alt="Logo" sx={{ height: 42, width: 31 }} />
-                        <Box component="img" src={avatar} alt='avatar' sx={{ width: 36, height: 36 }} />
+                        
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            {user?.name && (
+                                <Typography
+                                    variant="body2"
+                                    sx={{ 
+                                        color: '#344767',
+                                        fontWeight: 500,
+                                        display: { xs: 'none', sm: 'block' }
+                                    }}
+                                >
+                                    {user.name}
+                                </Typography>
+                            )}
+                            <IconButton
+                                onClick={handleAvatarClick}
+                                sx={{ p: 0 }}
+                            >
+                                <Avatar
+                                    src={avatarImg}
+                                    alt={user?.name || 'User Avatar'}
+                                    sx={{ width: 36, height: 36 }}
+                                />
+                            </IconButton>
+                            
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleMenuClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                sx={{ mt: 1 }}
+                            >
+                                <MenuItem onClick={handleProfile} sx={{ py: 1.5, px: 2 }}>
+                                    <ListItemIcon sx={{ minWidth: 36 }}>
+                                        <PersonIcon fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>Profile</ListItemText>
+                                </MenuItem>
+                                
+                                <Divider />
+                                
+                                <MenuItem onClick={handleLogout} sx={{ py: 1.5, px: 2, color: 'error.main' }}>
+                                    <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}>
+                                        <LogoutIcon fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>Logout</ListItemText>
+                                </MenuItem>
+                            </Menu>
+                        </Box>
                     </Box>
                 </Toolbar>
             </AppBar>

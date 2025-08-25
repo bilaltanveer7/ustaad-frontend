@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SideNav from '../sidebar/sidenav'
 import { useNavigate } from 'react-router-dom';
+import { useTutorStore } from '../store/useTutorStore';
+import { CircularProgress, Alert } from '@mui/material';
 import {
     Box,
     Table,
@@ -36,108 +38,35 @@ const drawerWidth = 260;
 
 const TutorDashboard = () => {
     const navigate = useNavigate();
+    const { 
+        tutors, 
+        fetchTutors, 
+        isLoading, 
+        error, 
+        pagination 
+    } = useTutorStore();
+    
     const [selected, setSelected] = useState([])
     const [searchValue, setSearchValue] = useState("")
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" })
+    const [currentPage, setCurrentPage] = useState(1);
+    
+    // Fetch tutors on component mount
+    useEffect(() => {
+        fetchTutors(currentPage, 20);
+    }, [fetchTutors, currentPage]);
 
-    const tableData = [
-        {
-            id: 1,
-            clientId: "PA-112725",
-            name: "Nisha Kumari",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 2,
-            clientId: "PA-112725",
-            name: "Sophia",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 3,
-            clientId: "PA-112725",
-            name: "Rudra Pratap",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 4,
-            clientId: "PA-112725",
-            name: "Trisha Norton",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 5,
-            clientId: "PA-112725",
-            name: "Jolene Orr",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 6,
-            clientId: "PA-112725",
-            name: "Aryan Roy",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 7,
-            clientId: "PA-112725",
-            name: "Elvin Bond",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 8,
-            clientId: "PA-112725",
-            name: "Huzaifa Anas",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 9,
-            clientId: "PA-112725",
-            name: "Nisha Kumari",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 10,
-            clientId: "PA-112725",
-            name: "Sophia",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 11,
-            clientId: "PA-112725",
-            name: "Rudra Pratap",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-        {
-            id: 12,
-            clientId: "PA-112725",
-            name: "Trisha Norton",
-            price: "Rs. 105367",
-            address: "987 Teck way, Seattle WA",
-            date: "12/03/20247",
-        },
-    ]
+    // Transform API data to match table format
+    const tableData = tutors.map((tutor) => ({
+        id: tutor.id,
+        clientId: tutor.id.substring(0, 8).toUpperCase(),
+        name: tutor.User?.fullName || 'N/A',
+        email: tutor.User?.email || 'N/A',
+        hourlyRate: `$${tutor.hourlyRate || 0}`,
+        subjects: tutor.subjects?.join(', ') || 'N/A',
+        balance: `$${tutor.balance || 0}`,
+        date: new Date(tutor.createdAt).toLocaleDateString() || 'N/A',
+    }));
 
     const handleSelectAll = (event) => {
         if (event.target.checked) {
@@ -309,7 +238,9 @@ const TutorDashboard = () => {
                                             }}
                                         />
                                     </Button>
-                                    <span style={{ fontWeight: 400, fontSize: "16px", color: "#4D5874" }}>120 Results</span>
+                                    <span style={{ fontWeight: 400, fontSize: "16px", color: "#4D5874" }}>
+                                        {pagination?.total || tableData.length} Results
+                                    </span>
                                 </div>
                                 <Button
                                     variant="contained"
@@ -328,6 +259,27 @@ const TutorDashboard = () => {
                             </div>
                         </div>
                     </div>
+
+                    {/* Error Display */}
+                    {error && (
+                        <div className="row">
+                            <div className="col-12">
+                                <Alert severity="error" sx={{ m: 2 }}>
+                                    Error loading tutors: {error}
+                                </Alert>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Loading State */}
+                    {isLoading && (
+                        <div className="row">
+                            <div className="col-12" style={{ textAlign: 'center', padding: '2rem' }}>
+                                <CircularProgress />
+                                <div style={{ marginTop: '1rem', color: '#666' }}>Loading tutors...</div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Table */}
                     <div className="row">
@@ -348,11 +300,11 @@ const TutorDashboard = () => {
                                             </TableCell>
 
                                             {[
-                                                { label: "Client ID", key: "clientId" },
-                                                { label: "Client Name", key: "name" },
-                                                { label: "Listing Price", key: "price" },
-                                                { label: "Address", key: "address" },
-                                                { label: "JoiningDate", key: "date" },
+                                                { label: "Tutor ID", key: "clientId" },
+                                                { label: "Tutor Name", key: "name" },
+                                                { label: "Hourly Rate", key: "hourlyRate" },
+                                                { label: "Subjects", key: "subjects" },
+                                                { label: "Joined Date", key: "date" },
                                             ].map(({ label, key }) => (
                                                 <TableCell
                                                     key={key}
@@ -400,7 +352,7 @@ const TutorDashboard = () => {
                                                         <Checkbox checked={isItemSelected} size="small" />
                                                     </TableCell>
                                                     <TableCell
-                                                        onClick={() => navigate('/tutor-profile')}
+                                                        onClick={() => navigate(`/tutor-profile/${row.id}`)}
                                                         style={{
                                                             fontWeight: 400,
                                                             fontSize: "16px",
@@ -434,17 +386,32 @@ const TutorDashboard = () => {
                                                     </TableCell>
                                                     <TableCell style={{ fontWeight: 400, fontSize: "16px", color: "#101219", border: "1px solid #e0e0e0" }}>
                                                         <div className="d-flex align-items-center justify-content-between">
-                                                            {row.price}
+                                                            <span style={{ 
+                                                                color: '#2e7d32', 
+                                                                fontWeight: 500,
+                                                                backgroundColor: '#e8f5e8',
+                                                                padding: '4px 8px',
+                                                                borderRadius: '4px'
+                                                            }}>
+                                                                {row.hourlyRate}
+                                                            </span>
                                                         </div>
                                                     </TableCell>
-                                                    <TableCell style={{ fontWeight: 400, fontSize: "16px", color: "#101219", border: "1px solid #e0e0e0" }}>
+                                                    <TableCell style={{ fontWeight: 400, fontSize: "14px", color: "#101219", border: "1px solid #e0e0e0" }}>
                                                         <div className="d-flex align-items-center justify-content-between">
-                                                            {row.address}
+                                                            <span style={{ 
+                                                                maxWidth: '200px',
+                                                                overflow: 'hidden',
+                                                                textOverflow: 'ellipsis',
+                                                                whiteSpace: 'nowrap'
+                                                            }}>
+                                                                {row.subjects}
+                                                            </span>
                                                             <IconButton
                                                                 size="small"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation()
-                                                                    handleCopy(row.address)
+                                                                    handleCopy(row.subjects)
                                                                 }}
                                                                 style={{ padding: "2px" }}
                                                             >

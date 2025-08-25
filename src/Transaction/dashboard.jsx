@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SideNav from '../sidebar/sidenav'
 import { useNavigate } from 'react-router-dom';
+import { useAdminStore } from '../store/useAdminStore';
+import { CircularProgress, Alert, MenuItem, FormControl, Select } from '@mui/material';
 import {
     Box,
     Table,
@@ -42,119 +44,45 @@ const drawerWidth = 260;
 
 const TransactionDashboard = () => {
     const navigate = useNavigate();
+    const { 
+        paymentRequests, 
+        fetchPaymentRequests, 
+        updatePaymentStatus,
+        isLoadingPaymentRequests, 
+        paymentRequestsError,
+        isUpdatingPaymentRequest 
+    } = useAdminStore();
+    
     const [selected, setSelected] = useState([])
     const [searchValue, setSearchValue] = useState("")
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" })
-    const tableData = [
-        {
-            id: 1,
-            type: "Withdraw",
-            amount: "Rs 10,000",
-            payment_method: "Credit Card",
-            status: "Success",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 2,
-            type: "Withdraw",
-            amount: "Rs 10,000",
-            payment_method: "Wire Transfer",
-            status: "Failed",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 3,
-            type: "Received",
-            amount: "Rs 10,000",
-            payment_method: "Credit Card",
-            status: "Success",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 4,
-            type: "Received",
-            amount: "Rs 10,000",
-            payment_method: "Debit Card",
-            status: "Success",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 5,
-            type: "Withdraw",
-            amount: "Rs 10,000",
-            payment_method: "Credit Card",
-            status: "Incomplete",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 6,
-            type: "Received",
-            amount: "Rs 10,000",
-            payment_method: "Wire Transfer",
-            status: "Success",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 7,
-            type: "Withdraw",
-            amount: "Rs 10,000",
-            payment_method: "Credit Card",
-            status: "Failed",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 8,
-            type: "Received",
-            amount: "Rs 10,000",
-            payment_method: "Debit Card",
-            status: "Failed",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 9,
-            type: "Withdraw",
-            amount: "Rs 10,000",
-            payment_method: "Credit Card",
-            status: "Success",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 10,
-            type: "Withdraw",
-            amount: "Rs 10,000",
-            payment_method: "Paypal",
-            status: "Success",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 11,
-            type: "Withdraw",
-            amount: "Rs 10,000",
-            payment_method: "Wire Transfer",
-            status: "Incomplete",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-        {
-            id: 12,
-            type: "Withdraw",
-            amount: "Rs 10,000",
-            payment_method: "Debit Card",
-            status: "Success",
-            people: "Rurda Pratap",
-            date: "12/03/20247"
-        },
-    ]
+    
+    // Fetch payment requests on component mount
+    useEffect(() => {
+        fetchPaymentRequests();
+    }, [fetchPaymentRequests]);
+
+    // Transform API data to match table format
+    const tableData = paymentRequests.map((request) => ({
+        id: request.id,
+        type: "Payment Request", // All are payment requests from tutors
+        amount: `$${request.amount || 0}`,
+        payment_method: "Bank Transfer", // Default payment method
+        status: request.status,
+        tutorId: request.tutorId,
+        subscriptionId: request.subscriptionId,
+        date: new Date(request.createdAt).toLocaleDateString() || 'N/A',
+        updatedAt: new Date(request.updatedAt).toLocaleDateString() || 'N/A',
+    }));
+
+    // Handle status change
+    const handleStatusChange = async (requestId, newStatus) => {
+        try {
+            await updatePaymentStatus(requestId, newStatus);
+        } catch (error) {
+            console.error('Failed to update payment status:', error);
+        }
+    };
 
     const handleSelectAll = (event) => {
         if (event.target.checked) {
@@ -326,7 +254,9 @@ const TransactionDashboard = () => {
                                             }}
                                         />
                                     </Button>
-                                    <span style={{ fontWeight: 400, fontSize: "16px", color: "#4D5874" }}>120 Results</span>
+                                    <span style={{ fontWeight: 400, fontSize: "16px", color: "#4D5874" }}>
+                                        {tableData.length} Results
+                                    </span>
                                 </div>
                                 <Button
                                     variant="contained"
@@ -345,6 +275,27 @@ const TransactionDashboard = () => {
                             </div>
                         </div>
                     </div>
+                    {/* Error Display */}
+                    {paymentRequestsError && (
+                        <div className="row">
+                            <div className="col-12">
+                                <Alert severity="error" sx={{ m: 2 }}>
+                                    Error loading payment requests: {paymentRequestsError}
+                                </Alert>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Loading State */}
+                    {isLoadingPaymentRequests && (
+                        <div className="row">
+                            <div className="col-12" style={{ textAlign: 'center', padding: '2rem' }}>
+                                <CircularProgress />
+                                <div style={{ marginTop: '1rem', color: '#666' }}>Loading payment requests...</div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="row">
                         <div className="col-12">
                             <TableContainer
@@ -358,9 +309,9 @@ const TransactionDashboard = () => {
                                                 { label: "Amount", key: "amount" },
                                                 { label: "Payment Method", key: "payment_method" },
                                                 { label: "Status", key: "status" },
-                                                { label: "People", key: "people" },
+                                                { label: "Tutor ID", key: "tutorId" },
                                                 { label: "Date", key: "date" },
-                                                { label: "Action", key: "date" },
+                                                { label: "Action", key: "action" },
                                             ].map(({ label, key }) => (
                                                 <TableCell
                                                     key={key}
@@ -460,7 +411,7 @@ const TransactionDashboard = () => {
                                                     >
                                                         <div className="d-flex align-items-center justify-content-start gap-2">
                                                             {/* Render status based on value */}
-                                                            {row.status === "Success" && (
+                                                            {row.status === "PAID" && (
                                                                 <div
                                                                     style={{
                                                                         backgroundColor: "#EEFCF3",
@@ -474,10 +425,10 @@ const TransactionDashboard = () => {
                                                                     }}
                                                                 >
                                                                     <CheckCircleIcon style={{ fontSize: "18px", marginRight: 4 }} />
-                                                                    Success
+                                                                    PAID
                                                                 </div>
                                                             )}
-                                                            {row.status === "Failed" && (
+                                                            {row.status === "REJECTED" && (
                                                                 <div
                                                                     style={{
                                                                         backgroundColor: "#FEECEC",
@@ -491,10 +442,10 @@ const TransactionDashboard = () => {
                                                                     }}
                                                                 >
                                                                     <CancelIcon style={{ fontSize: "18px", marginRight: 4 }} />
-                                                                    Failed
+                                                                    REJECTED
                                                                 </div>
                                                             )}
-                                                            {row.status === "Incomplete" && (
+                                                            {row.status === "PENDING" && (
                                                                 <div
                                                                     style={{
                                                                         backgroundColor: "#F0F2F5",
@@ -508,10 +459,10 @@ const TransactionDashboard = () => {
                                                                     }}
                                                                 >
                                                                     <PauseCircleFilledIcon style={{ fontSize: "18px", marginRight: 4 }} />
-                                                                    Incomplete
+                                                                    PENDING
                                                                 </div>
                                                             )}
-                                                            {row.status === "Bank Issue" && (
+                                                            {(row.status === "IN_REVIEW" || row.status === "REQUESTED") && (
                                                                 <div
                                                                     style={{
                                                                         backgroundColor: "#EEF3FF",
@@ -525,29 +476,24 @@ const TransactionDashboard = () => {
                                                                     }}
                                                                 >
                                                                     <InfoIcon style={{ fontSize: "18px", marginRight: 4 }} />
-                                                                    Bank Issue
+                                                                    {row.status}
                                                                 </div>
                                                             )}
                                                         </div>
                                                     </TableCell>
                                                     <TableCell style={{ border: "1px solid #e0e0e0" }}>
                                                         <div className="d-flex align-items-center justify-content-between">
-                                                            <div className="d-flex align-items-center">
-                                                                <Avatar
-                                                                    style={{
-                                                                        width: "32px",
-                                                                        height: "32px",
-                                                                        backgroundColor: getAvatarColor(row.name),
-                                                                        fontSize: "12px",
-                                                                        marginRight: "12px",
-                                                                    }}
-                                                                >
-                                                                    {getInitials(row.name)}
-                                                                </Avatar>
-                                                                <span style={{ fontWeight: 400, fontSize: "14px", color: "#101219" }}>
-                                                                    {row.people}
-                                                                </span>
-                                                            </div>
+                                                            <span style={{ 
+                                                                fontWeight: 400, 
+                                                                fontSize: "14px", 
+                                                                color: "#101219",
+                                                                fontFamily: 'monospace',
+                                                                backgroundColor: '#f5f5f5',
+                                                                padding: '2px 6px',
+                                                                borderRadius: '4px'
+                                                            }}>
+                                                                {row.tutorId?.substring(0, 8) || 'N/A'}
+                                                            </span>
                                                         </div>
                                                     </TableCell>
                                                     <TableCell style={{
@@ -568,9 +514,25 @@ const TransactionDashboard = () => {
                                                             textAlign: "center"
                                                         }}
                                                     >
-                                                        <div className="d-flex align-items-center justify-content-center">
-                                                            <MoreVertIcon style={{ color: "#4D5874", cursor: "pointer" }} />
-                                                        </div>
+                                                        <FormControl size="small" sx={{ minWidth: 120 }}>
+                                                            <Select
+                                                                value={row.status}
+                                                                onChange={(e) => handleStatusChange(row.id, e.target.value)}
+                                                                disabled={isUpdatingPaymentRequest}
+                                                                sx={{
+                                                                    fontSize: '12px',
+                                                                    '& .MuiSelect-select': {
+                                                                        padding: '4px 8px',
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <MenuItem value="PENDING">Pending</MenuItem>
+                                                                <MenuItem value="REQUESTED">Requested</MenuItem>
+                                                                <MenuItem value="IN_REVIEW">In Review</MenuItem>
+                                                                <MenuItem value="PAID">Paid</MenuItem>
+                                                                <MenuItem value="REJECTED">Rejected</MenuItem>
+                                                            </Select>
+                                                        </FormControl>
                                                     </TableCell>
                                                 </TableRow>
                                             )
