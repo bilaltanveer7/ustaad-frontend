@@ -61,11 +61,6 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
   
   const isImage = imageExtensions.includes(fileExtension);
   const isPDF = fileExtension === 'pdf';
-
-  console.log(fileExtension, "fileExtension");
-  console.log(isImage, "isImage");
-  console.log(isPDF, "isPDF");
-
   const renderContent = () => {
     // if (isLoading) {
     //   return (

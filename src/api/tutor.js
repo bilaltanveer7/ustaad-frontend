@@ -17,3 +17,28 @@ export const getTutorById = async (id) => {
   });
   return data;
 };
+export const getPaymentRequests = async () => {
+  const data = await invoke({
+    url: `/admin/payment-requests`,
+    method: "GET",
+  });
+  return data;
+};
+export const getPaymentRequestById = async (id) => {
+  const data = await invoke({
+    url: `/admin/payment-requests/${id}`,
+    method: "GET",
+  });
+  return data;
+};
+export const updatePaymentRequestStatus = async (id, status) => {
+  const data = await invoke({
+    url: `/admin/payment-requests`,
+    method: "PUT",
+    data: { id, status },
+  });
+  return data;
+};
+
+
+

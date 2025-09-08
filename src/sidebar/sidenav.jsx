@@ -19,6 +19,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
@@ -40,6 +42,8 @@ const menuSections = [
             { text: 'Parents', icon: <PeopleIcon />, path: '/parent-dashboard' },
             { text: 'Tutors', icon: <CalendarTodayIcon />, path: '/tutor-dashboard' },
             { text: 'Transaction Log', icon: <ReceiptLongIcon />, path: '/transaction-dashboard' },
+            { text: 'Admins', icon: <AdminPanelSettingsIcon />, path: '/admins-dashboard' },
+            { text: 'Pending Users', icon: <HourglassEmptyIcon />, path: '/pending-users' },
         ],
     },
     {

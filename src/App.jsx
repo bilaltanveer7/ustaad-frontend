@@ -6,6 +6,9 @@ import ParentsProfile from './Parents/profile';
 import TutorDashboard from './Tutor/dashboard';
 import TutorsProfile from './Tutor/profile';
 import TransactionDashboard from './Transaction/dashboard';
+import AdminsDashboard from './Admins/dashboard';
+import PendingUsersDashboard from './PendingUsers/dashboard';
+import UserDetail from './PendingUsers/UserDetail';
 import LoginScreen from './Auth/Login';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -70,6 +73,33 @@ function App() {
           element={
             <PrivateRoute>
               <TransactionDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/admins-dashboard" 
+          element={
+            <PrivateRoute>
+              <AdminsDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/pending-users" 
+          element={
+            <PrivateRoute>
+              <PendingUsersDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/pending-users/:userId" 
+          element={
+            <PrivateRoute>
+              <UserDetail/>
             </PrivateRoute>
           } 
         />
