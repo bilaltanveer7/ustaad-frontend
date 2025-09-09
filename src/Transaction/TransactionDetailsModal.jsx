@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -19,7 +19,7 @@ import {
   InputLabel,
   Card,
   CardContent,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Close as CloseIcon,
   Person as PersonIcon,
@@ -31,11 +31,11 @@ import {
   Cancel as CancelIcon,
   Info as InfoIcon,
   PauseCircleFilled as PauseIcon,
-} from '@mui/icons-material';
-import { useAdminStore } from '../store/useAdminStore';
+} from "@mui/icons-material";
+import { useAdminStore } from "../store/useAdminStore";
 
 const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
-  const { 
+  const {
     selectedPaymentRequest,
     fetchPaymentRequestDetails,
     updatePaymentStatus,
@@ -43,27 +43,28 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
     isUpdatingPaymentRequest,
     paymentRequestsError,
     getPaymentStatusOptions,
-    clearSelectedPaymentRequest
+    clearSelectedPaymentRequest,
   } = useAdminStore();
 
-  const [localStatus, setLocalStatus] = useState('');
+  const [localStatus, setLocalStatus] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
-  const [updateError, setUpdateError] = useState('');
-  const [updateSuccess, setUpdateSuccess] = useState('');
+  const [updateError, setUpdateError] = useState("");
+  const [updateSuccess, setUpdateSuccess] = useState("");
 
-  // Fetch transaction details when modal opens
+  console.log("selectedPaymentRequest", selectedPaymentRequest);
+
   useEffect(() => {
     if (open && transactionId) {
       fetchPaymentRequestDetails(transactionId);
-      setUpdateError('');
-      setUpdateSuccess('');
+      setUpdateError("");
+      setUpdateSuccess("");
     }
   }, [open, transactionId, fetchPaymentRequestDetails]);
 
   // Update local status when data loads
   useEffect(() => {
     if (selectedPaymentRequest) {
-      setLocalStatus(selectedPaymentRequest.status || '');
+      setLocalStatus(selectedPaymentRequest.status || "");
     }
   }, [selectedPaymentRequest]);
 
@@ -71,9 +72,9 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
   useEffect(() => {
     if (!open) {
       clearSelectedPaymentRequest();
-      setLocalStatus('');
-      setUpdateError('');
-      setUpdateSuccess('');
+      setLocalStatus("");
+      setUpdateError("");
+      setUpdateSuccess("");
     }
   }, [open, clearSelectedPaymentRequest]);
 
@@ -81,24 +82,27 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
     if (!selectedPaymentRequest || !localStatus) return;
 
     setIsUpdating(true);
-    setUpdateError('');
-    setUpdateSuccess('');
+    setUpdateError("");
+    setUpdateSuccess("");
 
     try {
-      const result = await updatePaymentStatus(selectedPaymentRequest.id, localStatus);
-      
+      const result = await updatePaymentStatus(
+        selectedPaymentRequest.paymentRequest.id,
+        localStatus
+      );
+
       if (result.success) {
-        setUpdateSuccess('Status updated successfully!');
+        setUpdateSuccess("Status updated successfully!");
         // Refresh the details to get updated data
         setTimeout(() => {
           fetchPaymentRequestDetails(transactionId);
         }, 1000);
       } else {
-        setUpdateError(result.error || 'Failed to update status');
+        setUpdateError(result.error || "Failed to update status");
       }
     } catch (error) {
-      console.error('Error updating status:', error);
-      setUpdateError('Failed to update status');
+      console.error("Error updating status:", error);
+      setUpdateError("Failed to update status");
     } finally {
       setIsUpdating(false);
     }
@@ -106,47 +110,63 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'PAID':
-        return <CheckCircleIcon sx={{ color: '#38BC5C' }} />;
-      case 'REJECTED':
-        return <CancelIcon sx={{ color: '#F31616' }} />;
-      case 'PENDING':
-        return <PauseIcon sx={{ color: '#7D879C' }} />;
-      case 'IN_REVIEW':
-      case 'REQUESTED':
-        return <InfoIcon sx={{ color: '#235DFF' }} />;
+      case "PAID":
+        return <CheckCircleIcon sx={{ color: "#38BC5C" }} />;
+      case "REJECTED":
+        return <CancelIcon sx={{ color: "#F31616" }} />;
+      case "PENDING":
+        return <PauseIcon sx={{ color: "#7D879C" }} />;
+      case "IN_REVIEW":
+      case "REQUESTED":
+        return <InfoIcon sx={{ color: "#235DFF" }} />;
       default:
-        return <InfoIcon sx={{ color: '#666' }} />;
+        return <InfoIcon sx={{ color: "#666" }} />;
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'PAID':
-        return { bg: '#EEFCF3', color: '#38BC5C', border: '#B2EECC' };
-      case 'REJECTED':
-        return { bg: '#FEECEC', color: '#F31616', border: '#FFCDD2' };
-      case 'PENDING':
-        return { bg: '#F0F2F5', color: '#7D879C', border: '#E0E0E0' };
-      case 'IN_REVIEW':
-      case 'REQUESTED':
-        return { bg: '#EEF3FF', color: '#235DFF', border: '#C5D9FF' };
+      case "PAID":
+        return { bg: "#EEFCF3", color: "#38BC5C", border: "#B2EECC" };
+      case "REJECTED":
+        return { bg: "#FEECEC", color: "#F31616", border: "#FFCDD2" };
+      case "PENDING":
+        return { bg: "#F0F2F5", color: "#7D879C", border: "#E0E0E0" };
+      case "IN_REVIEW":
+      case "REQUESTED":
+        return { bg: "#EEF3FF", color: "#235DFF", border: "#C5D9FF" };
       default:
-        return { bg: '#F5F5F5', color: '#666', border: '#E0E0E0' };
+        return { bg: "#F5F5F5", color: "#666", border: "#E0E0E0" };
     }
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return "N/A";
     return new Date(dateString).toLocaleString();
   };
 
   const formatAmount = (amount) => {
-    if (!amount) return '$0.00';
-    return `$${parseFloat(amount).toFixed(2)}`;
+    if (!amount) return "$0.00";
+    return `${parseFloat(amount).toFixed(2)}/- PKR`;
   };
 
   const statusOptions = getPaymentStatusOptions();
+
+  if (!selectedPaymentRequest) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "400px",
+        }}
+      >
+        <CircularProgress />
+        <Typography sx={{ ml: 2 }}>Loading transaction details...</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Dialog
@@ -156,15 +176,27 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: '12px',
-          maxHeight: '90vh',
+          borderRadius: "12px",
+          maxHeight: "90vh",
         },
       }}
     >
-      <DialogTitle sx={{ m: 0, p: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <ReceiptIcon sx={{ color: '#1E9CBC', fontSize: '28px' }} />
-          <Typography variant="h5" component="div" sx={{ fontWeight: 600, color: '#101219' }}>
+      <DialogTitle
+        sx={{
+          m: 0,
+          p: 3,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <ReceiptIcon sx={{ color: "#1E9CBC", fontSize: "28px" }} />
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{ fontWeight: 600, color: "#101219" }}
+          >
             Transaction Details
           </Typography>
         </Box>
@@ -181,9 +213,18 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
 
       <DialogContent dividers sx={{ p: 0 }}>
         {isLoadingPaymentRequests ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "400px",
+            }}
+          >
             <CircularProgress />
-            <Typography sx={{ ml: 2 }}>Loading transaction details...</Typography>
+            <Typography sx={{ ml: 2 }}>
+              Loading transaction details...
+            </Typography>
           </Box>
         ) : paymentRequestsError ? (
           <Box sx={{ p: 3 }}>
@@ -206,21 +247,36 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
             )}
 
             {/* Transaction Overview Card */}
-            <Card sx={{ mb: 3, border: '1px solid #E0E3EB' }}>
+            <Card sx={{ mb: 3, border: "1px solid #E0E3EB" }}>
               <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#101219' }}>
-                    Payment Request #{selectedPaymentRequest.id}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 2,
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, color: "#101219" }}
+                  >
+                    Payment Request #{selectedPaymentRequest.paymentRequest.id}
                   </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     {getStatusIcon(selectedPaymentRequest.status)}
                     <Chip
-                      label={selectedPaymentRequest.status}
+                      label={selectedPaymentRequest.paymentRequest.status}
                       size="medium"
                       sx={{
-                        backgroundColor: getStatusColor(selectedPaymentRequest.status).bg,
-                        color: getStatusColor(selectedPaymentRequest.status).color,
-                        border: `1px solid ${getStatusColor(selectedPaymentRequest.status).border}`,
+                        backgroundColor: getStatusColor(
+                          selectedPaymentRequest.paymentRequest.status
+                        ).bg,
+                        color: getStatusColor(selectedPaymentRequest.paymentRequest.status)
+                          .color,
+                        border: `1px solid ${
+                          getStatusColor(selectedPaymentRequest.paymentRequest.status).border
+                        }`,
                         fontWeight: 500,
                       }}
                     />
@@ -229,25 +285,52 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
 
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                      <AccountBalanceIcon sx={{ color: '#1E9CBC', fontSize: '20px' }} />
-                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 2,
+                      }}
+                    >
+                      <AccountBalanceIcon
+                        sx={{ color: "#1E9CBC", fontSize: "20px" }}
+                      />
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#666", fontWeight: 500 }}
+                      >
                         Amount
                       </Typography>
                     </Box>
-                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#101219' }}>
-                      {formatAmount(selectedPaymentRequest.amount)}
+                    <Typography
+                      variant="h4"
+                      sx={{ fontWeight: 600, color: "#101219" }}
+                    >
+                      {formatAmount(selectedPaymentRequest.paymentRequest.amount)}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                      <CalendarIcon sx={{ color: '#1E9CBC', fontSize: '20px' }} />
-                      <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 2,
+                      }}
+                    >
+                      <CalendarIcon
+                        sx={{ color: "#1E9CBC", fontSize: "20px" }}
+                      />
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#666", fontWeight: 500 }}
+                      >
                         Request Date
                       </Typography>
                     </Box>
-                    <Typography variant="body1" sx={{ color: '#101219' }}>
-                      {formatDate(selectedPaymentRequest.createdAt)}
+                    <Typography variant="body1" sx={{ color: "#101219" }}>
+                      {formatDate(selectedPaymentRequest.paymentRequest.createdAt)}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -257,118 +340,116 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
             {/* Details Grid */}
             <Grid container spacing={3}>
               {/* Tutor Information */}
-              <Grid item xs={12} md={6}>
-                <Card sx={{ height: '100%', border: '1px solid #E0E3EB' }}>
+              
+                <Card sx={{ height: "100%", width: "100%", border: "1px solid #E0E3EB" }}>
                   <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                      <PersonIcon sx={{ color: '#1E9CBC' }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600, color: '#101219' }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 2,
+                      }}
+                    >
+                      <PersonIcon sx={{ color: "#1E9CBC" }} />
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600, color: "#101219" }}
+                      >
                         Tutor Information
                       </Typography>
                     </Box>
                     <Divider sx={{ mb: 2 }} />
-                    
+
                     <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#666", mb: 0.5 }}
+                      >
                         Tutor ID
                       </Typography>
-                      <Typography variant="body1" sx={{ 
-                        color: '#101219', 
-                        fontFamily: 'monospace',
-                        backgroundColor: '#f5f5f5',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        display: 'inline-block'
-                      }}>
-                        {selectedPaymentRequest.tutorId || 'N/A'}
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: "#101219",
+                          fontFamily: "monospace",
+                          backgroundColor: "#f5f5f5",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          display: "inline-block",
+                        }}
+                      >
+                        {selectedPaymentRequest.paymentRequest.tutorId || "N/A"}
                       </Typography>
                     </Box>
 
-                    {selectedPaymentRequest.Tutor && (
-                      <>
-                        <Box sx={{ mb: 2 }}>
-                          <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
-                            Name
-                          </Typography>
-                          <Typography variant="body1" sx={{ color: '#101219' }}>
-                            {selectedPaymentRequest.Tutor.User?.fullName || 'N/A'}
-                          </Typography>
-                        </Box>
-                        <Box sx={{ mb: 2 }}>
-                          <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
-                            Email
-                          </Typography>
-                          <Typography variant="body1" sx={{ color: '#101219' }}>
-                            {selectedPaymentRequest.Tutor.User?.email || 'N/A'}
-                          </Typography>
-                        </Box>
-                      </>
-                    )}
+                    <>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#666", mb: 0.5 }}
+                        >
+                          Name
+                        </Typography>
+                        <Typography variant="body1" sx={{ color: "#101219" }}>
+                          {selectedPaymentRequest.tutor.name || "N/A"}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#666", mb: 0.5 }}
+                        >
+                          Email
+                        </Typography>
+                        <Typography variant="body1" sx={{ color: "#101219" }}>
+                          {selectedPaymentRequest.tutor.email || "N/A"}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#666", mb: 0.5 }}
+                        >
+                          Bank Name
+                        </Typography>
+                        <Typography variant="body1" sx={{ color: "#101219" }}>
+                          {selectedPaymentRequest.tutor.bankName || "N/A"}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#666", mb: 0.5 }}
+                        >
+                          Bank Account Number
+                        </Typography>
+                        <Typography variant="body1" sx={{ color: "#101219" }}>
+                          {selectedPaymentRequest.tutor.accountNumber || "N/A"}
+                        </Typography>
+                      </Box>
+                    </>
                   </CardContent>
                 </Card>
-              </Grid>
-
-              {/* Transaction Details */}
-              <Grid item xs={12} md={6}>
-                <Card sx={{ height: '100%', border: '1px solid #E0E3EB' }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                      <ReceiptIcon sx={{ color: '#1E9CBC' }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600, color: '#101219' }}>
-                        Transaction Details
-                      </Typography>
-                    </Box>
-                    <Divider sx={{ mb: 2 }} />
-                    
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
-                        Subscription ID
-                      </Typography>
-                      <Typography variant="body1" sx={{ 
-                        color: '#101219',
-                        fontFamily: 'monospace',
-                        backgroundColor: '#f5f5f5',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        display: 'inline-block'
-                      }}>
-                        {selectedPaymentRequest.subscriptionId || 'N/A'}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
-                        Last Updated
-                      </Typography>
-                      <Typography variant="body1" sx={{ color: '#101219' }}>
-                        {formatDate(selectedPaymentRequest.updatedAt)}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>
-                        Payment Method
-                      </Typography>
-                      <Typography variant="body1" sx={{ color: '#101219' }}>
-                        Bank Transfer
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
+              
             </Grid>
 
             {/* Status Update Section */}
-            <Card sx={{ mt: 3, border: '1px solid #E0E3EB' }}>
+            <Card sx={{ mt: 3, border: "1px solid #E0E3EB" }}>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                  <UpdateIcon sx={{ color: '#1E9CBC' }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: '#101219' }}>
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
+                >
+                  <UpdateIcon sx={{ color: "#1E9CBC" }} />
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, color: "#101219" }}
+                  >
                     Update Status
                   </Typography>
                 </Box>
                 <Divider sx={{ mb: 3 }} />
-                
+
                 <Grid container spacing={3} alignItems="center">
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
@@ -381,7 +462,13 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                       >
                         {statusOptions.map((option) => (
                           <MenuItem key={option.value} value={option.value}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
                               {getStatusIcon(option.value)}
                               {option.label}
                             </Box>
@@ -395,27 +482,30 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                       variant="contained"
                       onClick={handleStatusUpdate}
                       disabled={
-                        isUpdating || 
-                        isUpdatingPaymentRequest || 
-                        !localStatus || 
+                        isUpdating ||
+                        isUpdatingPaymentRequest ||
+                        !localStatus ||
                         localStatus === selectedPaymentRequest.status
                       }
                       sx={{
-                        backgroundColor: '#1E9CBC',
-                        '&:hover': {
-                          backgroundColor: '#1a8aa8',
+                        backgroundColor: "#1E9CBC",
+                        "&:hover": {
+                          backgroundColor: "#1a8aa8",
                         },
-                        textTransform: 'none',
+                        textTransform: "none",
                         px: 3,
                       }}
                     >
                       {isUpdating || isUpdatingPaymentRequest ? (
                         <>
-                          <CircularProgress size={20} sx={{ mr: 1, color: 'white' }} />
+                          <CircularProgress
+                            size={20}
+                            sx={{ mr: 1, color: "white" }}
+                          />
                           Updating...
                         </>
                       ) : (
-                        'Update Status'
+                        "Update Status"
                       )}
                     </Button>
                   </Grid>
@@ -424,8 +514,8 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
             </Card>
           </Box>
         ) : (
-          <Box sx={{ p: 3, textAlign: 'center' }}>
-            <Typography variant="body1" sx={{ color: '#666' }}>
+          <Box sx={{ p: 3, textAlign: "center" }}>
+            <Typography variant="body1" sx={{ color: "#666" }}>
               No transaction details available
             </Typography>
           </Box>
@@ -433,14 +523,14 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
       </DialogContent>
 
       <DialogActions sx={{ p: 3 }}>
-        <Button 
-          onClick={onClose} 
+        <Button
+          onClick={onClose}
           variant="outlined"
           sx={{
-            borderColor: '#ddd',
-            color: '#666',
-            textTransform: 'none',
-            borderRadius: '8px',
+            borderColor: "#ddd",
+            color: "#666",
+            textTransform: "none",
+            borderRadius: "8px",
             px: 3,
           }}
         >

@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
-const PrivateRoute = ({ children, requiredRole = 'SUPER_ADMIN' }) => {
+const PrivateRoute = ({ children, requiredRole = ['SUPER_ADMIN'] }) => {
   const { isAuthenticated, isLoading, user, initializeAuth } = useAuthStore();
   const location = useLocation();
 
@@ -37,7 +37,7 @@ const PrivateRoute = ({ children, requiredRole = 'SUPER_ADMIN' }) => {
   }
 
   // If a specific role is required and user doesn't have it
-  if (requiredRole && user?.role !== requiredRole) {
+  if (requiredRole && !requiredRole.includes(user?.role)) {
     return (
       <Box
         sx={{

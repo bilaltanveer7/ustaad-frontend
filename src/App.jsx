@@ -26,7 +26,7 @@ function App() {
         <Route 
           path="/dashboard" 
           element={
-            <PrivateRoute>
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
               <Dashboard/>
             </PrivateRoute>
           } 
@@ -35,7 +35,7 @@ function App() {
         <Route 
           path="/parent-dashboard" 
           element={
-            <PrivateRoute>
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
               <ParentDashboard/>
             </PrivateRoute>
           } 
@@ -44,7 +44,7 @@ function App() {
         <Route 
           path="/parent-profile/:id" 
           element={
-            <PrivateRoute>
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
               <ParentsProfile/>
             </PrivateRoute>
           } 
@@ -53,7 +53,7 @@ function App() {
         <Route 
           path="/tutor-dashboard" 
           element={
-            <PrivateRoute>
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
               <TutorDashboard/>
             </PrivateRoute>
           } 
@@ -62,7 +62,7 @@ function App() {
         <Route 
           path="/tutor-profile/:id" 
           element={
-            <PrivateRoute>
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
               <TutorsProfile/>
             </PrivateRoute>
           } 
@@ -71,7 +71,7 @@ function App() {
         <Route 
           path="/transaction-dashboard" 
           element={
-            <PrivateRoute>
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
               <TransactionDashboard/>
             </PrivateRoute>
           } 
@@ -80,7 +80,7 @@ function App() {
         <Route 
           path="/admins-dashboard" 
           element={
-            <PrivateRoute>
+            <PrivateRoute requiredRole={["SUPER_ADMIN"]}>
               <AdminsDashboard/>
             </PrivateRoute>
           } 
@@ -89,7 +89,7 @@ function App() {
         <Route 
           path="/pending-users" 
           element={
-            <PrivateRoute>
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
               <PendingUsersDashboard/>
             </PrivateRoute>
           } 
@@ -98,7 +98,7 @@ function App() {
         <Route 
           path="/pending-users/:userId" 
           element={
-            <PrivateRoute>
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
               <UserDetail/>
             </PrivateRoute>
           } 

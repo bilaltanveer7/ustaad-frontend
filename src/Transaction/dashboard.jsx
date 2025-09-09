@@ -85,71 +85,12 @@ const TransactionDashboard = () => {
     updatedAt: new Date(request.updatedAt).toLocaleDateString() || "N/A",
   }));
 
-  // Handle status change
-  const handleStatusChange = async (requestId, newStatus) => {
-    try {
-      await updatePaymentStatus(requestId, newStatus);
-    } catch (error) {
-      console.error("Failed to update payment status:", error);
-    }
-  };
 
-  const handleSelectAll = (event) => {
-    if (event.target.checked) {
-      setSelected(tableData.map((row) => row.id));
-    } else {
-      setSelected([]);
-    }
-  };
-
-  const handleSelectRow = (id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  const getInitials = (name) => {
-    if (!name) return "";
-    const words = name.trim().split(" ");
-    if (words.length === 1) return words[0][0].toUpperCase();
-    return (words[0][0] + words[1][0]).toUpperCase();
-  };
 
-  const getAvatarColor = (name) => {
-    const colors = [
-      "#FF6B6B",
-      "#4ECDC4",
-      "#45B7D1",
-      "#96CEB4",
-      "#FFEAA7",
-      "#DDA0DD",
-      "#98D8C8",
-      "#F7DC6F",
-    ];
 
-    if (!name || typeof name !== "string") {
-      return "#ccc";
-    }
-
-    const index = name.length % colors.length;
-    return colors[index];
-  };
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -174,9 +115,7 @@ const TransactionDashboard = () => {
     );
   };
 
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text);
-  };
+
 
   const handleViewTransaction = (transactionId) => {
     setSelectedTransactionId(transactionId);
