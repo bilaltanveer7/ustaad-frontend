@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./Dashboard/dashboard";
 import ParentDashboard from './Parents/dashboard';
 import ParentsProfile from './Parents/profile';
@@ -7,6 +7,7 @@ import TutorDashboard from './Tutor/dashboard';
 import TutorsProfile from './Tutor/profile';
 import TransactionDashboard from './Transaction/dashboard';
 import LoginScreen from './Auth/Login'
+import PrivateRoute from './PrivateRoute';
 
 function App() {
   return (
@@ -15,13 +16,37 @@ function App() {
         Ustaad
       </title>
       <Routes>
-        <Route path="/" element={<LoginScreen/>} />
-        <Route path="/dashboard" element={<Dashboard/>} />
-        <Route path="/parent-dashboard" element={<ParentDashboard/>} />
-        <Route path="/parent-profile" element={<ParentsProfile/>} />
-        <Route path="/tutor-dashboard" element={<TutorDashboard/>} />
-        <Route path="/tutor-profile" element={<TutorsProfile/>} />
-        <Route path="/transaction-dashboard" element={<TransactionDashboard/>} />
+        {/* Public route */}
+        <Route path="/" element={<LoginScreen />} />
+
+        {/* Protected routes */}
+        <Route path="/dashboard" element={<PrivateRoute> <Dashboard /> </PrivateRoute>} />
+        <Route path="/parent-dashboard" element={<PrivateRoute> <ParentDashboard /> </PrivateRoute>} />
+        <Route path="/parent-profile" element={<PrivateRoute> <ParentsProfile /> </PrivateRoute>} />
+        <Route
+          path="/tutor-dashboard"
+          element={
+            <PrivateRoute>
+              <TutorDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/tutor-profile"
+          element={
+            <PrivateRoute>
+              <TutorsProfile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/transaction-dashboard"
+          element={
+            <PrivateRoute>
+              <TransactionDashboard />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </>
   );

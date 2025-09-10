@@ -1,4 +1,5 @@
-import react, { useEffect } from 'react'
+import react, { useEffect, useState } from 'react'
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
     TextField,
@@ -13,10 +14,39 @@ import {
 import Logo from '../assets/logo.png'
 
 const LoginScreen = () => {
-    const navigate = useNavigate();
+    
+    // {/*useEffect hook used for tab title in browser*/}
     useEffect(() => {
         document.title = "Admin Login";
     }, []);
+    
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleSubmit = () => {
+        if (!email || !password) {
+            // alert("Please enter both email and password");
+            return;
+        }
+        const payload = {
+            email: email,
+            password: password
+        }
+        console.log("auth output++++++", payload);
+
+        axios.post("https://api.escuelajs.co/api/v1/auth/login", payload)
+            .then((res) => {
+                localStorage.setItem("token", JSON.stringify(res.data.access_token))
+                console.log("Login Successful", res);
+                navigate('/dashboard');
+            })
+            .catch((err) => {
+                console.log("Login Error+++++++++", err);
+
+            })
+    }
 
     return (
         <>
@@ -53,12 +83,16 @@ const LoginScreen = () => {
                     </Typography>
                     <Box component="form" display="flex" flexDirection="column" gap={2}>
                         <TextField
+                            onChange={(e) => setEmail(e.target.value)}
+                            value={email}
                             label="Email"
                             placeholder="Enter admin email"
                             fullWidth
                         />
 
                         <TextField
+                            onChange={(e) => setPassword(e.target.value)}
+                            value={password}
                             label="Password"
                             type="password"
                             placeholder="Enter password"
@@ -72,10 +106,11 @@ const LoginScreen = () => {
                         />
 
                         <Button
-                        onClick={()=> navigate('/dashboard')}
-                            type="submit"
+                            onClick={handleSubmit}
+                            type="button"
                             fullWidth
                             variant="contained"
+                            disabled={!email || !password || loading}
                             sx={{
                                 bgcolor: '#1F9FBE',
                                 color: '#fff',
@@ -85,11 +120,12 @@ const LoginScreen = () => {
                                 },
                             }}
                         >
-                            Log in
+                            {/* Log in */}
+                            {loading ? 'Logging in...' : 'Log in'}
                         </Button>
                         <Link
                             underline="hover"
-                            sx={{ cursor:'pointer', fontSize: '0.875rem', mt: 1, display: 'block', textAlign: 'right' }}
+                            sx={{ cursor: 'pointer', fontSize: '0.875rem', mt: 1, display: 'block', textAlign: 'right' }}
                         >
                             Forgot password?
                         </Link>

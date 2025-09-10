@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
+import { Menu, MenuItem, Button } from '@mui/material'
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -21,6 +23,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import logo from "../assets/logo.png"
 import avatar from "../assets/Avatar.png"
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 const drawerWidth = 260;
 const selectedItem = 'Dashboard';
@@ -44,8 +48,41 @@ const menuSections = [
 ];
 
 export default function SideNav() {
+    const [openMenu, setOpenMenu] = useState();
     const location = useLocation();
     const navigate = useNavigate();
+    const [userData, setUserData] = useState();
+
+    useEffect(() => {
+        const token = JSON.parse(localStorage.getItem('token'))
+        const header = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        axios.get("https://api.escuelajs.co/api/v1/auth/profile", header)
+            .then((res) => {
+                setUserData(res.data)
+                console.log("profile data----------", res);
+            })
+            .catch((err) => {
+                console.log("profile data fetching error*********", err);
+            })
+    }, []);
+
+    const handleOpenMenu = () => {
+        setOpenMenu(true);
+    };
+
+    const handleCloseMenu = () => {
+        setOpenMenu(false);
+    };
+
+    const handleLogout = () => {
+        handleCloseMenu();
+        localStorage.removeItem("token")
+        navigate('/', { replace: true });
+    };
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -67,7 +104,35 @@ export default function SideNav() {
                         }}
                     >
                         <Box component="img" src={logo} alt="Logo" sx={{ height: 42, width: 31 }} />
-                        <Box component="img" src={avatar} alt='avatar' sx={{ width: 36, height: 36 }} />
+                        <Box
+                            component="img"
+                            src={userData?.avatar}
+                            alt='Avatar'
+                            sx={{ width: 36, height: 36, borderRadius: 50, cursor: 'pointer' }}
+                            onClick={handleOpenMenu}
+                        />
+                        <Menu
+                            openMenu={openMenu}
+                            open={Boolean(openMenu)}
+                            onClose={handleCloseMenu}
+                            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        >
+                            <Box sx={{ px: 2, py: 1 }}>
+                                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                                    {userData?.name || "N/A"}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    {userData?.email || "N/A"}
+                                </Typography>
+                            </Box>
+                            <Divider />
+                            <MenuItem onClick={handleLogout}>
+                                <Button fullWidth color="error">
+                                    Logout
+                                </Button>
+                            </MenuItem>
+                        </Menu>
                     </Box>
                 </Toolbar>
             </AppBar>
