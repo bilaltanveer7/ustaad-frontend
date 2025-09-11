@@ -332,15 +332,15 @@ const TutorsProfile = () => {
         {
           id: 1,
           name: "Resume",
-          type: "PDF/Image",
+          type: documents.resume ? (documents.resume.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
           url: `${config.tutorDocumentUrl}${documents.resume}`,
           uploadDate: "N/A", // Upload date not available in API
           status: documents.resume ? "Available" : "Missing",
         },
         {
           id: 2,
-          name: "ID Front",
-          type: "Image",
+          name: "ID Front", 
+          type: documents.idFront ? (documents.idFront.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
           url: `${config.tutorDocumentUrl}${documents.idFront}`,
           uploadDate: "N/A", // Upload date not available in API
           status: documents.idFront ? "Available" : "Missing",
@@ -348,13 +348,13 @@ const TutorsProfile = () => {
         {
           id: 3,
           name: "ID Back",
-          type: "Image",
+          type: documents.idBack ? (documents.idBack.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
           url: `${config.tutorDocumentUrl}${documents.idBack}`,
           uploadDate: "N/A", // Upload date not available in API
           status: documents.idBack ? "Available" : "Missing",
         },
       ].filter((doc) => doc.url)
-    : []; // Only show documents that exist
+    : [];
 
   const childrenData = [
     {

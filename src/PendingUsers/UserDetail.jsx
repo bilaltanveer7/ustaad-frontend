@@ -279,10 +279,11 @@ const UserDetail = () => {
       const documents = tutorDetails.documents;
       
       if (documents.idFront) {
+        const extension = documents.idFront.split('.').pop().toLowerCase();
         docs.push({
           id: 'id-front',
           name: 'ID Front',
-          type: 'image/png',
+          type: extension === 'pdf' ? 'application/pdf' : 'image/png',
           url: `${config.tutorDocumentUrl}${documents.idFront}`,
           uploadedAt: tutorProfile?.createdAt,
           category: 'Identity',
@@ -290,10 +291,11 @@ const UserDetail = () => {
       }
       
       if (documents.idBack) {
+        const extension = documents.idBack.split('.').pop().toLowerCase();
         docs.push({
           id: 'id-back',
-          name: 'ID Back',
-          type: 'image/png',
+          name: 'ID Back', 
+          type: extension === 'pdf' ? 'application/pdf' : 'image/png',
           url: `${config.tutorDocumentUrl}${documents.idBack}`,
           uploadedAt: tutorProfile?.createdAt,
           category: 'Identity',
@@ -301,10 +303,11 @@ const UserDetail = () => {
       }
       
       if (documents.resume) {
+        const extension = documents.resume.split('.').pop().toLowerCase();
         docs.push({
           id: 'resume',
           name: 'Resume/CV',
-          type: 'image/png',
+          type: extension === 'pdf' ? 'application/pdf' : 'image/png',
           url: `${config.tutorDocumentUrl}${documents.resume}`,
           uploadedAt: tutorProfile?.createdAt,
           category: 'Education',
@@ -317,6 +320,9 @@ const UserDetail = () => {
   };
 
   const documents = getDocuments();
+
+  console.log("documents", documents);
+  
 
   const renderBasicInfo = () => (
     <Card sx={{ mb: 3 }}>
