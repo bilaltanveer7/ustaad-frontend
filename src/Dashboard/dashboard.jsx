@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios';
 import SideNav from '../sidebar/sidenav'
 import {
     Box,
@@ -77,91 +78,24 @@ const Dashboard = () => {
     const [jobTitleFilter, setJobTitleFilter] = useState("All Job Titles")
     const [statusFilter, setStatusFilter] = useState("All Status")
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" })
+    // const [tableData, setTableData] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [users, setUsers] = useState([])
 
-    const tableData = [
-        {
-            id: 1,
-            name: "Rudra Pratap",
-            email: "rudra@brinul.com",
-            jobTitle: "UX/UI Designer",
-            status: "ACTIVE",
-            avatar: "/placeholder.svg?height=40&width=40",
-        },
-        {
-            id: 2,
-            name: "Nisha Kumari",
-            email: "nisha.kumari@brinul.com",
-            jobTitle: "Graphic Designer",
-            status: "ACTIVE",
-            avatar: "/placeholder.svg?height=40&width=40",
-        },
-        {
-            id: 3,
-            name: "Aryan Roy",
-            email: "aryan.roy@brinul.com",
-            jobTitle: "UX/UI Designer",
-            status: "PROBATION",
-            avatar: "/placeholder.svg?height=40&width=40",
-        },
-        {
-            id: 4,
-            name: "Sophia",
-            email: "sophia@brinul.com",
-            jobTitle: "UX/UI Designer",
-            status: "ON BOARDING",
-            avatar: "/placeholder.svg?height=40&width=40",
-        },
-        {
-            id: 5,
-            name: "Koen Chegg",
-            email: "koen.chegg@brinul.com",
-            jobTitle: "UX/UI Designer",
-            status: "PENDING",
-            avatar: "/placeholder.svg?height=40&width=40",
-        },
-        {
-            id: 6,
-            name: "Kim Armstrong",
-            email: "kim.armstrong@brinul.com",
-            jobTitle: "UX/UI Designer",
-            status: "RESIGN",
-            avatar: "/placeholder.svg?height=40&width=40",
-        },
-    ]
-
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case "ACTIVE":
-                return { bgcolor: "#e8f5e8", color: "#2e7d32" }
-            case "PROBATION":
-                return { bgcolor: "#e3f2fd", color: "#1976d2" }
-            case "ON BOARDING":
-                return { bgcolor: "#fff3e0", color: "#f57c00" }
-            case "PENDING":
-                return { bgcolor: "#e3f2fd", color: "#1976d2" }
-            case "RESIGN":
-                return { bgcolor: "#ffebee", color: "#d32f2f" }
-            default:
-                return { bgcolor: "#f5f5f5", color: "#666" }
-        }
-    }
-
-    const getStatusIcon = (status: string) => {
-        switch (status) {
-            case "ACTIVE":
-                return "●"
-            case "PROBATION":
-                return "●"
-            case "ON BOARDING":
-                return "●"
-            case "PENDING":
-                return "●"
-            case "RESIGN":
-                return "●"
-            default:
-                return "●"
-        }
-    }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get("https://api.escuelajs.co/api/v1/users");
+                console.log("users data fetched++++++", res.data);
+                setUsers(res.data);
+            } catch (err) {
+                console.log("Error fetching users--------", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     const MetricCard = ({ title, value, change, changeType, icon: Icon }) => {
         const isUp = changeType === "up";
@@ -216,7 +150,7 @@ const Dashboard = () => {
 
     const handleSelectAll = (event) => {
         if (event.target.checked) {
-            setSelected(tableData.map((row) => row.id))
+            setSelected(users.map((user) => user.id))
         } else {
             setSelected([])
         }
@@ -272,10 +206,6 @@ const Dashboard = () => {
             )
         }
         return <UnfoldMoreIcon style={{ fontSize: "16px", marginLeft: "4px", color: "#ccc" }} />
-    }
-
-    const handleCopy = (text) => {
-        navigator.clipboard.writeText(text)
     }
 
     return (
@@ -780,8 +710,8 @@ const Dashboard = () => {
                                     <TableRow sx={{ height: 32, backgroundColor: "#F9F9FB" }}>
                                         <TableCell padding="checkbox" sx={{ py: 0, height: 32 }}>
                                             <Checkbox
-                                                indeterminate={selected.length > 0 && selected.length < tableData.length}
-                                                checked={tableData.length > 0 && selected.length === tableData.length}
+                                                indeterminate={selected.length > 0 && selected.length < users.length}
+                                                checked={users.length > 0 && selected.length === users.length}
                                                 onChange={handleSelectAll}
                                                 size="small"
                                                 sx={{ p: 0.5 }}
@@ -791,8 +721,8 @@ const Dashboard = () => {
                                         {[
                                             { label: "People", key: "clientId" },
                                             { label: "Email ID", key: "name" },
-                                            { label: "Job Title", key: "price" },
-                                            { label: "Status", key: "address" },
+                                            { label: "Password", key: "price" },
+                                            { label: "Role", key: "address" },
                                             { label: "Action", key: "date" },
                                         ].map(({ label, key }) => (
                                             <TableCell
@@ -823,13 +753,13 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {tableData.map((row, index) => {
-                                        const isItemSelected = isSelected(row.id)
+                                    {users.map((user, index) => {
+                                        const isItemSelected = isSelected(user.id)
                                         return (
                                             <TableRow
-                                                key={row.id}
+                                                key={user.id}
                                                 hover
-                                                onClick={() => handleSelectRow(row.id)}
+                                                onClick={() => handleSelectRow(user.id)}
                                                 selected={isItemSelected}
                                                 style={{
                                                     cursor: "pointer",
@@ -862,14 +792,14 @@ const Dashboard = () => {
                                                                 style={{
                                                                     width: "32px",
                                                                     height: "32px",
-                                                                    backgroundColor: getAvatarColor(row.name),
+                                                                    backgroundColor: getAvatarColor(user.name),
                                                                     fontSize: "12px",
                                                                     marginRight: "12px",
                                                                 }}
                                                             >
-                                                                {getInitials(row.name)}
+                                                                {getInitials(user.avatar)}
                                                             </Avatar>
-                                                            <span style={{ fontWeight: 400, fontSize: "16px", color: "#101219" }}>{row.name}</span>
+                                                            <span style={{ fontWeight: 400, fontSize: "16px", color: "#101219" }}>{user.name}</span>
                                                         </div>
                                                     </div>
                                                 </TableCell>
@@ -881,7 +811,7 @@ const Dashboard = () => {
                                                     height: 48,
                                                 }}>
                                                     <div className="d-flex align-items-center justify-content-between">
-                                                        {row.email}
+                                                        {user.email}
                                                     </div>
                                                 </TableCell>
                                                 <TableCell style={{
@@ -892,7 +822,7 @@ const Dashboard = () => {
                                                     height: 48,
                                                 }}>
                                                     <div className="d-flex align-items-center justify-content-between">
-                                                        {row.jobTitle}
+                                                        {user.password}
                                                     </div>
                                                 </TableCell>
 
@@ -920,30 +850,12 @@ const Dashboard = () => {
                                                                 textTransform: "uppercase",
                                                                 width: "fit-content",
                                                                 gap: "6px",
-                                                                color:
-                                                                    row.status === "ACTIVE"
-                                                                        ? "#38BC5C"
-                                                                        : row.status === "PROBATION"
-                                                                            ? "#1E9CBC"
-                                                                            : row.status === "RESIGN"
-                                                                                ? "#F31616"
-                                                                                : row.status === "ON BOARDING"
-                                                                                    ? "#A35F00"
-                                                                                    : "#6B7280",
-                                                                borderColor:
-                                                                    row.status === "ACTIVE"
-                                                                        ? "#38BC5C"
-                                                                        : row.status === "PROBATION"
-                                                                            ? "#1E9CBC"
-                                                                            : row.status === "RESIGN"
-                                                                                ? "#F31616"
-                                                                                : row.status === "ON BOARDING"
-                                                                                    ? "#A35F00"
-                                                                                    : "#D1D5DB",
+                                                                color: user.role === "CUSTOMER" ? "#38BC5C" : "#F31616",
+                                                                borderColor: user.role === "CUSTOMER" ? "#38BC5C" : "#F31616",
                                                                 backgroundColor: "#fff",
                                                             }}
                                                         >
-                                                            <span
+                                                            {/* <span
                                                                 style={{
                                                                     width: "8px",
                                                                     height: "8px",
@@ -960,8 +872,8 @@ const Dashboard = () => {
                                                                                         : "#9CA3AF",
                                                                     display: "inline-block",
                                                                 }}
-                                                            ></span>
-                                                            {row.status}
+                                                            ></span> */}
+                                                            {user.role}
                                                         </div>
                                                     </div>
                                                 </TableCell>
@@ -980,7 +892,7 @@ const Dashboard = () => {
                                                     }}
                                                 >
                                                     <div className="d-flex align-items-center justify-content-between">
-                                                        {row.address}
+                                                        {user.address}
                                                         <div className="d-flex align-items-center gap-3">
                                                             <img
                                                                 src={fileicon}
