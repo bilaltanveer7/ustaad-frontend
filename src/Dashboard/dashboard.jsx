@@ -78,9 +78,10 @@ const Dashboard = () => {
     const [jobTitleFilter, setJobTitleFilter] = useState("All Job Titles")
     const [statusFilter, setStatusFilter] = useState("All Status")
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" })
-    // const [tableData, setTableData] = useState([])
     const [loading, setLoading] = useState(true)
     const [users, setUsers] = useState([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const usersPerPage = 5;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -207,6 +208,11 @@ const Dashboard = () => {
         }
         return <UnfoldMoreIcon style={{ fontSize: "16px", marginLeft: "4px", color: "#ccc" }} />
     }
+
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+    const totalPages = Math.ceil(users.length / usersPerPage);
 
     return (
         <>
@@ -850,29 +856,11 @@ const Dashboard = () => {
                                                                 textTransform: "uppercase",
                                                                 width: "fit-content",
                                                                 gap: "6px",
-                                                                color: user.role === "CUSTOMER" ? "#38BC5C" : "#F31616",
-                                                                borderColor: user.role === "CUSTOMER" ? "#38BC5C" : "#F31616",
+                                                                color: user.role?.toUpperCase() === "CUSTOMER" ? "#38BC5C" : "#F31616",
+                                                                borderColor: user.role?.toUpperCase() === "CUSTOMER" ? "#38BC5C" : "#F31616",
                                                                 backgroundColor: "#fff",
                                                             }}
                                                         >
-                                                            {/* <span
-                                                                style={{
-                                                                    width: "8px",
-                                                                    height: "8px",
-                                                                    borderRadius: "50%",
-                                                                    backgroundColor:
-                                                                        row.status === "active"
-                                                                            ? "#38BC5C"
-                                                                            : row.status === "probation"
-                                                                                ? "#1E9CBC"
-                                                                                : row.status === "resign"
-                                                                                    ? "#F31616"
-                                                                                    : row.status === "on boarding"
-                                                                                        ? "#A35F00"
-                                                                                        : "#9CA3AF",
-                                                                    display: "inline-block",
-                                                                }}
-                                                            ></span> */}
                                                             {user.role}
                                                         </div>
                                                     </div>
@@ -915,6 +903,32 @@ const Dashboard = () => {
                         </TableContainer>
                     </Box>
                 </Box>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "10px",
+                        marginTop: "20px",
+                    }}
+                >
+                    <Button
+                        variant="outlined"
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage((prev) => prev - 1)}
+                    >
+                        Previous
+                    </Button>
+                    <span>
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <Button
+                        variant="outlined"
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage((prev) => prev + 1)}
+                    >
+                        Next
+                    </Button>
+                </div>
             </div>
         </>
     )
