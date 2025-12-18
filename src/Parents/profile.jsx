@@ -145,8 +145,35 @@ const ParentsProfile = () => {
     setSortConfig({ key, direction });
   };
 
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text);
+  const handleCopy = async (text) => {
+    if (text === undefined || text === null) return;
+    const value = String(text);
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(value);
+        return;
+      }
+    } catch (err) {
+      // Fall back to legacy copy approach below
+    }
+
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "0";
+      textarea.style.left = "0";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    } catch (err) {
+      console.warn("Copy failed:", err);
+    }
   };
 
   const handleInputChange = (field, value) => {

@@ -11,7 +11,10 @@ import {
   Paper,
   Alert,
   CircularProgress,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Logo from "../assets/logo.png";
 import { useAuthStore } from "../store/useAuthStore";
 
@@ -25,6 +28,7 @@ const LoginScreen = () => {
     rememberMe: false,
   });
   const [localError, setLocalError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     document.title = "Admin Login";
@@ -133,13 +137,28 @@ const LoginScreen = () => {
             <TextField
               label="Password"
               name="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Enter password"
               value={formData.password}
               onChange={handleInputChange}
               disabled={isLoading}
               fullWidth
               required
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={() => setShowPassword((v) => !v)}
+                      onMouseDown={(e) => e.preventDefault()}
+                      disabled={isLoading}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
 
             <FormControlLabel
