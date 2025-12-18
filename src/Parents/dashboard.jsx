@@ -291,7 +291,7 @@ const ParentDashboard = () => {
                     {pagination?.total || tableData.length} Results
                   </span>
                 </div>
-                <Button
+                {/* <Button
                   variant="contained"
                   startIcon={<AddIcon />}
                   style={{
@@ -304,7 +304,7 @@ const ParentDashboard = () => {
                   }}
                 >
                   Add New
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>

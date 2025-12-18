@@ -79,10 +79,12 @@ const TutorsProfile = () => {
   // Update profile data when tutor details are loaded
   useEffect(() => {
     if (tutorDetails) {
-      const { tutor, totalExperience } = tutorDetails;
+      const { tutor, totalExperience, timesHired } = tutorDetails;
 
-      setProfileData({
-        noOfHires: "12", // Will need to get this from subscriptions/bookings data when available
+      setProfileData((prev) => ({
+        ...prev,
+        noOfHires:
+          typeof timesHired === "number" ? timesHired.toString() : prev.noOfHires,
         joiningDate: tutor?.createdAt
           ? new Date(tutor.createdAt).toLocaleDateString()
           : "N/A",
@@ -93,7 +95,7 @@ const TutorsProfile = () => {
           ? `Rs. ${tutor.balance.toFixed(2)}`
           : "Rs. 0.00",
         description: tutor?.about || "No description available",
-      });
+      }));
     }
   }, [tutorDetails]);
 

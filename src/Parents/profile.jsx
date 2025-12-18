@@ -238,7 +238,7 @@ const ParentsProfile = () => {
 
   const childrenData = children.map(child => ({
     id: child.id,
-    childName: child.name || "N/A",
+    childName: child.fullName || "N/A",
     grade: child.grade || "N/A",
     age: child.age || "N/A", 
     subjects: child.subjects?.join(", ") || "N/A",

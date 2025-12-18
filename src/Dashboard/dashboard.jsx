@@ -103,6 +103,100 @@ const Dashboard = () => {
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
+  const formatSignedPercent = (percent) => {
+    const n = Number(percent);
+    if (!Number.isFinite(n)) return null;
+    const abs = Math.abs(n);
+    const fixed = abs % 1 === 0 ? abs.toFixed(0) : abs.toFixed(2);
+    const trimmed = fixed.replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
+    const sign = n >= 0 ? "+" : "-";
+    return `${sign}${trimmed}%`;
+  };
+
+  const getStatChange = (key) => stats?.comparison?.change?.[key];
+
+  const getChangeText = (key, fallbackText) => {
+    const formatted = formatSignedPercent(getStatChange(key)?.percent);
+    return formatted ?? fallbackText;
+  };
+
+  const getChangeType = (key, fallbackType) => {
+    const change = getStatChange(key);
+    if (typeof change?.delta === "number") return change.delta >= 0 ? "up" : "down";
+    if (typeof change?.percent === "number")
+      return change.percent >= 0 ? "up" : "down";
+    return fallbackType;
+  };
+
+  const hasUsersData =
+    typeof stats?.totalUsers === "number" &&
+    typeof stats?.totalParents === "number" &&
+    typeof stats?.totalTutors === "number";
+
+  const totalUsersValue = typeof stats?.totalUsers === "number" ? stats.totalUsers : null;
+  const totalParentsValue =
+    typeof stats?.totalParents === "number" ? stats.totalParents : null;
+  const totalTutorsValue = typeof stats?.totalTutors === "number" ? stats.totalTutors : null;
+
+  const derivedOffloadedUsers =
+    hasUsersData && totalUsersValue != null
+      ? Math.max(0, totalUsersValue - totalParentsValue - totalTutorsValue)
+      : null;
+
+  const derivedKnownUsersPercent =
+    hasUsersData && totalUsersValue > 0
+      ? Math.round(((totalParentsValue + totalTutorsValue) / totalUsersValue) * 100)
+      : null;
+
+  const derivedTutorsPercent =
+    hasUsersData && totalUsersValue > 0
+      ? Math.max(0, Math.min(100, (totalTutorsValue / totalUsersValue) * 100))
+      : null;
+  const derivedParentsPercent =
+    hasUsersData && totalUsersValue > 0
+      ? Math.max(0, Math.min(100, (totalParentsValue / totalUsersValue) * 100))
+      : null;
+  const derivedOffloadedPercent =
+    hasUsersData && totalUsersValue > 0
+      ? Math.max(
+          0,
+          Math.min(
+            100,
+            100 - (derivedTutorsPercent || 0) - (derivedParentsPercent || 0)
+          )
+        )
+      : null;
+
+  const hasSubscriptionsData = typeof stats?.totalSubscriptions === "number";
+  const totalSubscriptionsValue = hasSubscriptionsData ? stats.totalSubscriptions : null;
+  const activeSubscriptionsValue =
+    typeof stats?.activeSubscriptions === "number" ? stats.activeSubscriptions : null;
+  const completedSubscriptionsValue =
+    typeof stats?.completedSubscriptions === "number"
+      ? stats.completedSubscriptions
+      : null;
+  const remainingSubscriptionsValue =
+    hasSubscriptionsData &&
+    typeof activeSubscriptionsValue === "number" &&
+    typeof completedSubscriptionsValue === "number"
+      ? Math.max(
+          0,
+          totalSubscriptionsValue - activeSubscriptionsValue - completedSubscriptionsValue
+        )
+      : null;
+
+  const computedJobData =
+    hasSubscriptionsData &&
+    typeof activeSubscriptionsValue === "number" &&
+    typeof completedSubscriptionsValue === "number" &&
+    typeof remainingSubscriptionsValue === "number"
+      ? [
+          { name: "Active", value: activeSubscriptionsValue, color: "#00bcd4" },
+          { name: "Completed", value: completedSubscriptionsValue, color: "#4caf50" },
+          { name: "Remaining", value: remainingSubscriptionsValue, color: "#e0e0e0" },
+        ]
+      : jobData;
+
   // Fetch stats on component mount and when time filter changes
   useEffect(() => {
     let days = null;
@@ -452,7 +546,7 @@ const Dashboard = () => {
               </Box>
 
               {/* Right Side: Add New Button */}
-              <Button
+              {/* <Button
                 variant="contained"
                 startIcon={<Add />}
                 sx={{
@@ -465,7 +559,7 @@ const Dashboard = () => {
                 }}
               >
                 Add New
-              </Button>
+              </Button> */}
             </Box>
           </Box>
 
@@ -498,8 +592,8 @@ const Dashboard = () => {
               <MetricCard
                 title="Total Users"
                 value={stats?.totalUsers || 0}
-                change="+13%"
-                changeType="up"
+                change={getChangeText("totalUsers", "+13%")}
+                changeType={getChangeType("totalUsers", "up")}
                 icon={Group}
               />
             </Box>
@@ -507,8 +601,8 @@ const Dashboard = () => {
               <MetricCard
                 title="Parents"
                 value={stats?.totalParents || 0}
-                change="+12%"
-                changeType="up"
+                change={getChangeText("totalParents", "+12%")}
+                changeType={getChangeType("totalParents", "up")}
                 icon={Person}
               />
             </Box>
@@ -516,8 +610,8 @@ const Dashboard = () => {
               <MetricCard
                 title="Tutors"
                 value={stats?.totalTutors || 0}
-                change="-12%"
-                changeType="down"
+                change={getChangeText("totalTutors", "-12%")}
+                changeType={getChangeType("totalTutors", "down")}
                 icon={School}
               />
             </Box>
@@ -672,15 +766,22 @@ const Dashboard = () => {
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
                       >
-                        <TrendingUp sx={{ fontSize: 16, color: "#38BC5C" }} />
+                    {getChangeType("totalUsers", "up") === "up" ? (
+                      <TrendingUp sx={{ fontSize: 16, color: "#38BC5C" }} />
+                    ) : (
+                      <TrendingDown sx={{ fontSize: 16, color: "#F31616" }} />
+                    )}
                         <Typography
                           sx={{
-                            color: "#38BC5C",
+                        color:
+                          getChangeType("totalUsers", "up") === "up"
+                            ? "#38BC5C"
+                            : "#F31616",
                             fontWeight: 400,
                             fontSize: "14px",
                           }}
                         >
-                          +12%
+                      {getChangeText("totalUsers", "+12%")}
                         </Typography>
                         <Typography
                           sx={{
@@ -705,12 +806,14 @@ const Dashboard = () => {
                       <Typography
                         sx={{ fontWeight: 600, fontSize: 20, color: "#101219" }}
                       >
-                        80%
+                        {derivedKnownUsersPercent != null
+                          ? `${derivedKnownUsersPercent}%`
+                          : "80%"}
                       </Typography>
                       <Typography
                         sx={{ fontWeight: 500, fontSize: 14, color: "#101219" }}
                       >
-                        2310
+                        {totalUsersValue != null ? totalUsersValue.toLocaleString() : "2310"}
                       </Typography>
                     </Box>
 
@@ -725,9 +828,33 @@ const Dashboard = () => {
                         mb: 1.5,
                       }}
                     >
-                      <Box sx={{ width: "40%", backgroundColor: "#25A798" }} />
-                      <Box sx={{ width: "40%", backgroundColor: "#1E9CBC" }} />
-                      <Box sx={{ width: "20%", backgroundColor: "#C8CDDA" }} />
+                      <Box
+                        sx={{
+                          width:
+                            derivedTutorsPercent != null
+                              ? `${derivedTutorsPercent}%`
+                              : "40%",
+                          backgroundColor: "#25A798",
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          width:
+                            derivedParentsPercent != null
+                              ? `${derivedParentsPercent}%`
+                              : "40%",
+                          backgroundColor: "#1E9CBC",
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          width:
+                            derivedOffloadedPercent != null
+                              ? `${derivedOffloadedPercent}%`
+                              : "20%",
+                          backgroundColor: "#C8CDDA",
+                        }}
+                      />
                     </Box>
 
                     {/* Legend */}
@@ -818,17 +945,26 @@ const Dashboard = () => {
                             gap: 0.5,
                           }}
                         >
-                          <TrendingUp
-                            sx={{ fontSize: 16, color: "#4caf50", mr: 0.5 }}
-                          />
+                          {getChangeType("totalSubscriptions", "up") === "up" ? (
+                            <TrendingUp
+                              sx={{ fontSize: 16, color: "#4caf50", mr: 0.5 }}
+                            />
+                          ) : (
+                            <TrendingDown
+                              sx={{ fontSize: 16, color: "#F31616", mr: 0.5 }}
+                            />
+                          )}
                           <Typography
                             sx={{
-                              color: "#38BC5C",
+                              color:
+                                getChangeType("totalSubscriptions", "up") === "up"
+                                  ? "#38BC5C"
+                                  : "#F31616",
                               fontWeight: 400,
                               fontSize: "14px",
                             }}
                           >
-                            +5.5%
+                            {getChangeText("totalSubscriptions", "+5.5%")}
                           </Typography>
                           <Typography
                             sx={{
@@ -855,7 +991,7 @@ const Dashboard = () => {
                           <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                               <Pie
-                                data={jobData}
+                                data={computedJobData}
                                 cx="50%"
                                 cy="100%"
                                 innerRadius={30}
@@ -864,7 +1000,7 @@ const Dashboard = () => {
                                 endAngle={0}
                                 dataKey="value"
                               >
-                                {jobData.map((entry, index) => (
+                                {computedJobData.map((entry, index) => (
                                   <Cell
                                     key={`cell-${index}`}
                                     fill={entry.color}
@@ -886,7 +1022,9 @@ const Dashboard = () => {
                               variant="h6"
                               sx={{ fontWeight: "bold", fontSize: "1.25rem" }}
                             >
-                              773
+                              {totalSubscriptionsValue != null
+                                ? totalSubscriptionsValue.toLocaleString()
+                                : "773"}
                             </Typography>
                             <Typography
                               variant="caption"
@@ -931,7 +1069,9 @@ const Dashboard = () => {
                                 color: "#101219",
                               }}
                             >
-                              15
+                              {activeSubscriptionsValue != null
+                                ? activeSubscriptionsValue.toLocaleString()
+                                : "15"}
                             </Typography>
                           </Box>
                           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -961,7 +1101,9 @@ const Dashboard = () => {
                                 color: "#101219",
                               }}
                             >
-                              20
+                              {completedSubscriptionsValue != null
+                                ? completedSubscriptionsValue.toLocaleString()
+                                : "20"}
                             </Typography>
                           </Box>
                         </Box>

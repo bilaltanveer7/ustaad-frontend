@@ -242,7 +242,7 @@ const TutorDashboard = () => {
                                         {pagination?.total || tableData.length} Results
                                     </span>
                                 </div>
-                                <Button
+                                {/* <Button
                                     variant="contained"
                                     startIcon={<AddIcon />}
                                     style={{
@@ -255,7 +255,7 @@ const TutorDashboard = () => {
                                     }}
                                 >
                                     Add New
-                                </Button>
+                                </Button> */}
                             </div>
                         </div>
                     </div>

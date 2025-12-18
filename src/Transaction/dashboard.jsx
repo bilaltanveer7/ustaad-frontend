@@ -283,7 +283,7 @@ const TransactionDashboard = () => {
                      Click "View" to see transaction details
                    </span>
                 </div>
-                <Button
+                {/* <Button
                   variant="contained"
                   startIcon={<AddIcon />}
                   style={{
@@ -296,7 +296,7 @@ const TransactionDashboard = () => {
                   }}
                 >
                   Add New
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
