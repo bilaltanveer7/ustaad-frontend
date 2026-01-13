@@ -63,8 +63,6 @@ export default function SideNav() {
     const { user, logout } = useAuthStore();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [userAnchorEl, setUserAnchorEl] = React.useState(null);
-
-    // Notification menu state
     const [notificationAnchorEl, setNotificationAnchorEl] = React.useState(null);
 
     const handleAvatarClick = (event) => {
@@ -75,22 +73,14 @@ export default function SideNav() {
         setNotificationAnchorEl(event.currentTarget);
     };
 
-    const handleMenuNotiClose = () => {
-        setUserAnchorEl(null);
-    };
-
     const handleNotificationClose = () => {
         setNotificationAnchorEl(null);
     };
 
     const isNotificationOpen = Boolean(notificationAnchorEl);
 
-    // const handleMenuClose = () => {
-    //     setAnchorEl(null);
-    // };
-
     const handleMenuClose = () => {
-        setUserAnchorEl(null);  // Closes USER menu
+        setUserAnchorEl(null);
     };
 
     const handleLogout = () => {
@@ -144,10 +134,10 @@ export default function SideNav() {
                             <IconButton
                                 onClick={handleNotificationClick}
                                 sx={{
-                                    pr: 3, boxShadow: 'none',  // Removes all shadows
+                                    pr: 3, boxShadow: 'none',
                                     '&:hover': {
-                                        boxShadow: 'none',  // Specifically removes hover shadow
-                                        backgroundColor: 'transparent'  // Optional: removes hover background
+                                        boxShadow: 'none',
+                                        backgroundColor: 'transparent'
                                     }
                                 }}
                                 color="inherit"
@@ -169,11 +159,8 @@ export default function SideNav() {
                             </IconButton>
 
                             <Menu
-                                // anchorEl={anchorEl}
-                                // open={Boolean(anchorEl)}
-                                // onClose={handleMenuClose}
-                                anchorEl={userAnchorEl}      // ✅ Uses userAnchorEl
-                                open={Boolean(userAnchorEl)} // ✅ Uses userAnchorEl
+                                anchorEl={userAnchorEl}
+                                open={Boolean(userAnchorEl)}
                                 onClose={handleMenuClose}
                                 anchorOrigin={{
                                     vertical: 'bottom',
