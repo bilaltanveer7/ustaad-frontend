@@ -36,6 +36,7 @@ import {
   CalendarToday as CalendarTodayIcon,
   ArrowUpward as ArrowUpwardIcon,
   ArrowDownward as ArrowDownwardIcon,
+  Visibility as ViewIcon,
 } from "@mui/icons-material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -301,88 +302,88 @@ const TutorsProfile = () => {
   const experienceData =
     experience?.length > 0
       ? experience?.map((exp) => ({
-          id: exp.id,
-          company: exp.company || "N/A",
-          title: exp.description || "N/A", // API uses 'description' for job title/role
-          startYear: exp.startDate
-            ? new Date(exp.startDate).getFullYear().toString()
-            : "N/A",
-          endYear: exp.endDate
-            ? new Date(exp.endDate).getFullYear().toString()
-            : "Present",
-        }))
+        id: exp.id,
+        company: exp.company || "N/A",
+        title: exp.description || "N/A", // API uses 'description' for job title/role
+        startYear: exp.startDate
+          ? new Date(exp.startDate).getFullYear().toString()
+          : "N/A",
+        endYear: exp.endDate
+          ? new Date(exp.endDate).getFullYear().toString()
+          : "Present",
+      }))
       : [];
 
   const educationData =
     education?.length > 0
       ? education?.map((edu) => ({
-          id: edu.id,
-          institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-          degree: edu.description || "N/A", // API uses 'description' for degree info
-          startYear: edu.startDate
-            ? new Date(edu.startDate).getFullYear().toString()
-            : "N/A",
-          endYear: edu.endDate
-            ? new Date(edu.endDate).getFullYear().toString()
-            : "Present",
-        }))
+        id: edu.id,
+        institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
+        degree: edu.description || "N/A", // API uses 'description' for degree info
+        startYear: edu.startDate
+          ? new Date(edu.startDate).getFullYear().toString()
+          : "N/A",
+        endYear: edu.endDate
+          ? new Date(edu.endDate).getFullYear().toString()
+          : "Present",
+      }))
       : [];
 
   // Transform API transactions data for display
   const transactionsData = transactions
     ? // Handle both single object and array cases
-      (Array.isArray(transactions) ? transactions : [transactions]).map(
-        (tx) => ({
-          id: tx.id,
-          payment: {
-            name: tutor?.User?.fullName || "Unknown",
-            cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
-          },
-          child: {
-            name: "Student", // API doesn't provide child info, using placeholder
-            avatar: "/placeholder.svg?height=32&width=32",
-          },
-          pay: tx.amount || 0,
-          paymentMethod: {
-            type: "bank",
-            accountNumber: tutor?.accountNumber || "N/A",
-          },
-          transactionDate: tx.createdAt
-            ? new Date(tx.createdAt).toLocaleDateString()
-            : "N/A",
-          status: tx.status || "UNKNOWN",
-        })
-      )
+    (Array.isArray(transactions) ? transactions : [transactions]).map(
+      (tx) => ({
+        id: tx.id,
+        payment: {
+          name: tutor?.User?.fullName || "Unknown",
+          cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
+        },
+        child: {
+          name: "Student", // API doesn't provide child info, using placeholder
+          avatar: "/placeholder.svg?height=32&width=32",
+        },
+        pay: tx.amount || 0,
+        paymentMethod: {
+          type: "bank",
+          accountNumber: tutor?.accountNumber || "N/A",
+        },
+        transactionDate: tx.createdAt
+          ? new Date(tx.createdAt).toLocaleDateString()
+          : "N/A",
+        status: tx.status || "UNKNOWN",
+      })
+    )
     : [];
 
   // Transform API documents data for display
   const documentsData = documents
     ? [
-        {
-          id: 1,
-          name: "Resume",
-          type: documents.resume ? (documents.resume.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
-          url: `${config.tutorDocumentUrl}${documents.resume}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.resume ? "Available" : "Missing",
-        },
-        {
-          id: 2,
-          name: "ID Front", 
-          type: documents.idFront ? (documents.idFront.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
-          url: `${config.tutorDocumentUrl}${documents.idFront}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.idFront ? "Available" : "Missing",
-        },
-        {
-          id: 3,
-          name: "ID Back",
-          type: documents.idBack ? (documents.idBack.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
-          url: `${config.tutorDocumentUrl}${documents.idBack}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.idBack ? "Available" : "Missing",
-        },
-      ].filter((doc) => doc.url)
+      {
+        id: 1,
+        name: "Resume",
+        type: documents.resume ? (documents.resume.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
+        url: `${config.tutorDocumentUrl}${documents.resume}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.resume ? "Available" : "Missing",
+      },
+      {
+        id: 2,
+        name: "ID Front",
+        type: documents.idFront ? (documents.idFront.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
+        url: `${config.tutorDocumentUrl}${documents.idFront}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.idFront ? "Available" : "Missing",
+      },
+      {
+        id: 3,
+        name: "ID Back",
+        type: documents.idBack ? (documents.idBack.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
+        url: `${config.tutorDocumentUrl}${documents.idBack}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.idBack ? "Available" : "Missing",
+      },
+    ].filter((doc) => doc.url)
     : [];
 
   const childrenData = [
@@ -655,26 +656,26 @@ const TutorsProfile = () => {
                               row.status === "COMPLETED"
                                 ? "#EEFBF4"
                                 : row.status === "IN_REVIEW"
-                                ? "#FFF4E6"
-                                : row.status === "FAILED"
-                                ? "#FFEBEE"
-                                : "#F5F5F5",
+                                  ? "#FFF4E6"
+                                  : row.status === "FAILED"
+                                    ? "#FFEBEE"
+                                    : "#F5F5F5",
                             border:
                               row.status === "COMPLETED"
                                 ? "1px solid #B2EECC"
                                 : row.status === "IN_REVIEW"
-                                ? "1px solid #FFD54F"
-                                : row.status === "FAILED"
-                                ? "1px solid #FFCDD2"
-                                : "1px solid #E0E0E0",
+                                  ? "1px solid #FFD54F"
+                                  : row.status === "FAILED"
+                                    ? "1px solid #FFCDD2"
+                                    : "1px solid #E0E0E0",
                             color:
                               row.status === "COMPLETED"
                                 ? "#17663A"
                                 : row.status === "IN_REVIEW"
-                                ? "#E65100"
-                                : row.status === "FAILED"
-                                ? "#C62828"
-                                : "#424242",
+                                  ? "#E65100"
+                                  : row.status === "FAILED"
+                                    ? "#C62828"
+                                    : "#424242",
                             fontWeight: 500,
                             fontSize: "12px",
                           }}
@@ -1012,19 +1013,28 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell style={{ border: "1px solid #e0e0e0" }}>
                         {row.url && (
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => handleDocumentView(row.url)}
-                            style={{
-                              textTransform: "none",
-                              fontSize: "12px",
-                              borderColor: "#1E9CBC",
-                              color: "#1E9CBC",
-                            }}
-                          >
-                            View
-                          </Button>
+                          // <Button
+                          //   variant="outlined"
+                          //   size="small"
+                          //   onClick={() => handleDocumentView(row.url)}
+                          //   style={{
+                          //     textTransform: "none",
+                          //     fontSize: "12px",
+                          //     borderColor: "#1E9CBC",
+                          //     color: "#1E9CBC",
+                          //   }}
+                          // >
+                          //   View
+                          // </Button>
+                          <Tooltip title="View Document">
+                            <IconButton
+                              size="small"
+                              onClick={() => handleDocumentView(row.url)}
+                              sx={{ color: "#1976D2" }}
+                            >
+                              <ViewIcon />
+                            </IconButton>
+                          </Tooltip>
                         )}
                       </TableCell>
                     </TableRow>
@@ -1558,7 +1568,7 @@ const TutorsProfile = () => {
                     border: "1px solid #D1D1DB",
                     borderRadius: "8px",
                     marginBottom: "20px",
-                    width: "48%",
+                    width: "51%",
                   }}
                 >
                   <Tabs

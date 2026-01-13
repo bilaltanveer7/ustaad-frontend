@@ -30,7 +30,10 @@ import logo from "../assets/logo.png"
 import avatarImg from "../assets/Avatar.png"
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
-
+import SchoolIcon from '@mui/icons-material/School';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Badge from '@mui/material/Badge';
 const drawerWidth = 260;
 const selectedItem = 'Dashboard';
 
@@ -40,7 +43,7 @@ const menuSections = [
         items: [
             { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
             { text: 'Parents', icon: <PeopleIcon />, path: '/parent-dashboard' },
-            { text: 'Tutors', icon: <CalendarTodayIcon />, path: '/tutor-dashboard' },
+            { text: 'Tutors', icon: <SchoolIcon />, path: '/tutor-dashboard' },
             { text: 'Transaction Log', icon: <ReceiptLongIcon />, path: '/transaction-dashboard' },
             { text: 'Admins', icon: <AdminPanelSettingsIcon />, path: '/admins-dashboard' },
             { text: 'Pending Users', icon: <HourglassEmptyIcon />, path: '/pending-users' },
@@ -49,7 +52,7 @@ const menuSections = [
     {
         title: 'OTHERS',
         items: [
-            { text: 'Setting', icon: <SettingsIcon />, path: '/settings' },
+            { text: 'Setting', icon: <SettingsIcon />, path: '' },
         ],
     },
 ];
@@ -59,13 +62,35 @@ export default function SideNav() {
     const navigate = useNavigate();
     const { user, logout } = useAuthStore();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    
+    const [userAnchorEl, setUserAnchorEl] = React.useState(null);
+
+    // Notification menu state
+    const [notificationAnchorEl, setNotificationAnchorEl] = React.useState(null);
+
     const handleAvatarClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        setUserAnchorEl(event.currentTarget);
     };
 
+    const handleNotificationClick = (event) => {
+        setNotificationAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuNotiClose = () => {
+        setUserAnchorEl(null);
+    };
+
+    const handleNotificationClose = () => {
+        setNotificationAnchorEl(null);
+    };
+
+    const isNotificationOpen = Boolean(notificationAnchorEl);
+
+    // const handleMenuClose = () => {
+    //     setAnchorEl(null);
+    // };
+
     const handleMenuClose = () => {
-        setAnchorEl(null);
+        setUserAnchorEl(null);  // Closes USER menu
     };
 
     const handleLogout = () => {
@@ -76,7 +101,7 @@ export default function SideNav() {
 
     const handleProfile = () => {
         // Navigate to profile page (can be customized based on user role)
-        navigate('/profile');
+        // navigate('/profile');
         handleMenuClose();
     };
 
@@ -101,12 +126,12 @@ export default function SideNav() {
                         }}
                     >
                         <Box component="img" src={logo} alt="Logo" sx={{ height: 42, width: 31 }} />
-                        
+
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             {user?.name && (
                                 <Typography
                                     variant="body2"
-                                    sx={{ 
+                                    sx={{
                                         color: '#344767',
                                         fontWeight: 500,
                                         display: { xs: 'none', sm: 'block' }
@@ -115,6 +140,23 @@ export default function SideNav() {
                                     {user.name}
                                 </Typography>
                             )}
+
+                            <IconButton
+                                onClick={handleNotificationClick}
+                                sx={{
+                                    pr: 3, boxShadow: 'none',  // Removes all shadows
+                                    '&:hover': {
+                                        boxShadow: 'none',  // Specifically removes hover shadow
+                                        backgroundColor: 'transparent'  // Optional: removes hover background
+                                    }
+                                }}
+                                color="inherit"
+                            >
+                                <Badge badgeContent={3} color="error">
+                                    <NotificationsNoneIcon sx={{ fontSize: 35, color: '#1E9CBC' }} />
+                                </Badge>
+                            </IconButton>
+
                             <IconButton
                                 onClick={handleAvatarClick}
                                 sx={{ p: 0 }}
@@ -125,10 +167,13 @@ export default function SideNav() {
                                     sx={{ width: 36, height: 36 }}
                                 />
                             </IconButton>
-                            
+
                             <Menu
-                                anchorEl={anchorEl}
-                                open={Boolean(anchorEl)}
+                                // anchorEl={anchorEl}
+                                // open={Boolean(anchorEl)}
+                                // onClose={handleMenuClose}
+                                anchorEl={userAnchorEl}      // ✅ Uses userAnchorEl
+                                open={Boolean(userAnchorEl)} // ✅ Uses userAnchorEl
                                 onClose={handleMenuClose}
                                 anchorOrigin={{
                                     vertical: 'bottom',
@@ -146,15 +191,77 @@ export default function SideNav() {
                                     </ListItemIcon>
                                     <ListItemText>Profile</ListItemText>
                                 </MenuItem>
-                                
+
                                 <Divider />
-                                
+
                                 <MenuItem onClick={handleLogout} sx={{ py: 1.5, px: 2, color: 'error.main' }}>
                                     <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}>
                                         <LogoutIcon fontSize="small" />
                                     </ListItemIcon>
                                     <ListItemText>Logout</ListItemText>
                                 </MenuItem>
+                            </Menu>
+
+                            <Menu
+                                anchorEl={notificationAnchorEl}
+                                open={isNotificationOpen}
+                                onClose={handleNotificationClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                sx={{ mt: 1 }}
+                                PaperProps={{
+                                    sx: { width: 320, maxHeight: 400 }
+                                }}
+                            >
+                                <MenuItem
+                                    sx={{
+                                        py: 1.5,
+                                        px: 2,
+                                        borderBottom: '1px solid #e0e0e0',
+                                        justifyContent: 'flex-start'
+                                    }}
+                                    disabled
+                                >
+                                    <Typography variant="subtitle2" fontWeight={600}>
+                                        Notifications
+                                    </Typography>
+                                </MenuItem>
+
+                                {[
+                                    "New tutor joined the platform",
+                                    "Parent approved your profile",
+                                    "Payment received successfully",
+                                    "New message from parent"
+                                ].map((notification, index) => (
+                                    <MenuItem
+                                        key={index}
+                                        sx={{
+                                            py: 1.5,
+                                            px: 2,
+                                            borderBottom: index < 3 ? '1px solid #f0f0f0' : 'none',
+                                            '&:hover': { backgroundColor: '#f5f5f5' }
+                                        }}
+                                    >
+                                        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                                            <Box sx={{
+                                                width: 8,
+                                                height: 8,
+                                                borderRadius: '50%',
+                                                backgroundColor: '#4CAF50',
+                                                mt: 0.5
+                                            }} />
+                                            <Typography variant="body2" color="text.primary" sx={{ lineHeight: 1.3 }}>
+                                                {notification}
+                                            </Typography>
+                                        </Box>
+                                    </MenuItem>
+                                ))}
                             </Menu>
                         </Box>
                     </Box>

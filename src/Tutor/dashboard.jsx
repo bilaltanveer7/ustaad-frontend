@@ -3,6 +3,7 @@ import SideNav from '../sidebar/sidenav'
 import { useNavigate } from 'react-router-dom';
 import { useTutorStore } from '../store/useTutorStore';
 import { CircularProgress, Alert } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
 import {
     Box,
     Table,
@@ -38,19 +39,19 @@ const drawerWidth = 260;
 
 const TutorDashboard = () => {
     const navigate = useNavigate();
-    const { 
-        tutors, 
-        fetchTutors, 
-        isLoading, 
-        error, 
-        pagination 
+    const {
+        tutors,
+        fetchTutors,
+        isLoading,
+        error,
+        pagination
     } = useTutorStore();
-    
+
     const [selected, setSelected] = useState([])
     const [searchValue, setSearchValue] = useState("")
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" })
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     // Fetch tutors on component mount
     useEffect(() => {
         fetchTutors(currentPage, 20);
@@ -307,15 +308,33 @@ const TutorDashboard = () => {
                         </div>
                     )}
 
+                    {!isLoading && !error && (!tableData || tableData.length === 0) && (
+                        <div className="row">
+                            <div
+                                className="col-12"
+                                style={{
+                                    textAlign: "center",
+                                    padding: "4rem 2rem",
+                                    color: "#666",
+                                    fontSize: "16px"
+                                }}
+                            >
+                                <PersonIcon sx={{ fontSize: 64, color: "#ccc", mb: 2 }} />
+                                <div>No tutors yet</div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Table */}
-                    <div className="row">
-                        <div className="col-12">
-                            <TableContainer
-                                component={Paper}>
-                                <Table >
-                                    <TableHead>
-                                        <TableRow sx={{ height: 32 }}>
-                                            <TableCell padding="checkbox" sx={{ py: 0, height: 32 }}>
+                    {!isLoading && !error && tableData && tableData.length > 0 && (
+                        <div className="row">
+                            <div className="col-12">
+                                <TableContainer
+                                    component={Paper}>
+                                    <Table >
+                                        <TableHead>
+                                            <TableRow sx={{ height: 32, bgcolor: '#1E9CBC' }}>
+                                                {/* <TableCell padding="checkbox" sx={{ py: 0, height: 32 }}>
                                                 <Checkbox
                                                     indeterminate={selected.length > 0 && selected.length < tableData.length}
                                                     checked={tableData.length > 0 && selected.length === tableData.length}
@@ -323,145 +342,146 @@ const TutorDashboard = () => {
                                                     size="small"
                                                     sx={{ p: 0.5 }}
                                                 />
-                                            </TableCell>
+                                            </TableCell> */}
 
-                                            {[
-                                                { label: "Tutor ID", key: "clientId" },
-                                                { label: "Tutor Name", key: "name" },
-                                                { label: "Hourly Rate", key: "hourlyRate" },
-                                                { label: "Subjects", key: "subjects" },
-                                                { label: "Joined Date", key: "date" },
-                                            ].map(({ label, key }) => (
-                                                <TableCell
-                                                    key={key}
-                                                    sx={{
-                                                        fontSize: "14px",
-                                                        fontWeight: 500,
-                                                        color: "#4D5874",
-                                                        cursor: "pointer",
-                                                        py: 0,
-                                                        height: 32,
-                                                    }}
-                                                    onClick={() => handleSort(key)}
-                                                >
-                                                    <Box
+                                                {[
+                                                    { label: "Tutor ID", key: "clientId" },
+                                                    { label: "Tutor Name", key: "name" },
+                                                    { label: "Hourly Rate", key: "hourlyRate" },
+                                                    { label: "Subjects", key: "subjects" },
+                                                    { label: "Joining Date", key: "date" },
+                                                ].map(({ label, key }) => (
+                                                    <TableCell
+                                                        key={key}
                                                         sx={{
-                                                            display: "flex",
-                                                            justifyContent: "space-between",
-                                                            alignItems: "center",
-                                                            width: "100%",
+                                                            fontSize: "14px",
+                                                            fontWeight: 500,
+                                                            color: "#FFFFFF",
+                                                            // cursor: "pointer",
+                                                            py: 0,
+                                                            height: 32,
+                                                        }}
+                                                        onClick={() => handleSort(key)}
+                                                    >
+                                                        <Box
+                                                            sx={{
+                                                                display: "flex",
+                                                                justifyContent: "space-between",
+                                                                alignItems: "center",
+                                                                width: "100%",
+                                                            }}
+                                                        >
+                                                            <span>{label}</span>
+                                                            {getSortIcon(key)}
+                                                        </Box>
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {tableData.map((row, index) => {
+                                                const isItemSelected = isSelected(row.id)
+                                                return (
+                                                    <TableRow
+                                                        key={row.id}
+                                                        hover
+                                                        onClick={() => handleSelectRow(row.id)}
+                                                        selected={isItemSelected}
+                                                        style={{
+                                                            cursor: "pointer",
+                                                            backgroundColor: index % 2 === 0 ? "white" : "#fafafa",
+                                                            borderBottom: "1px solid #e0e0e0",
                                                         }}
                                                     >
-                                                        <span>{label}</span>
-                                                        {getSortIcon(key)}
-                                                    </Box>
-                                                </TableCell>
-                                            ))}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {tableData.map((row, index) => {
-                                            const isItemSelected = isSelected(row.id)
-                                            return (
-                                                <TableRow
-                                                    key={row.id}
-                                                    hover
-                                                    onClick={() => handleSelectRow(row.id)}
-                                                    selected={isItemSelected}
-                                                    style={{
-                                                        cursor: "pointer",
-                                                        backgroundColor: index % 2 === 0 ? "white" : "#fafafa",
-                                                        borderBottom: "1px solid #e0e0e0",
-                                                    }}
-                                                >
-                                                    <TableCell padding="checkbox" style={{ border: "1px solid #e0e0e0" }}>
+                                                        {/* <TableCell padding="checkbox" style={{ border: "1px solid #e0e0e0" }}>
                                                         <Checkbox checked={isItemSelected} size="small" />
-                                                    </TableCell>
-                                                    <TableCell
-                                                        onClick={() => navigate(`/tutor-profile/${row.id}`)}
-                                                        style={{
+                                                    </TableCell> */}
+                                                        <TableCell
+                                                            onClick={() => navigate(`/tutor-profile/${row.id}`)}
+                                                            style={{
+                                                                fontWeight: 400,
+                                                                fontSize: "16px",
+                                                                color: "#4D5874",
+                                                                border: "1px solid #e0e0e0",
+                                                                cursor: "pointer",
+                                                                py: 0
+                                                            }}
+                                                        >
+                                                            <div className="d-flex align-items-center justify-content-between">
+                                                                {row.clientId}
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                                                            <div className="d-flex align-items-center justify-content-between">
+                                                                <div className="d-flex align-items-center">
+                                                                    <Avatar
+                                                                        style={{
+                                                                            width: "32px",
+                                                                            height: "32px",
+                                                                            backgroundColor: getAvatarColor(row.name),
+                                                                            fontSize: "12px",
+                                                                            marginRight: "12px",
+                                                                        }}
+                                                                    >
+                                                                        {getInitials(row.name)}
+                                                                    </Avatar>
+                                                                    <span style={{ fontWeight: 400, fontSize: "16px", color: "#101219" }}>{row.name}</span>
+                                                                </div>
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell style={{ fontWeight: 400, fontSize: "16px", color: "#101219", border: "1px solid #e0e0e0" }}>
+                                                            <div className="d-flex align-items-center justify-content-between">
+                                                                <span style={{
+                                                                    color: '#2e7d32',
+                                                                    fontWeight: 500,
+                                                                    backgroundColor: '#e8f5e8',
+                                                                    padding: '4px 8px',
+                                                                    borderRadius: '4px'
+                                                                }}>
+                                                                    {row.hourlyRate}
+                                                                </span>
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell style={{ fontWeight: 400, fontSize: "14px", color: "#101219", border: "1px solid #e0e0e0" }}>
+                                                            <div className="d-flex align-items-center justify-content-between">
+                                                                <span style={{
+                                                                    maxWidth: '200px',
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    whiteSpace: 'nowrap'
+                                                                }}>
+                                                                    {row.subjects}
+                                                                </span>
+                                                                <IconButton
+                                                                    size="small"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation()
+                                                                        handleCopy(row.subjects)
+                                                                    }}
+                                                                    style={{ padding: "2px" }}
+                                                                >
+                                                                    <ContentCopyIcon style={{ fontSize: "14px", color: "#666" }} />
+                                                                </IconButton>
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell style={{
                                                             fontWeight: 400,
                                                             fontSize: "16px",
-                                                            color: "#4D5874",
-                                                            border: "1px solid #e0e0e0",
-                                                            cursor: "pointer",
-                                                            py:0
-                                                        }}
-                                                    >
-                                                        <div className="d-flex align-items-center justify-content-between">
-                                                            {row.clientId}
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                                                        <div className="d-flex align-items-center justify-content-between">
-                                                            <div className="d-flex align-items-center">
-                                                                <Avatar
-                                                                    style={{
-                                                                        width: "32px",
-                                                                        height: "32px",
-                                                                        backgroundColor: getAvatarColor(row.name),
-                                                                        fontSize: "12px",
-                                                                        marginRight: "12px",
-                                                                    }}
-                                                                >
-                                                                    {getInitials(row.name)}
-                                                                </Avatar>
-                                                                <span style={{ fontWeight: 400, fontSize: "16px", color: "#101219" }}>{row.name}</span>
+                                                            color: "#4D5874", border: "1px solid #e0e0e0"
+                                                        }}>
+                                                            <div className="d-flex align-items-center justify-content-between">
+                                                                {row.date}
                                                             </div>
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell style={{ fontWeight: 400, fontSize: "16px", color: "#101219", border: "1px solid #e0e0e0" }}>
-                                                        <div className="d-flex align-items-center justify-content-between">
-                                                            <span style={{ 
-                                                                color: '#2e7d32', 
-                                                                fontWeight: 500,
-                                                                backgroundColor: '#e8f5e8',
-                                                                padding: '4px 8px',
-                                                                borderRadius: '4px'
-                                                            }}>
-                                                                {row.hourlyRate}
-                                                            </span>
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell style={{ fontWeight: 400, fontSize: "14px", color: "#101219", border: "1px solid #e0e0e0" }}>
-                                                        <div className="d-flex align-items-center justify-content-between">
-                                                            <span style={{ 
-                                                                maxWidth: '200px',
-                                                                overflow: 'hidden',
-                                                                textOverflow: 'ellipsis',
-                                                                whiteSpace: 'nowrap'
-                                                            }}>
-                                                                {row.subjects}
-                                                            </span>
-                                                            <IconButton
-                                                                size="small"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation()
-                                                                    handleCopy(row.subjects)
-                                                                }}
-                                                                style={{ padding: "2px" }}
-                                                            >
-                                                                <ContentCopyIcon style={{ fontSize: "14px", color: "#666" }} />
-                                                            </IconButton>
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell style={{
-                                                        fontWeight: 400,
-                                                        fontSize: "16px",
-                                                        color: "#4D5874", border: "1px solid #e0e0e0"
-                                                    }}>
-                                                        <div className="d-flex align-items-center justify-content-between">
-                                                            {row.date}
-                                                        </div>
-                                                    </TableCell>
-                                                </TableRow>
-                                            )
-                                        })}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                            })}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </>

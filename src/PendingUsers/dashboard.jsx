@@ -251,7 +251,7 @@ const PendingUsersDashboard = () => {
               {/* Stats Cards */}
               <div className="row mb-4">
                 <div className="col-md-3">
-                  <Card sx={{ border: "1px solid #E0E3EB" }}>
+                  <Card sx={{ border: "1px solid #E0E3EB", borderRadius:'12px', boxShadow:'none' }}>
                     <CardContent>
                       <Box
                         sx={{
@@ -274,7 +274,7 @@ const PendingUsersDashboard = () => {
                   </Card>
                 </div>
                 <div className="col-md-3">
-                  <Card sx={{ border: "1px solid #E0E3EB" }}>
+                  <Card sx={{ border: "1px solid #E0E3EB", borderRadius:'12px', boxShadow:'none' }}>
                     <CardContent>
                       <Box
                         sx={{
@@ -297,7 +297,7 @@ const PendingUsersDashboard = () => {
                   </Card>
                 </div>
                 <div className="col-md-3">
-                  <Card sx={{ border: "1px solid #E0E3EB" }}>
+                  <Card sx={{ border: "1px solid #E0E3EB", borderRadius:'12px', boxShadow:'none' }}>
                     <CardContent>
                       <Box
                         sx={{
@@ -320,7 +320,7 @@ const PendingUsersDashboard = () => {
                   </Card>
                 </div>
                 <div className="col-md-3">
-                  <Card sx={{ border: "1px solid #E0E3EB" }}>
+                  <Card sx={{ border: "1px solid #E0E3EB", borderRadius:'12px', boxShadow:'none' }}>
                     <CardContent>
                       <Box
                         sx={{
@@ -345,8 +345,8 @@ const PendingUsersDashboard = () => {
               </div>
 
               {/* Search and Filter Row */}
-              <div className="row align-items-center mb-3">
-                <div className="col-md-6">
+              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                <div>
                   <TextField
                     placeholder="Search by name, email, phone, or ID"
                     variant="outlined"
@@ -362,44 +362,46 @@ const PendingUsersDashboard = () => {
                     }}
                     style={{ width: "350px" }}
                   />
-                  <Typography variant="body2" sx={{ color: "#999", fontSize: "12px", mt: 1 }}>
-                    Click on any user row to view detailed profile
-                  </Typography>
                 </div>
-                <div className="col-md-3">
-                  <FormControl size="small" style={{ minWidth: "120px" }}>
-                    <Select
-                      value={roleFilter}
-                      onChange={(e) => setRoleFilter(e.target.value)}
-                      displayEmpty
-                      startAdornment={
-                        <InputAdornment position="start">
-                          <FilterListIcon style={{ color: "#8A8AA3" }} />
-                        </InputAdornment>
-                      }
-                    >
-                      <MenuItem value="ALL">All Roles</MenuItem>
-                      <MenuItem value="PARENT">Parents</MenuItem>
-                      <MenuItem value="TUTOR">Tutors</MenuItem>
-                      <MenuItem value="ADMIN">Admins</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-                <div className="col-md-3 text-end">
-                  <FormControl size="small" style={{ minWidth: "80px" }}>
-                    <Select
-                      value={rowsPerPage}
-                      onChange={handleRowsPerPageChange}
-                      displayEmpty
-                    >
-                      <MenuItem value={10}>10</MenuItem>
-                      <MenuItem value={25}>25</MenuItem>
-                      <MenuItem value={50}>50</MenuItem>
-                      <MenuItem value={100}>100</MenuItem>
-                    </Select>
-                  </FormControl>
+                <div style={{display:'flex', gap:5}}>
+                  <div>
+                    <FormControl size="small" style={{ minWidth: "120px" }}>
+                      <Select
+                        value={roleFilter}
+                        onChange={(e) => setRoleFilter(e.target.value)}
+                        displayEmpty
+                        startAdornment={
+                          <InputAdornment position="start">
+                            <FilterListIcon style={{ color: "#8A8AA3" }} />
+                          </InputAdornment>
+                        }
+                      >
+                        <MenuItem value="ALL">All Roles</MenuItem>
+                        <MenuItem value="PARENT">Parents</MenuItem>
+                        <MenuItem value="TUTOR">Tutors</MenuItem>
+                        <MenuItem value="ADMIN">Admins</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl size="small" style={{ minWidth: "80px" }}>
+                      <Select
+                        value={rowsPerPage}
+                        onChange={handleRowsPerPageChange}
+                        displayEmpty
+                      >
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={25}>25</MenuItem>
+                        <MenuItem value={50}>50</MenuItem>
+                        <MenuItem value={100}>100</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
                 </div>
               </div>
+              <Typography variant="body2" sx={{ color: "#999", fontSize: "12px", mt: 1 }}>
+                Click on any user row to view detailed profile
+              </Typography>
 
               {/* Users Table */}
               <TableContainer
@@ -408,6 +410,7 @@ const PendingUsersDashboard = () => {
                   boxShadow: "none",
                   border: "1px solid #E0E3EB",
                   borderRadius: "8px",
+                  marginTop: 5
                 }}
               >
                 <Table style={{ border: "1px solid #e0e0e0" }}>
@@ -528,7 +531,7 @@ const PendingUsersDashboard = () => {
                         <TableRow
                           key={user.id}
                           onClick={() => handleUserClick(user.id)}
-                          style={{ 
+                          style={{
                             borderBottom: "1px solid #e0e0e0",
                             cursor: "pointer"
                           }}
@@ -615,7 +618,7 @@ const PendingUsersDashboard = () => {
                                   variant="body2"
                                   style={{ fontSize: "14px", color: "#101219" }}
                                 >
-                                  {user.phone || "N/A"}
+                                  +{user.phone || "N/A"}
                                 </Typography>
                               </div>
                             </div>

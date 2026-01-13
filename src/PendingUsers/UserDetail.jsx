@@ -91,7 +91,7 @@ const UserDetail = () => {
       fetchTutorDetails(userId);
     }
   }, [userId, fetchTutorDetails]);
-  
+
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -109,7 +109,7 @@ const UserDetail = () => {
 
   const handleApproveUser = async () => {
     if (!userId) return;
-    
+
     const result = await approveUser(userId);
     if (result.success) {
       setShowSuccessMessage(true);
@@ -172,7 +172,7 @@ const UserDetail = () => {
 
   // Loading state - show loading if either user details or tutor details are loading
   const isLoading = isLoadingTutor;
-  
+
   if (isLoading) {
     return (
       <>
@@ -204,7 +204,7 @@ const UserDetail = () => {
 
   // Error state
   const currentError = tutorError;
-  
+
   if (currentError) {
     return (
       <>
@@ -277,7 +277,7 @@ const UserDetail = () => {
     if (tutorDetails?.documents) {
       const docs = [];
       const documents = tutorDetails.documents;
-      
+
       if (documents.idFront) {
         const extension = documents.idFront.split('.').pop().toLowerCase();
         docs.push({
@@ -289,19 +289,19 @@ const UserDetail = () => {
           category: 'Identity',
         });
       }
-      
+
       if (documents.idBack) {
         const extension = documents.idBack.split('.').pop().toLowerCase();
         docs.push({
           id: 'id-back',
-          name: 'ID Back', 
+          name: 'ID Back',
           type: extension === 'pdf' ? 'application/pdf' : 'image/png',
           url: `${config.tutorDocumentUrl}${documents.idBack}`,
           uploadedAt: tutorProfile?.createdAt,
           category: 'Identity',
         });
       }
-      
+
       if (documents.resume) {
         const extension = documents.resume.split('.').pop().toLowerCase();
         docs.push({
@@ -313,7 +313,7 @@ const UserDetail = () => {
           category: 'Education',
         });
       }
-      
+
       return docs;
     }
     return [];
@@ -322,7 +322,7 @@ const UserDetail = () => {
   const documents = getDocuments();
 
   console.log("documents", documents);
-  
+
 
   const renderBasicInfo = () => (
     <Card sx={{ mb: 3 }}>
@@ -553,38 +553,38 @@ const UserDetail = () => {
                   <ListItemIcon>
                     <SchoolIcon />
                   </ListItemIcon>
-                    <ListItemText
-                      primary="Education"
-                      secondary={education.map(edu => `${edu.description} at ${edu.institute}`).join(", ") || "N/A"}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <WorkIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Experience"
-                      secondary={totalExperience > 0 ? `${Math.round(totalExperience)} years` : "N/A"}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <BankIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Bank Details"
-                      secondary={`${tutorProfile?.bankName || "N/A"} - ${tutorProfile?.accountNumber || "N/A"}`}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <SchoolIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Grade Level"
-                      secondary={tutorProfile?.grade || "N/A"}
-                    />
-                  </ListItem>
+                  <ListItemText
+                    primary="Education"
+                    secondary={education.map(edu => `${edu.description} at ${edu.institute}`).join(", ") || "N/A"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <WorkIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Experience"
+                    secondary={totalExperience > 0 ? `${Math.round(totalExperience)} years` : "N/A"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <BankIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Bank Details"
+                    secondary={`${tutorProfile?.bankName || "N/A"} - ${tutorProfile?.accountNumber || "N/A"}`}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <SchoolIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Grade Level"
+                    secondary={tutorProfile?.grade || "N/A"}
+                  />
+                </ListItem>
               </List>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -595,7 +595,7 @@ const UserDetail = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary="Work Experience"
-                    secondary={experience.length > 0 
+                    secondary={experience.length > 0
                       ? experience.map(exp => `${exp.description} at ${exp.company}`).join(", ")
                       : "N/A"
                     }
@@ -787,29 +787,36 @@ const UserDetail = () => {
               >
                 Send Message
               </Button>
+              
               <Button
                 variant="contained"
                 startIcon={
                   user?.isOnBoard === "approved" ? <VerifiedIcon /> :
-                  isApprovingUser ? <CircularProgress size={16} color="inherit" /> : <VerifiedIcon />
+                    isApprovingUser ? <CircularProgress size={16} color="inherit" /> : <VerifiedIcon />
                 }
                 onClick={handleApproveUser}
                 disabled={isApprovingUser || user?.isOnBoard === "approved"}
                 sx={{
                   backgroundColor: user?.isOnBoard === "approved" ? "#4CAF50" : "#17663A",
-                  color: "white",
+                  color: "white !important",  // Force white text
                   textTransform: "none",
                   "&:hover": {
-                    backgroundColor: user?.isOnBoard === "approved" ? "#4CAF50" : "#0F4A29",
+                    backgroundColor: user?.isOnBoard === "approved" ? "#45a049" : "#0F4A29",
                   },
-                  "&:disabled": {
-                    backgroundColor: user?.isOnBoard === "approved" ? "#4CAF50" : "#9E9E9E",
-                    cursor: user?.isOnBoard === "approved" ? "default" : "not-allowed",
+                  "&.Mui-disabled": {
+                    backgroundColor: "#4CAF50",
+                    color: "white !important",  // Force white on disabled too
+                    opacity: 0.7,
+                  },
+                  // Override MUI's disabled opacity for approved state
+                  "&.Mui-disabled.MuiButton-contained": {
+                    color: "white !important",
+                    opacity: 1,
                   },
                 }}
               >
-                {user?.isOnBoard === "approved" ? "Approved" : 
-                 isApprovingUser ? "Approving..." : "Approve User"}
+                {user?.isOnBoard === "approved" ? "Approved" :
+                  isApprovingUser ? "Approving..." : "Approve User"}
               </Button>
             </Box>
           </Box>
@@ -839,8 +846,8 @@ const UserDetail = () => {
 
           {/* Error Display for Approve User */}
           {approveUserError && (
-            <Alert 
-              severity="error" 
+            <Alert
+              severity="error"
               sx={{ mt: 2 }}
               onClose={() => clearErrors()}
             >
@@ -862,9 +869,9 @@ const UserDetail = () => {
             onClose={handleCloseSuccessMessage}
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-            <Alert 
-              onClose={handleCloseSuccessMessage} 
-              severity="success" 
+            <Alert
+              onClose={handleCloseSuccessMessage}
+              severity="success"
               sx={{ width: '100%' }}
             >
               User has been successfully approved for onboarding!

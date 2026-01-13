@@ -272,7 +272,7 @@ const TransactionDashboard = () => {
                   >
                     {tableData.length} Results
                   </span>
-                   <span
+                   {/* <span
                      style={{
                        fontWeight: 400,
                        fontSize: "12px",
@@ -281,7 +281,7 @@ const TransactionDashboard = () => {
                      }}
                    >
                      Click "View" to see transaction details
-                   </span>
+                   </span> */}
                 </div>
                 {/* <Button
                   variant="contained"
@@ -331,7 +331,7 @@ const TransactionDashboard = () => {
               <TableContainer component={Paper}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ height: 32 }}>
+                    <TableRow sx={{ height: 32, bgcolor:'#1E9CBC' }}>
                       {[
                         { label: "Type", key: "type" },
                         { label: "Amount", key: "amount" },
@@ -346,8 +346,8 @@ const TransactionDashboard = () => {
                           sx={{
                             fontSize: "14px",
                             fontWeight: 500,
-                            color: "#4D5874",
-                            cursor: "pointer",
+                            color: "#FFFFFF",
+                            // cursor: "pointer",
                             py: 0,
                             height: 32,
                           }}
