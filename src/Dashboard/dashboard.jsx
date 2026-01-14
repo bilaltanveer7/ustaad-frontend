@@ -38,6 +38,7 @@ import {
   ArrowUpward as ArrowUpwardIcon,
   ArrowDownward as ArrowDownwardIcon,
   UnfoldMore as UnfoldMoreIcon,
+  HourglassEmpty as HourglassEmptyIcon,
 } from "@mui/icons-material";
 import fileicon from "../assets/file.png";
 import editicon from "../assets/edit.png";
@@ -706,6 +707,15 @@ const Dashboard = () => {
                 change="-12%"
                 changeType="down"
                 icon={PersonOff}
+              />
+            </Box>
+            <Box sx={{ width: 250 }}>
+              <MetricCard
+                title="Pending Users"
+                value={stats?.totalPendingUsers || 0}
+                change={getChangeText("totalPendingUsers", "+5%")}
+                changeType={getChangeType("totalPendingUsers", "up")}
+                icon={HourglassEmptyIcon}
               />
             </Box>
           </Box>

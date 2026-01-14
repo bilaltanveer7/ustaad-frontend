@@ -532,6 +532,12 @@ export const useAdminStore = create((set, get) => ({
         icon: "💳",
         color: "#00695c",
       },
+      {
+        title: "Total Pending Users",
+        value: stats.pendingUserCount || 0,
+        icon: "⏳",
+        color: "#f44336",
+      },
     ];
   },
 }));

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useParentStore } from "../store/useParentStore";
@@ -45,6 +45,7 @@ const ParentDashboard = () => {
   const [searchValue, setSearchValue] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
+  const isFirstRender = useRef(true);
 
   // Fetch parents on component mount and when page changes
   useEffect(() => {
@@ -53,6 +54,10 @@ const ParentDashboard = () => {
 
   // Debounced search effect
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const timer = setTimeout(() => {
       if (currentPage !== 1) {
         setCurrentPage(1);
@@ -243,7 +248,7 @@ const ParentDashboard = () => {
                 <div style={{ width: "300px" }}>
                   <TextField
                     size="small"
-                    placeholder="Search by name or email"
+                    placeholder="Search by name email or phone"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     InputProps={{

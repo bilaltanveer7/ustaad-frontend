@@ -282,7 +282,7 @@ const AdminsDashboard = () => {
               <div className="row align-items-center mb-3">
                 <div className="col-md-6">
                   <TextField
-                    placeholder="Search by name, email, or ID"
+                    placeholder="Search by name, email, or phone"
                     variant="outlined"
                     size="small"
                     value={searchTerm}
