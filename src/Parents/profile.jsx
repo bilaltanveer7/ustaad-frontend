@@ -1175,9 +1175,9 @@ const ParentsProfile = () => {
                             fontSize: "24px",
                           }}
                         >
-                          {parent?.User?.firstname +
+                          {parent?.User?.firstName +
                             " " +
-                            parent?.User?.lastname || "N/A"}
+                            parent?.User?.lastName || "N/A"}
                         </h5>
                         <Typography
                           variant="body2"
