@@ -712,9 +712,9 @@ const Dashboard = () => {
             <Box sx={{ width: 250 }}>
               <MetricCard
                 title="Pending Users"
-                value={stats?.totalPendingUsers || 0}
-                change={getChangeText("totalPendingUsers", "+5%")}
-                changeType={getChangeType("totalPendingUsers", "up")}
+                value={stats?.pendingUserCount || 0}
+                change={getChangeText("pendingUserCount", "+5%")}
+                changeType={getChangeType("pendingUserCount", "up")}
                 icon={HourglassEmptyIcon}
               />
             </Box>
