@@ -37,26 +37,6 @@ import Badge from '@mui/material/Badge';
 const drawerWidth = 260;
 const selectedItem = 'Dashboard';
 
-const menuSections = [
-    {
-        title: 'GENERAL',
-        items: [
-            { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-            { text: 'Parents', icon: <PeopleIcon />, path: '/parent-dashboard' },
-            { text: 'Tutors', icon: <SchoolIcon />, path: '/tutor-dashboard' },
-            { text: 'Transaction Log', icon: <ReceiptLongIcon />, path: '/transaction-dashboard' },
-            { text: 'Admins', icon: <AdminPanelSettingsIcon />, path: '/admins-dashboard' },
-            { text: 'Pending Users', icon: <HourglassEmptyIcon />, path: '/pending-users' },
-        ],
-    },
-    {
-        title: 'OTHERS',
-        items: [
-            { text: 'Setting', icon: <SettingsIcon />, path: '' },
-        ],
-    },
-];
-
 export default function SideNav() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -94,6 +74,34 @@ export default function SideNav() {
         // navigate('/profile');
         handleMenuClose();
     };
+
+    const handleItemClick = (item) => {
+        if (item.onClick) {
+            item.onClick(); // handleLogout for logout
+        } else {
+            navigate(item.path); // normal navigation
+        }
+    };
+
+    const menuSections = [
+        {
+            title: 'GENERAL',
+            items: [
+                { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+                { text: 'Parents', icon: <PeopleIcon />, path: '/parent-dashboard' },
+                { text: 'Tutors', icon: <SchoolIcon />, path: '/tutor-dashboard' },
+                { text: 'Transaction Log', icon: <ReceiptLongIcon />, path: '/transaction-dashboard' },
+                { text: 'Admins', icon: <AdminPanelSettingsIcon />, path: '/admins-dashboard' },
+                { text: 'Pending Users', icon: <HourglassEmptyIcon />, path: '/pending-users' },
+            ],
+        },
+        {
+            title: 'OTHERS',
+            items: [
+                { text: 'Logout', icon: <LogoutIcon />, path: '/', onClick: handleLogout },
+            ],
+        },
+    ];
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -142,7 +150,16 @@ export default function SideNav() {
                                 }}
                                 color="inherit"
                             >
-                                <Badge badgeContent={3} color="error">
+                                <Badge variant="dot" color="success"
+                                    sx={{
+                                        '& .MuiBadge-badge': {
+                                            right: 4,
+                                            top: 8,
+                                            // minWidth: 10,
+                                            // height: 10,
+                                            fontSize: '0.75rem'
+                                        }
+                                    }}>
                                     <NotificationsNoneIcon sx={{ fontSize: 35, color: '#1E9CBC' }} />
                                 </Badge>
                             </IconButton>
@@ -269,7 +286,7 @@ export default function SideNav() {
             >
                 <Toolbar />
                 <Box sx={{ overflow: 'auto' }}>
-                    {menuSections.map((section, sectionIndex) => (
+                    {/* {menuSections.map((section, sectionIndex) => (
                         <Box key={section.title}>
                             <Typography
                                 variant="caption"
@@ -324,6 +341,75 @@ export default function SideNav() {
                                                 </ListItemIcon>
                                                 <ListItemText
                                                     primary={text}
+                                                    primaryTypographyProps={{
+                                                        fontSize: '0.95rem',
+                                                        color: isSelected ? '#FFFFFF' : '#4D5874',
+                                                    }}
+                                                />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    );
+                                })}
+                            </List>
+                            {sectionIndex === 0 && <Divider sx={{ mx: 2, my: 1 }} />}
+                        </Box>
+                    ))} */}
+                    {menuSections.map((section, sectionIndex) => (
+                        <Box key={section.title}>
+                            <Typography
+                                variant="caption"
+                                sx={{
+                                    px: 2,
+                                    pt: sectionIndex === 0 ? 0 : 2,
+                                    pb: 1,
+                                    color: '#7B809A',
+                                    fontWeight: 500,
+                                }}
+                            >
+                                {section.title}
+                            </Typography>
+                            <List>
+                                {section.items.map((item) => {  // ✅ Changed: full item object instead of destructuring
+                                    const isSelected = location.pathname === item.path;
+                                    return (
+                                        <ListItem key={item.text} disablePadding sx={{ px: 1.5, mb: 0.5 }}>
+                                            <ListItemButton
+                                                // ✅ CHANGED: handleItemClick instead of navigate(path)
+                                                onClick={() => handleItemClick(item)}
+                                                selected={isSelected}
+                                                sx={{
+                                                    borderRadius: '8px',
+                                                    fontWeight: 500,
+                                                    fontSize: '14px',
+                                                    backgroundColor: isSelected ? '#1E9CBC' : 'transparent',
+                                                    '&:hover': {
+                                                        backgroundColor: '#1E9CBC',
+                                                        '& .MuiListItemText-primary': {
+                                                            color: '#FFFFFF',
+                                                        },
+                                                        '& .MuiListItemIcon-root': {
+                                                            color: '#FFFFFF',
+                                                        },
+                                                    },
+                                                    '&.Mui-selected': {
+                                                        backgroundColor: '#1E9CBC',
+                                                        '& .MuiListItemText-primary': {
+                                                            color: '#FFFFFF',
+                                                        },
+                                                        '& .MuiListItemIcon-root': {
+                                                            color: '#FFFFFF',
+                                                        },
+                                                        '&:hover': {
+                                                            backgroundColor: '#1E9CBC',
+                                                        },
+                                                    },
+                                                }}
+                                            >
+                                                <ListItemIcon sx={{ color: isSelected ? '#FFFFFF' : '#344767', minWidth: 32 }}>
+                                                    {item.icon}
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    primary={item.text}
                                                     primaryTypographyProps={{
                                                         fontSize: '0.95rem',
                                                         color: isSelected ? '#FFFFFF' : '#4D5874',

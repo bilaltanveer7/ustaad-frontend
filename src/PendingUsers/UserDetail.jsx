@@ -325,7 +325,7 @@ const UserDetail = () => {
 
 
   const renderBasicInfo = () => (
-    <Card sx={{ mb: 3 }}>
+    <Card sx={{ mb: 3, bgcolor:'#EEFBFD', border: "1px solid #D1D1DB", }}>
       <CardContent>
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
           Basic Information

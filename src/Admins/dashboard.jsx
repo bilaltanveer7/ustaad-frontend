@@ -39,16 +39,16 @@ const drawerWidth = 260;
 
 const AdminsDashboard = () => {
   const navigate = useNavigate();
-  const { 
-    admins, 
-    fetchAdmins, 
+  const {
+    admins,
+    fetchAdmins,
     deleteAdminById,
-    isLoadingAdmins, 
+    isLoadingAdmins,
     isDeletingAdmin,
-    adminsError, 
-    clearErrors 
+    adminsError,
+    clearErrors
   } = useAdminStore();
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -81,8 +81,8 @@ const AdminsDashboard = () => {
       <>
         <SideNav />
         <div style={{ marginLeft: `${drawerWidth}px`, marginTop: "4rem", padding: "20px" }}>
-          <Alert 
-            severity="error" 
+          <Alert
+            severity="error"
             action={
               <Button color="inherit" size="small" onClick={() => { clearErrors(); fetchAdmins(); }}>
                 Retry
@@ -352,37 +352,38 @@ const AdminsDashboard = () => {
                             fontSize: "14px",
                             color: "#FFFFFF",
                             alignItems: "center",
+                            whiteSpace: 'nowrap'
                           }}
                         >
                           Created Date
                         </Box>
                       </TableCell>
-                                              <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              color: "#FFFFFF",
-                              alignItems: "center",
-                            }}
-                          >
-                            Status
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              color: "#FFFFFF",
-                              alignItems: "center",
-                            }}
-                          >
-                            Actions
-                          </Box>
-                        </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                            color: "#FFFFFF",
+                            alignItems: "center",
+                          }}
+                        >
+                          Status
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                            color: "#FFFFFF",
+                            alignItems: "center",
+                          }}
+                        >
+                          Actions
+                        </Box>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -399,15 +400,25 @@ const AdminsDashboard = () => {
                           style={{ borderBottom: "1px solid #e0e0e0" }}
                         >
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                            <span
-                              style={{
-                                fontSize: "16px",
-                                fontWeight: 500,
-                                color: "#1E9CBC",
-                              }}
-                            >
-                              #{admin.id}
-                            </span>
+                            <Tooltip title={admin.id} arrow>
+                              <div
+                                style={{
+                                  fontWeight: 400,
+                                  fontSize: "16px",
+                                  color: "#4D5874",
+                                  // border: "1px solid #e0e0e0",
+                                  py: 0,
+                                  // height: 48,
+                                  cursor: "pointer",
+                                  maxWidth: '60px',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap'
+                                }}
+                              >
+                                {admin.id}
+                              </div>
+                            </Tooltip>
                           </TableCell>
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -418,17 +429,24 @@ const AdminsDashboard = () => {
                                 {admin.fullName?.charAt(0).toUpperCase()}
                               </Avatar>
                               <div>
-                                <Typography
-                                  variant="body1"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: 500,
-                                    color: "#101219",
-                                    margin: 0,
-                                  }}
-                                >
-                                  {admin.fullName || "N/A"}
-                                </Typography>
+                                <Tooltip title={admin.fullName || "N/A"} arrow>
+                                  <div
+                                    variant="body1"
+                                    style={{
+                                      fontSize: "16px",
+                                      fontWeight: 500,
+                                      color: "#101219",
+                                      margin: 0,
+                                      cursor: "pointer",
+                                      maxWidth: '60px',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      whiteSpace: 'nowrap'
+                                    }}
+                                  >
+                                    {admin.fullName || "N/A"}
+                                  </div>
+                                </Tooltip>
                                 <Typography
                                   variant="body2"
                                   style={{
@@ -443,15 +461,22 @@ const AdminsDashboard = () => {
                             </div>
                           </TableCell>
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                            <span
-                              style={{
-                                fontSize: "16px",
-                                fontWeight: 400,
-                                color: "#101219",
-                              }}
-                            >
-                              {admin.email || "N/A"}
-                            </span>
+                            <Tooltip title={admin.email || "N/A"} arrow>
+                              <div
+                                style={{
+                                  fontSize: "16px",
+                                  fontWeight: 400,
+                                  color: "#101219",
+                                  cursor: "pointer",
+                                  maxWidth: '140px',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap'
+                                }}
+                              >
+                                {admin.email || "N/A"}
+                              </div>
+                            </Tooltip>
                           </TableCell>
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
                             <span
@@ -461,7 +486,7 @@ const AdminsDashboard = () => {
                                 color: "#4D5874",
                               }}
                             >
-                              {admin.createdAt 
+                              {admin.createdAt
                                 ? new Date(admin.createdAt).toLocaleDateString()
                                 : "N/A"
                               }
@@ -516,17 +541,17 @@ const AdminsDashboard = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
 
       {/* Add Admin Modal */}
-      <AddAdminModal
+      < AddAdminModal
         open={isAddModalOpen}
         onClose={handleCloseAddModal}
         onAdminAdded={handleAdminAdded}
       />
 
       {/* Delete Admin Dialog */}
-      <DeleteAdminDialog
+      < DeleteAdminDialog
         open={deleteDialogOpen}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}

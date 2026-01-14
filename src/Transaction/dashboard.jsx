@@ -272,7 +272,7 @@ const TransactionDashboard = () => {
                   >
                     {tableData.length} Results
                   </span>
-                   {/* <span
+                  {/* <span
                      style={{
                        fontWeight: 400,
                        fontSize: "12px",
@@ -326,287 +326,305 @@ const TransactionDashboard = () => {
             </div>
           )}
 
-          <div className="row">
-            <div className="col-12">
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow sx={{ height: 32, bgcolor:'#1E9CBC' }}>
-                      {[
-                        { label: "Type", key: "type" },
-                        { label: "Amount", key: "amount" },
-                        { label: "Payment Method", key: "payment_method" },
-                        { label: "Status", key: "status" },
-                        { label: "Tutor ID", key: "tutorId" },
-                        { label: "Date", key: "date" },
-                        { label: "Actions", key: "actions" },
-                      ].map(({ label, key }) => (
-                        <TableCell
-                          key={key}
-                          sx={{
-                            fontSize: "14px",
-                            fontWeight: 500,
-                            color: "#FFFFFF",
-                            // cursor: "pointer",
-                            py: 0,
-                            height: 32,
-                          }}
-                          onClick={() => handleSort(key)}
-                        >
-                          <Box
+          {!isLoadingPaymentRequests && (!tableData || tableData.length === 0) && (
+            <div className="row">
+              <div
+                className="col-12"
+                style={{
+                  textAlign: "center",
+                  padding: "4rem 2rem",
+                  color: "#666",
+                  fontSize: "16px"
+                }}
+              >
+                <div style={{ fontSize: "64px", marginBottom: "1rem", opacity: 0.3 }}>📋</div>
+                <div>No transactions yet</div>
+              </div>
+            </div>
+          )}
+          {!isLoadingPaymentRequests && tableData && tableData.length > 0 && (
+            <div className="row">
+              <div className="col-12">
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow sx={{ height: 32, bgcolor: '#1E9CBC' }}>
+                        {[
+                          { label: "Type", key: "type" },
+                          { label: "Amount", key: "amount" },
+                          { label: "Payment Method", key: "payment_method" },
+                          { label: "Status", key: "status" },
+                          { label: "Tutor ID", key: "tutorId" },
+                          { label: "Date", key: "date" },
+                          { label: "Actions", key: "actions" },
+                        ].map(({ label, key }) => (
+                          <TableCell
+                            key={key}
                             sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              width: "100%",
-                            }}
-                          >
-                            <span>{label}</span>
-                            {getSortIcon(key)}
-                          </Box>
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {tableData.map((row, index) => {
-                      const isItemSelected = isSelected(row.id);
-                      return (
-                        <TableRow
-                          key={row.id}
-                          selected={isItemSelected}
-                          sx={{
-                            backgroundColor:
-                              index % 2 === 0 ? "white" : "#fafafa",
-                            borderBottom: "1px solid #e0e0e0",
-                          }}
-                        >
-                          <TableCell
-                            style={{
+                              fontSize: "14px",
                               fontWeight: 500,
-                              fontSize: "14px",
-                              color: "#101219",
-                              border: "1px solid #e0e0e0",
-                              cursor: "pointer",
+                              color: "#FFFFFF",
+                              // cursor: "pointer",
                               py: 0,
+                              height: 32,
                             }}
+                            onClick={() => handleSort(key)}
                           >
-                            <div className="d-flex align-items-center gap-2">
-                              <div
-                                style={{
-                                  width: 24,
-                                  height: 24,
-                                  borderRadius: "50%",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  backgroundColor:
-                                    row.type === "Withdraw"
-                                      ? "#FEECEC"
-                                      : "#EEFCF3",
-                                }}
-                              >
-                                {row.type === "Withdraw" ? (
-                                  <ArrowUpwardIcon
-                                    style={{
-                                      color: "#F31616",
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  />
-                                ) : (
-                                  <ArrowDownwardIcon
-                                    style={{
-                                      color: "#38BC5C",
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  />
-                                )}
-                              </div>
-                              <span>{row.type}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              fontWeight: 400,
-                              fontSize: "14px",
-                              color: "#101219",
-                              border: "1px solid #e0e0e0",
-                            }}
-                          >
-                            <div className="d-flex align-items-center justify-content-between">
-                              {row.amount}
-                            </div>
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              fontWeight: 400,
-                              fontSize: "14px",
-                              color: "#101219",
-                              border: "1px solid #e0e0e0",
-                            }}
-                          >
-                            <div className="d-flex align-items-center justify-content-between">
-                              {row.payment_method}
-                            </div>
-                          </TableCell>
-
-                          <TableCell
-                            style={{
-                              fontWeight: 400,
-                              fontSize: "16px",
-                              color: "#101219",
-                              border: "1px solid #e0e0e0",
-                            }}
-                          >
-                            <div className="d-flex align-items-center justify-content-start gap-2">
-                              {/* Render status based on value */}
-                              {row.status === "PAID" && (
-                                <div
-                                  style={{
-                                    backgroundColor: "#EEFCF3",
-                                    color: "#38BC5C",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    padding: "4px 8px",
-                                    borderRadius: "6px",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                  }}
-                                >
-                                  <CheckCircleIcon
-                                    style={{ fontSize: "18px", marginRight: 4 }}
-                                  />
-                                  PAID
-                                </div>
-                              )}
-                              {row.status === "REJECTED" && (
-                                <div
-                                  style={{
-                                    backgroundColor: "#FEECEC",
-                                    color: "#F31616",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    padding: "4px 8px",
-                                    borderRadius: "6px",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                  }}
-                                >
-                                  <CancelIcon
-                                    style={{ fontSize: "18px", marginRight: 4 }}
-                                  />
-                                  REJECTED
-                                </div>
-                              )}
-                              {row.status === "PENDING" && (
-                                <div
-                                  style={{
-                                    backgroundColor: "#F0F2F5",
-                                    color: "#7D879C",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    padding: "4px 8px",
-                                    borderRadius: "6px",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                  }}
-                                >
-                                  <PauseCircleFilledIcon
-                                    style={{ fontSize: "18px", marginRight: 4 }}
-                                  />
-                                  PENDING
-                                </div>
-                              )}
-                              {(row.status === "IN_REVIEW" ||
-                                row.status === "REQUESTED") && (
-                                <div
-                                  style={{
-                                    backgroundColor: "#EEF3FF",
-                                    color: "#235DFF",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    padding: "4px 8px",
-                                    borderRadius: "6px",
-                                    fontWeight: 500,
-                                    fontSize: "14px",
-                                  }}
-                                >
-                                  <InfoIcon
-                                    style={{ fontSize: "18px", marginRight: 4 }}
-                                  />
-                                  {row.status}
-                                </div>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                            <div className="d-flex align-items-center justify-content-between">
-                              <span
-                                style={{
-                                  fontWeight: 400,
-                                  fontSize: "14px",
-                                  color: "#101219",
-                                  fontFamily: "monospace",
-                                  backgroundColor: "#f5f5f5",
-                                  padding: "2px 6px",
-                                  borderRadius: "4px",
-                                }}
-                              >
-                                {row.tutorId?.substring(0, 8) || "N/A"}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              fontWeight: 400,
-                              fontSize: "14px",
-                              color: "#101219",
-                              border: "1px solid #e0e0e0",
-                            }}
-                          >
-                            <div className="d-flex align-items-center justify-content-between">
-                              {row.date}
-                            </div>
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              fontWeight: 400,
-                              fontSize: "16px",
-                              color: "#4D5874",
-                              border: "1px solid #e0e0e0",
-                              textAlign: "center",
-                            }}
-                          >
-                            <Button
-                              variant="outlined"
-                              size="small"
-                              startIcon={<VisibilityIcon />}
-                              onClick={() => handleViewTransaction(row.id)}
+                            <Box
                               sx={{
-                                textTransform: "none",
-                                fontSize: "12px",
-                                minWidth: "80px",
-                                borderColor: "#1976D2",
-                                color: "#1976D2",
-                                "&:hover": {
-                                  borderColor: "#1565C0",
-                                  backgroundColor: "#E3F2FD",
-                                },
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                width: "100%",
                               }}
                             >
-                              View
-                            </Button>
+                              <span>{label}</span>
+                              {getSortIcon(key)}
+                            </Box>
                           </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {tableData.map((row, index) => {
+                        const isItemSelected = isSelected(row.id);
+                        return (
+                          <TableRow
+                            key={row.id}
+                            selected={isItemSelected}
+                            sx={{
+                              backgroundColor:
+                                index % 2 === 0 ? "white" : "#fafafa",
+                              borderBottom: "1px solid #e0e0e0",
+                            }}
+                          >
+                            <TableCell
+                              style={{
+                                fontWeight: 500,
+                                fontSize: "14px",
+                                color: "#101219",
+                                border: "1px solid #e0e0e0",
+                                cursor: "pointer",
+                                py: 0,
+                              }}
+                            >
+                              <div className="d-flex align-items-center gap-2">
+                                <div
+                                  style={{
+                                    width: 24,
+                                    height: 24,
+                                    borderRadius: "50%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    backgroundColor:
+                                      row.type === "Withdraw"
+                                        ? "#FEECEC"
+                                        : "#EEFCF3",
+                                  }}
+                                >
+                                  {row.type === "Withdraw" ? (
+                                    <ArrowUpwardIcon
+                                      style={{
+                                        color: "#F31616",
+                                        fontSize: "16px",
+                                        fontWeight: "bold",
+                                      }}
+                                    />
+                                  ) : (
+                                    <ArrowDownwardIcon
+                                      style={{
+                                        color: "#38BC5C",
+                                        fontSize: "16px",
+                                        fontWeight: "bold",
+                                      }}
+                                    />
+                                  )}
+                                </div>
+                                <span>{row.type}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                fontWeight: 400,
+                                fontSize: "14px",
+                                color: "#101219",
+                                border: "1px solid #e0e0e0",
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between">
+                                {row.amount}
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                fontWeight: 400,
+                                fontSize: "14px",
+                                color: "#101219",
+                                border: "1px solid #e0e0e0",
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between">
+                                {row.payment_method}
+                              </div>
+                            </TableCell>
+
+                            <TableCell
+                              style={{
+                                fontWeight: 400,
+                                fontSize: "16px",
+                                color: "#101219",
+                                border: "1px solid #e0e0e0",
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-start gap-2">
+                                {/* Render status based on value */}
+                                {row.status === "PAID" && (
+                                  <div
+                                    style={{
+                                      backgroundColor: "#EEFCF3",
+                                      color: "#38BC5C",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      padding: "4px 8px",
+                                      borderRadius: "6px",
+                                      fontWeight: 500,
+                                      fontSize: "14px",
+                                    }}
+                                  >
+                                    <CheckCircleIcon
+                                      style={{ fontSize: "18px", marginRight: 4 }}
+                                    />
+                                    PAID
+                                  </div>
+                                )}
+                                {row.status === "REJECTED" && (
+                                  <div
+                                    style={{
+                                      backgroundColor: "#FEECEC",
+                                      color: "#F31616",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      padding: "4px 8px",
+                                      borderRadius: "6px",
+                                      fontWeight: 500,
+                                      fontSize: "14px",
+                                    }}
+                                  >
+                                    <CancelIcon
+                                      style={{ fontSize: "18px", marginRight: 4 }}
+                                    />
+                                    REJECTED
+                                  </div>
+                                )}
+                                {row.status === "PENDING" && (
+                                  <div
+                                    style={{
+                                      backgroundColor: "#F0F2F5",
+                                      color: "#7D879C",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      padding: "4px 8px",
+                                      borderRadius: "6px",
+                                      fontWeight: 500,
+                                      fontSize: "14px",
+                                    }}
+                                  >
+                                    <PauseCircleFilledIcon
+                                      style={{ fontSize: "18px", marginRight: 4 }}
+                                    />
+                                    PENDING
+                                  </div>
+                                )}
+                                {(row.status === "IN_REVIEW" ||
+                                  row.status === "REQUESTED") && (
+                                    <div
+                                      style={{
+                                        backgroundColor: "#EEF3FF",
+                                        color: "#235DFF",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        padding: "4px 8px",
+                                        borderRadius: "6px",
+                                        fontWeight: 500,
+                                        fontSize: "14px",
+                                      }}
+                                    >
+                                      <InfoIcon
+                                        style={{ fontSize: "18px", marginRight: 4 }}
+                                      />
+                                      {row.status}
+                                    </div>
+                                  )}
+                              </div>
+                            </TableCell>
+                            <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                              <div className="d-flex align-items-center justify-content-between">
+                                <span
+                                  style={{
+                                    fontWeight: 400,
+                                    fontSize: "14px",
+                                    color: "#101219",
+                                    fontFamily: "monospace",
+                                    backgroundColor: "#f5f5f5",
+                                    padding: "2px 6px",
+                                    borderRadius: "4px",
+                                  }}
+                                >
+                                  {row.tutorId?.substring(0, 8) || "N/A"}
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                fontWeight: 400,
+                                fontSize: "14px",
+                                color: "#101219",
+                                border: "1px solid #e0e0e0",
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between">
+                                {row.date}
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                fontWeight: 400,
+                                fontSize: "16px",
+                                color: "#4D5874",
+                                border: "1px solid #e0e0e0",
+                                textAlign: "center",
+                              }}
+                            >
+                              <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<VisibilityIcon />}
+                                onClick={() => handleViewTransaction(row.id)}
+                                sx={{
+                                  textTransform: "none",
+                                  fontSize: "12px",
+                                  minWidth: "80px",
+                                  borderColor: "#1976D2",
+                                  color: "#1976D2",
+                                  "&:hover": {
+                                    borderColor: "#1565C0",
+                                    backgroundColor: "#E3F2FD",
+                                  },
+                                }}
+                              >
+                                View
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
