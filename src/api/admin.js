@@ -48,12 +48,11 @@ export const updatePaymentRequestStatus = async (id, status) => {
   return data;
 };
 
-
-export const createAdmin = async (fullName, email, password) => {
+export const createAdmin = async (firstName, lastName, email, password) => {
   const data = await invoke({
     url: `/admin/users/create`,
     method: "POST",
-    data: { fullName, email, password },
+    data: { firstName, lastName, email, password },
   });
   return data;
 };

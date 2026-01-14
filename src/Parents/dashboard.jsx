@@ -46,16 +46,32 @@ const ParentDashboard = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch parents on component mount
+  // Fetch parents on component mount and when page changes
   useEffect(() => {
-    fetchParents(currentPage, 20);
+    fetchParents(currentPage, 20, searchValue);
   }, [fetchParents, currentPage]);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (currentPage !== 1) {
+        setCurrentPage(1);
+      } else {
+        fetchParents(1, 20, searchValue);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchValue, fetchParents]);
 
   // Transform API data to match table format
   const tableData = parents.map((parent) => ({
     id: parent.id,
     clientId: parent.id.substring(0, 8).toUpperCase(),
-    name: parent.User?.fullName || "N/A",
+    name:
+      parent.User?.firstName && parent.User?.lastName
+        ? `${parent.User.firstName} ${parent.User.lastName}`
+        : parent.User?.firstName || parent.User?.lastName || "N/A",
     email: parent.User?.email || "N/A",
     phone: parent.User?.phone || "N/A",
     address: "N/A", // Address not provided in API response
@@ -227,7 +243,7 @@ const ParentDashboard = () => {
                 <div style={{ width: "300px" }}>
                   <TextField
                     size="small"
-                    placeholder="Search"
+                    placeholder="Search by name or email"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     InputProps={{
@@ -371,7 +387,7 @@ const ParentDashboard = () => {
                 <TableContainer component={Paper}>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ height: 32, bgcolor: '#1E9CBC' }}>
+                      <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
                         {/* <TableCell padding="checkbox" sx={{ py: 0, height: 32 }}>
                         <Checkbox
                           indeterminate={
@@ -450,7 +466,9 @@ const ParentDashboard = () => {
                             <Checkbox checked={isItemSelected} size="small" />
                           </TableCell> */}
                             <TableCell
-                              onClick={() => navigate(`/parent-profile/${row.id}`)}
+                              onClick={() =>
+                                navigate(`/parent-profile/${row.id}`)
+                              }
                               style={{
                                 fontWeight: 400,
                                 fontSize: "16px",
@@ -545,7 +563,10 @@ const ParentDashboard = () => {
                                     style={{ padding: "2px" }}
                                   >
                                     <ContentCopyIcon
-                                      style={{ fontSize: "14px", color: "#666" }}
+                                      style={{
+                                        fontSize: "14px",
+                                        color: "#666",
+                                      }}
                                     />
                                   </IconButton>
                                 )}

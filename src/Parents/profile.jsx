@@ -44,8 +44,9 @@ const drawerWidth = 260;
 const ParentsProfile = () => {
   const { id: parentId } = useParams();
   const navigate = useNavigate();
-  const { parentDetails, fetchParentDetails, isLoading, error, clearError } = useParentStore();
-  
+  const { parentDetails, fetchParentDetails, isLoading, error, clearError } =
+    useParentStore();
+
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(50);
@@ -57,7 +58,7 @@ const ParentsProfile = () => {
   const [profileData, setProfileData] = useState({
     noOfHires: "0",
     joiningDate: "",
-    children: "0", 
+    children: "0",
     amountSpent: "0.00",
     description: "",
   });
@@ -73,11 +74,14 @@ const ParentsProfile = () => {
   useEffect(() => {
     if (parentDetails) {
       const { parent, children, transactions, subscriptions } = parentDetails;
-      const totalAmount = transactions?.reduce((sum, tx) => sum + (tx.amount || 0), 0) || 0;
-      
+      const totalAmount =
+        transactions?.reduce((sum, tx) => sum + (tx.amount || 0), 0) || 0;
+
       setProfileData({
         noOfHires: subscriptions?.length?.toString() || "0",
-        joiningDate: parent?.createdAt ? new Date(parent.createdAt).toLocaleDateString() : "",
+        joiningDate: parent?.createdAt
+          ? new Date(parent.createdAt).toLocaleDateString()
+          : "",
         children: children?.length?.toString() || "0",
         amountSpent: `${totalAmount.toFixed(2)}`,
         description: parent?.description || "No description available",
@@ -90,8 +94,21 @@ const ParentsProfile = () => {
     return (
       <>
         <SideNav />
-        <div style={{ marginLeft: `${drawerWidth}px`, marginTop: "4rem", padding: "20px" }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+        <div
+          style={{
+            marginLeft: `${drawerWidth}px`,
+            marginTop: "4rem",
+            padding: "20px",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "50vh",
+            }}
+          >
             <CircularProgress />
             <Typography sx={{ ml: 2 }}>Loading parent details...</Typography>
           </Box>
@@ -105,11 +122,24 @@ const ParentsProfile = () => {
     return (
       <>
         <SideNav />
-        <div style={{ marginLeft: `${drawerWidth}px`, marginTop: "4rem", padding: "20px" }}>
-          <Alert 
-            severity="error" 
+        <div
+          style={{
+            marginLeft: `${drawerWidth}px`,
+            marginTop: "4rem",
+            padding: "20px",
+          }}
+        >
+          <Alert
+            severity="error"
             action={
-              <Button color="inherit" size="small" onClick={() => { clearError(); fetchParentDetails(parentId); }}>
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  clearError();
+                  fetchParentDetails(parentId);
+                }}
+              >
                 Retry
               </Button>
             }
@@ -126,7 +156,13 @@ const ParentsProfile = () => {
     return (
       <>
         <SideNav />
-        <div style={{ marginLeft: `${drawerWidth}px`, marginTop: "4rem", padding: "20px" }}>
+        <div
+          style={{
+            marginLeft: `${drawerWidth}px`,
+            marginTop: "4rem",
+            padding: "20px",
+          }}
+        >
           <Alert severity="warning">
             Parent not found. Please check the ID and try again.
           </Alert>
@@ -135,7 +171,12 @@ const ParentsProfile = () => {
     );
   }
 
-  const { parent, children = [], subscriptions = [], transactions = [] } = parentDetails || {};
+  const {
+    parent,
+    children = [],
+    subscriptions = [],
+    transactions = [],
+  } = parentDetails || {};
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -245,35 +286,44 @@ const ParentsProfile = () => {
   };
 
   // Transform API data for display
-  const transactionsData = transactions.map(tx => ({
+  const transactionsData = transactions.map((tx) => ({
     id: tx.id,
-    payment: { 
-      name: tx.childName || parent?.User?.fullName || "N/A", 
-      cost: `$${tx.amount?.toFixed(2) || "0.00"}` 
+    payment: {
+      recipient:
+        tx.childName ||
+        (parent?.User?.firstName && parent?.User?.lastName
+          ? `${parent.User.firstName} ${parent.User.lastName}`
+          : parent?.User?.firstName || parent?.User?.lastName || "N/A"),
+      cost: `$${tx.amount?.toFixed(2) || "0.00"}`,
     },
     child: {
       name: tx.childName || "N/A",
       avatar: "/placeholder.svg?height=32&width=32",
     },
-    paymentMethod: { 
-      type: "stripe", 
-      accountNumber: tx.invoiceId || "N/A" 
+    paymentMethod: {
+      type: "stripe",
+      accountNumber: tx.invoiceId || "N/A",
     },
-    transactionDate: tx.createdAt ? new Date(tx.createdAt).toLocaleDateString() : "N/A",
-    status: tx.status || "unknown"
+    transactionDate: tx.createdAt
+      ? new Date(tx.createdAt).toLocaleDateString()
+      : "N/A",
+    status: tx.status || "unknown",
   }));
 
-  const childrenData = children.map(child => ({
+  const childrenData = children.map((child) => ({
     id: child.id,
     childName: child.fullName || "N/A",
     grade: child.grade || "N/A",
-    age: child.age || "N/A", 
+    age: child.age || "N/A",
     subjects: child.subjects?.join(", ") || "N/A",
-    tutorHired: subscriptions.some(sub => sub.status === 'active') ? "Yes" : "No",
-    currentTutors: subscriptions
-      .filter(sub => sub.status === 'active')
-      .map(sub => sub.tutor?.name || "Unknown")
-      .join(", ") || "-",
+    tutorHired: subscriptions.some((sub) => sub.status === "active")
+      ? "Yes"
+      : "No",
+    currentTutors:
+      subscriptions
+        .filter((sub) => sub.status === "active")
+        .map((sub) => sub.tutor?.name || "Unknown")
+        .join(", ") || "-",
   }));
 
   // For now, we don't have notes data from the API, so we'll show a placeholder
@@ -377,103 +427,111 @@ const ParentsProfile = () => {
               <TableBody>
                 {transactionsData.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+                    <TableCell
+                      colSpan={4}
+                      style={{
+                        textAlign: "center",
+                        padding: "40px",
+                        color: "#666",
+                      }}
+                    >
                       No transactions found for this parent
                     </TableCell>
                   </TableRow>
                 ) : (
                   transactionsData.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    style={{ borderBottom: "1px solid #e0e0e0" }}
-                  >
-                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                      <img
-                        src="https://png.pngtree.com/png-clipart/20220821/ourmid/pngtree-male-profile-picture-icon-and-png-image-png-image_6118773.png"
-                        alt="Teacher"
-                        style={{ width: 32, height: 32, borderRadius: "50%" }}
-                      />
-                      <span
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: 400,
-                          color: "#101219",
-                          marginLeft: "5px",
-                        }}
-                      >
-                        {row.payment.name}
-                      </span>
-                    </TableCell>
-                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                      <span
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: 400,
-                          color: "#101219",
-                        }}
-                      >
-                        {row.payment.cost}
-                      </span>
-                    </TableCell>
-                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
+                    <TableRow
+                      key={row.id}
+                      style={{ borderBottom: "1px solid #e0e0e0" }}
+                    >
+                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                        <img
+                          src="https://png.pngtree.com/png-clipart/20220821/ourmid/pngtree-male-profile-picture-icon-and-png-image-png-image_6118773.png"
+                          alt="Teacher"
+                          style={{ width: 32, height: 32, borderRadius: "50%" }}
+                        />
+                        <span
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: 400,
+                            color: "#101219",
+                            marginLeft: "5px",
+                          }}
+                        >
+                          {row.payment.name}
+                        </span>
+                      </TableCell>
+                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                        <span
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: 400,
+                            color: "#101219",
+                          }}
+                        >
+                          {row.payment.cost}
+                        </span>
+                      </TableCell>
+                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
                         <div
                           style={{
                             display: "flex",
                             alignItems: "center",
-                            gap: "5px",
+                            justifyContent: "space-between",
                           }}
                         >
-                          <img
-                            src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e2/75/5f/e2755f3b-22fc-2929-4619-2fe03c47e635/AppIcon-1x_U007emarketing-0-6-0-sRGB-85-220-0.png/256x256bb.jpg"
-                            alt="Meezan Bank"
+                          <div
                             style={{
-                              width: 32,
-                              height: 32,
-                              borderRadius: "50%",
-                            }}
-                          />
-                          <span
-                            style={{
-                              fontSize: "16px",
-                              fontWeight: 400,
-                              color: "#101219",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "5px",
                             }}
                           >
-                            ****{row.paymentMethod.accountNumber.slice(-4)}
-                          </span>
+                            <img
+                              src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e2/75/5f/e2755f3b-22fc-2929-4619-2fe03c47e635/AppIcon-1x_U007emarketing-0-6-0-sRGB-85-220-0.png/256x256bb.jpg"
+                              alt="Meezan Bank"
+                              style={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                              }}
+                            />
+                            <span
+                              style={{
+                                fontSize: "16px",
+                                fontWeight: 400,
+                                color: "#101219",
+                              }}
+                            >
+                              ****{row.paymentMethod.accountNumber.slice(-4)}
+                            </span>
+                          </div>
+                          <Tooltip title="Copy Account Number">
+                            <IconButton
+                              size="small"
+                              onClick={() =>
+                                handleCopy(row.paymentMethod.accountNumber)
+                              }
+                              style={{ padding: "1px", width: 20, height: 20 }}
+                            >
+                              <ContentCopyIcon style={{ color: "#A6ADBF" }} />
+                            </IconButton>
+                          </Tooltip>
                         </div>
-                        <Tooltip title="Copy Account Number">
-                          <IconButton
-                            size="small"
-                            onClick={() =>
-                              handleCopy(row.paymentMethod.accountNumber)
-                            }
-                            style={{ padding: "1px", width: 20, height: 20 }}
-                          >
-                            <ContentCopyIcon style={{ color: "#A6ADBF" }} />
-                          </IconButton>
-                        </Tooltip>
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: 400,
-                        color: "#4D5874",
-                        border: "1px solid #e0e0e0",
-                      }}
-                    >
-                      {row.transactionDate}
-                    </TableCell>
-                  </TableRow>
-                )))}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: 400,
+                          color: "#4D5874",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+                        {row.transactionDate}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -586,78 +644,89 @@ const ParentsProfile = () => {
               <TableBody>
                 {childrenData.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+                    <TableCell
+                      colSpan={5}
+                      style={{
+                        textAlign: "center",
+                        padding: "40px",
+                        color: "#666",
+                      }}
+                    >
                       No children found for this parent
                     </TableCell>
                   </TableRow>
                 ) : (
                   childrenData.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    style={{ borderBottom: "1px solid #e0e0e0" }}
-                  >
-                    <TableCell
-                      style={{
-                        fontSize: "16px",
-                        color: "#101219",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                      }}
+                    <TableRow
+                      key={row.id}
+                      style={{ borderBottom: "1px solid #e0e0e0" }}
                     >
-                      {row.childName}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        fontSize: "16px",
-                        color: "#101219",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                      }}
-                    >
-                      {row.age}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        fontSize: "16px",
-                        color: "#101219",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                      }}
-                    >
-                      {row.grade}
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        fontSize: "16px",
-                        color: "#101219",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                      }}
-                    >
-                      <Tooltip title={row.subjects}>
-                        <span style={{ 
-                          display: 'block',
-                          maxWidth: '150px',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap' 
-                        }}>
-                          {row.subjects}
-                        </span>
-                      </Tooltip>
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        fontSize: "16px",
-                        border: "1px solid #e0e0e0",
-                        color: row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
-                        fontWeight: "400",
-                      }}
-                    >
-                      {row.tutorHired}
-                    </TableCell>
-                  </TableRow>
-                )))}
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+                        {row.childName}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+                        {row.age}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+                        {row.grade}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+                        <Tooltip title={row.subjects}>
+                          <span
+                            style={{
+                              display: "block",
+                              maxWidth: "150px",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {row.subjects}
+                          </span>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          border: "1px solid #e0e0e0",
+                          color:
+                            row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
+                          fontWeight: "400",
+                        }}
+                      >
+                        {row.tutorHired}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -1071,7 +1140,10 @@ const ParentsProfile = () => {
                     >
                       <div style={{ position: "relative" }}>
                         <Avatar
-                          src={parent?.User?.image || "/placeholder.svg?height=60&width=60"}
+                          src={
+                            parent?.User?.image ||
+                            "/placeholder.svg?height=60&width=60"
+                          }
                           style={{ width: 60, height: 60 }}
                         />
                         <div
@@ -1105,7 +1177,10 @@ const ParentsProfile = () => {
                         >
                           {parent?.User?.fullName || "N/A"}
                         </h5>
-                        <Typography variant="body2" sx={{ color: "#666", mt: 1 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "#666", mt: 1 }}
+                        >
                           {parent?.User?.email || "No email"}
                         </Typography>
                         {parent?.User?.phone && (
@@ -1132,7 +1207,7 @@ const ParentsProfile = () => {
                           color: "#121217",
                         }}
                       >
-                        Tutor Status
+                        Parent Status
                       </span>
                       <Chip
                         label="Verified"

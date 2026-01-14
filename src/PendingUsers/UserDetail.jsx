@@ -73,12 +73,8 @@ const UserDetail = () => {
     clearSelectedTutor,
   } = useTutorStore();
 
-  const {
-    approveUser,
-    isApprovingUser,
-    approveUserError,
-    clearErrors,
-  } = useAdminStore();
+  const { approveUser, isApprovingUser, approveUserError, clearErrors } =
+    useAdminStore();
 
   const [activeTab, setActiveTab] = useState(0);
   const [selectedDocument, setSelectedDocument] = useState(null);
@@ -91,7 +87,6 @@ const UserDetail = () => {
       fetchTutorDetails(userId);
     }
   }, [userId, fetchTutorDetails]);
-
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -193,9 +188,7 @@ const UserDetail = () => {
             }}
           >
             <CircularProgress />
-            <Typography sx={{ ml: 2 }}>
-              Loading tutor details...
-            </Typography>
+            <Typography sx={{ ml: 2 }}>Loading tutor details...</Typography>
           </Box>
         </div>
       </>
@@ -234,7 +227,9 @@ const UserDetail = () => {
               </Button>
             }
           >
-            Error loading {tutorDetails?.role === "TUTOR" && tutorError ? "tutor" : "user"} details: {currentError}
+            Error loading{" "}
+            {tutorDetails?.role === "TUTOR" && tutorError ? "tutor" : "user"}{" "}
+            details: {currentError}
           </Alert>
         </div>
       </>
@@ -279,38 +274,38 @@ const UserDetail = () => {
       const documents = tutorDetails.documents;
 
       if (documents.idFront) {
-        const extension = documents.idFront.split('.').pop().toLowerCase();
+        const extension = documents.idFront.split(".").pop().toLowerCase();
         docs.push({
-          id: 'id-front',
-          name: 'ID Front',
-          type: extension === 'pdf' ? 'application/pdf' : 'image/png',
+          id: "id-front",
+          name: "ID Front",
+          type: extension === "pdf" ? "application/pdf" : "image/png",
           url: `${config.tutorDocumentUrl}${documents.idFront}`,
           uploadedAt: tutorProfile?.createdAt,
-          category: 'Identity',
+          category: "Identity",
         });
       }
 
       if (documents.idBack) {
-        const extension = documents.idBack.split('.').pop().toLowerCase();
+        const extension = documents.idBack.split(".").pop().toLowerCase();
         docs.push({
-          id: 'id-back',
-          name: 'ID Back',
-          type: extension === 'pdf' ? 'application/pdf' : 'image/png',
+          id: "id-back",
+          name: "ID Back",
+          type: extension === "pdf" ? "application/pdf" : "image/png",
           url: `${config.tutorDocumentUrl}${documents.idBack}`,
           uploadedAt: tutorProfile?.createdAt,
-          category: 'Identity',
+          category: "Identity",
         });
       }
 
       if (documents.resume) {
-        const extension = documents.resume.split('.').pop().toLowerCase();
+        const extension = documents.resume.split(".").pop().toLowerCase();
         docs.push({
-          id: 'resume',
-          name: 'Resume/CV',
-          type: extension === 'pdf' ? 'application/pdf' : 'image/png',
+          id: "resume",
+          name: "Resume/CV",
+          type: extension === "pdf" ? "application/pdf" : "image/png",
           url: `${config.tutorDocumentUrl}${documents.resume}`,
           uploadedAt: tutorProfile?.createdAt,
-          category: 'Education',
+          category: "Education",
         });
       }
 
@@ -322,7 +317,6 @@ const UserDetail = () => {
   const documents = getDocuments();
 
   console.log("documents", documents);
-
 
   const renderBasicInfo = () => (
     <Card sx={{ mb: 3 }}>
@@ -337,10 +331,12 @@ const UserDetail = () => {
                 src={user?.image}
                 sx={{ width: 120, height: 120, mx: "auto", mb: 2 }}
               >
-                {user?.fullName?.charAt(0).toUpperCase()}
+                {user?.firstName?.charAt(0).toUpperCase()}
               </Avatar>
               <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
-                {user?.fullName || "N/A"}
+                {user?.firstName && user?.lastName
+                  ? `${user.firstName} ${user.lastName}`
+                  : user?.firstName || user?.lastName || "N/A"}
               </Typography>
               <Chip
                 label="TUTOR"
@@ -359,8 +355,11 @@ const UserDetail = () => {
                 label={user?.isOnBoard?.toUpperCase() || "PENDING"}
                 size="medium"
                 sx={{
-                  backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
-                  border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border}`,
+                  backgroundColor: getStatusColor(user?.isOnBoard || "pending")
+                    .bg,
+                  border: `1px solid ${
+                    getStatusColor(user?.isOnBoard || "pending").border
+                  }`,
                   color: getStatusColor(user?.isOnBoard || "pending").color,
                   fontWeight: 500,
                   fontSize: "14px",
@@ -401,7 +400,9 @@ const UserDetail = () => {
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       {user?.email}
                       {user?.isEmailVerified ? (
-                        <CheckCircleIcon sx={{ color: "#38BC5C", fontSize: 16 }} />
+                        <CheckCircleIcon
+                          sx={{ color: "#38BC5C", fontSize: 16 }}
+                        />
                       ) : (
                         <CancelIcon sx={{ color: "#F31616", fontSize: 16 }} />
                       )}
@@ -419,7 +420,9 @@ const UserDetail = () => {
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       {user?.phone || "N/A"}
                       {user?.isPhoneVerified ? (
-                        <CheckCircleIcon sx={{ color: "#38BC5C", fontSize: 16 }} />
+                        <CheckCircleIcon
+                          sx={{ color: "#38BC5C", fontSize: 16 }}
+                        />
                       ) : (
                         <CancelIcon sx={{ color: "#F31616", fontSize: 16 }} />
                       )}
@@ -470,7 +473,9 @@ const UserDetail = () => {
               }}
             >
               {user?.isEmailVerified ? (
-                <CheckCircleIcon sx={{ color: "#38BC5C", fontSize: 40, mb: 1 }} />
+                <CheckCircleIcon
+                  sx={{ color: "#38BC5C", fontSize: 40, mb: 1 }}
+                />
               ) : (
                 <CancelIcon sx={{ color: "#F31616", fontSize: 40, mb: 1 }} />
               )}
@@ -493,7 +498,9 @@ const UserDetail = () => {
               }}
             >
               {user?.isPhoneVerified ? (
-                <CheckCircleIcon sx={{ color: "#38BC5C", fontSize: 40, mb: 1 }} />
+                <CheckCircleIcon
+                  sx={{ color: "#38BC5C", fontSize: 40, mb: 1 }}
+                />
               ) : (
                 <CancelIcon sx={{ color: "#F31616", fontSize: 40, mb: 1 }} />
               )}
@@ -555,7 +562,11 @@ const UserDetail = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary="Education"
-                    secondary={education.map(edu => `${edu.description} at ${edu.institute}`).join(", ") || "N/A"}
+                    secondary={
+                      education
+                        .map((edu) => `${edu.description} at ${edu.institute}`)
+                        .join(", ") || "N/A"
+                    }
                   />
                 </ListItem>
                 <ListItem>
@@ -564,7 +575,11 @@ const UserDetail = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary="Experience"
-                    secondary={totalExperience > 0 ? `${Math.round(totalExperience)} years` : "N/A"}
+                    secondary={
+                      totalExperience > 0
+                        ? `${Math.round(totalExperience)} years`
+                        : "N/A"
+                    }
                   />
                 </ListItem>
                 <ListItem>
@@ -573,7 +588,9 @@ const UserDetail = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary="Bank Details"
-                    secondary={`${tutorProfile?.bankName || "N/A"} - ${tutorProfile?.accountNumber || "N/A"}`}
+                    secondary={`${tutorProfile?.bankName || "N/A"} - ${
+                      tutorProfile?.accountNumber || "N/A"
+                    }`}
                   />
                 </ListItem>
                 <ListItem>
@@ -595,9 +612,14 @@ const UserDetail = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary="Work Experience"
-                    secondary={experience.length > 0
-                      ? experience.map(exp => `${exp.description} at ${exp.company}`).join(", ")
-                      : "N/A"
+                    secondary={
+                      experience.length > 0
+                        ? experience
+                            .map(
+                              (exp) => `${exp.description} at ${exp.company}`
+                            )
+                            .join(", ")
+                        : "N/A"
                     }
                   />
                 </ListItem>
@@ -661,7 +683,10 @@ const UserDetail = () => {
             <Typography>No documents uploaded yet</Typography>
           </Box>
         ) : (
-          <TableContainer component={Paper} sx={{ border: "1px solid #E0E3EB" }}>
+          <TableContainer
+            component={Paper}
+            sx={{ border: "1px solid #E0E3EB" }}
+          >
             <Table>
               <TableHead sx={{ backgroundColor: "#F5F5F5" }}>
                 <TableRow>
@@ -676,7 +701,9 @@ const UserDetail = () => {
                 {documents.map((doc) => (
                   <TableRow key={doc.id}>
                     <TableCell>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
                         <DocumentIcon sx={{ color: "#666", fontSize: 20 }} />
                         {doc.name}
                       </Box>
@@ -771,7 +798,10 @@ const UserDetail = () => {
               >
                 <ArrowBackIcon />
               </IconButton>
-              <Typography variant="h4" sx={{ fontWeight: 600, color: "#101219" }}>
+              <Typography
+                variant="h4"
+                sx={{ fontWeight: 600, color: "#101219" }}
+              >
                 User Details
               </Typography>
             </Box>
@@ -787,25 +817,32 @@ const UserDetail = () => {
               >
                 Send Message
               </Button>
-              
+
               <Button
                 variant="contained"
                 startIcon={
-                  user?.isOnBoard === "approved" ? <VerifiedIcon /> :
-                    isApprovingUser ? <CircularProgress size={16} color="inherit" /> : <VerifiedIcon />
+                  user?.isOnBoard === "approved" ? (
+                    <VerifiedIcon />
+                  ) : isApprovingUser ? (
+                    <CircularProgress size={16} color="inherit" />
+                  ) : (
+                    <VerifiedIcon />
+                  )
                 }
                 onClick={handleApproveUser}
                 disabled={isApprovingUser || user?.isOnBoard === "approved"}
                 sx={{
-                  backgroundColor: user?.isOnBoard === "approved" ? "#4CAF50" : "#17663A",
-                  color: "white !important",  // Force white text
+                  backgroundColor:
+                    user?.isOnBoard === "approved" ? "#4CAF50" : "#17663A",
+                  color: "white !important", // Force white text
                   textTransform: "none",
                   "&:hover": {
-                    backgroundColor: user?.isOnBoard === "approved" ? "#45a049" : "#0F4A29",
+                    backgroundColor:
+                      user?.isOnBoard === "approved" ? "#45a049" : "#0F4A29",
                   },
                   "&.Mui-disabled": {
                     backgroundColor: "#4CAF50",
-                    color: "white !important",  // Force white on disabled too
+                    color: "white !important", // Force white on disabled too
                     opacity: 0.7,
                   },
                   // Override MUI's disabled opacity for approved state
@@ -815,8 +852,11 @@ const UserDetail = () => {
                   },
                 }}
               >
-                {user?.isOnBoard === "approved" ? "Approved" :
-                  isApprovingUser ? "Approving..." : "Approve User"}
+                {user?.isOnBoard === "approved"
+                  ? "Approved"
+                  : isApprovingUser
+                  ? "Approving..."
+                  : "Approve User"}
               </Button>
             </Box>
           </Box>
@@ -840,9 +880,7 @@ const UserDetail = () => {
 
           {activeTab === 1 && <Box>{renderDocuments()}</Box>}
 
-          {activeTab === 2 && (
-            <Box>{renderTutorInfo()}</Box>
-          )}
+          {activeTab === 2 && <Box>{renderTutorInfo()}</Box>}
 
           {/* Error Display for Approve User */}
           {approveUserError && (
@@ -867,12 +905,12 @@ const UserDetail = () => {
             open={showSuccessMessage}
             autoHideDuration={4000}
             onClose={handleCloseSuccessMessage}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
           >
             <Alert
               onClose={handleCloseSuccessMessage}
               severity="success"
-              sx={{ width: '100%' }}
+              sx={{ width: "100%" }}
             >
               User has been successfully approved for onboarding!
             </Alert>

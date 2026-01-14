@@ -147,7 +147,8 @@ const PendingUsersDashboard = () => {
   const filteredUsers = pendingUsers.filter((user) => {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch =
-      user.fullName?.toLowerCase().includes(searchLower) ||
+      user.firstName?.toLowerCase().includes(searchLower) ||
+      user.lastName?.toLowerCase().includes(searchLower) ||
       user.email?.toLowerCase().includes(searchLower) ||
       user.phone?.includes(searchTerm) ||
       user.id?.toLowerCase().includes(searchLower);
@@ -251,7 +252,13 @@ const PendingUsersDashboard = () => {
               {/* Stats Cards */}
               <div className="row mb-4">
                 <div className="col-md-3">
-                  <Card sx={{ border: "1px solid #E0E3EB", borderRadius:'12px', boxShadow:'none' }}>
+                  <Card
+                    sx={{
+                      border: "1px solid #E0E3EB",
+                      borderRadius: "12px",
+                      boxShadow: "none",
+                    }}
+                  >
                     <CardContent>
                       <Box
                         sx={{
@@ -261,20 +268,31 @@ const PendingUsersDashboard = () => {
                         }}
                       >
                         <div>
-                          <Typography variant="h4" sx={{ fontWeight: 600, color: "#101219" }}>
+                          <Typography
+                            variant="h4"
+                            sx={{ fontWeight: 600, color: "#101219" }}
+                          >
                             {pendingUsersPagination?.total || 0}
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Total Pending
                           </Typography>
                         </div>
-                        <HourglassEmptyIcon sx={{ color: "#E65100", fontSize: "40px" }} />
+                        <HourglassEmptyIcon
+                          sx={{ color: "#E65100", fontSize: "40px" }}
+                        />
                       </Box>
                     </CardContent>
                   </Card>
                 </div>
                 <div className="col-md-3">
-                  <Card sx={{ border: "1px solid #E0E3EB", borderRadius:'12px', boxShadow:'none' }}>
+                  <Card
+                    sx={{
+                      border: "1px solid #E0E3EB",
+                      borderRadius: "12px",
+                      boxShadow: "none",
+                    }}
+                  >
                     <CardContent>
                       <Box
                         sx={{
@@ -284,20 +302,34 @@ const PendingUsersDashboard = () => {
                         }}
                       >
                         <div>
-                          <Typography variant="h4" sx={{ fontWeight: 600, color: "#101219" }}>
-                            {pendingUsers.filter(u => u.role === 'PARENT').length}
+                          <Typography
+                            variant="h4"
+                            sx={{ fontWeight: 600, color: "#101219" }}
+                          >
+                            {
+                              pendingUsers.filter((u) => u.role === "PARENT")
+                                .length
+                            }
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Parents
                           </Typography>
                         </div>
-                        <PersonIcon sx={{ color: "#1976D2", fontSize: "40px" }} />
+                        <PersonIcon
+                          sx={{ color: "#1976D2", fontSize: "40px" }}
+                        />
                       </Box>
                     </CardContent>
                   </Card>
                 </div>
                 <div className="col-md-3">
-                  <Card sx={{ border: "1px solid #E0E3EB", borderRadius:'12px', boxShadow:'none' }}>
+                  <Card
+                    sx={{
+                      border: "1px solid #E0E3EB",
+                      borderRadius: "12px",
+                      boxShadow: "none",
+                    }}
+                  >
                     <CardContent>
                       <Box
                         sx={{
@@ -307,20 +339,34 @@ const PendingUsersDashboard = () => {
                         }}
                       >
                         <div>
-                          <Typography variant="h4" sx={{ fontWeight: 600, color: "#101219" }}>
-                            {pendingUsers.filter(u => u.role === 'TUTOR').length}
+                          <Typography
+                            variant="h4"
+                            sx={{ fontWeight: 600, color: "#101219" }}
+                          >
+                            {
+                              pendingUsers.filter((u) => u.role === "TUTOR")
+                                .length
+                            }
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Tutors
                           </Typography>
                         </div>
-                        <PersonIcon sx={{ color: "#7B1FA2", fontSize: "40px" }} />
+                        <PersonIcon
+                          sx={{ color: "#7B1FA2", fontSize: "40px" }}
+                        />
                       </Box>
                     </CardContent>
                   </Card>
                 </div>
                 <div className="col-md-3">
-                  <Card sx={{ border: "1px solid #E0E3EB", borderRadius:'12px', boxShadow:'none' }}>
+                  <Card
+                    sx={{
+                      border: "1px solid #E0E3EB",
+                      borderRadius: "12px",
+                      boxShadow: "none",
+                    }}
+                  >
                     <CardContent>
                       <Box
                         sx={{
@@ -330,14 +376,23 @@ const PendingUsersDashboard = () => {
                         }}
                       >
                         <div>
-                          <Typography variant="h4" sx={{ fontWeight: 600, color: "#101219" }}>
-                            {pendingUsers.filter(u => u.isEmailVerified && u.isPhoneVerified).length}
+                          <Typography
+                            variant="h4"
+                            sx={{ fontWeight: 600, color: "#101219" }}
+                          >
+                            {
+                              pendingUsers.filter(
+                                (u) => u.isEmailVerified && u.isPhoneVerified
+                              ).length
+                            }
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Fully Verified
                           </Typography>
                         </div>
-                        <CheckCircleIcon sx={{ color: "#17663A", fontSize: "40px" }} />
+                        <CheckCircleIcon
+                          sx={{ color: "#17663A", fontSize: "40px" }}
+                        />
                       </Box>
                     </CardContent>
                   </Card>
@@ -345,7 +400,13 @@ const PendingUsersDashboard = () => {
               </div>
 
               {/* Search and Filter Row */}
-              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <div>
                   <TextField
                     placeholder="Search by name, email, phone, or ID"
@@ -363,7 +424,7 @@ const PendingUsersDashboard = () => {
                     style={{ width: "350px" }}
                   />
                 </div>
-                <div style={{display:'flex', gap:5}}>
+                <div style={{ display: "flex", gap: 5 }}>
                   <div>
                     <FormControl size="small" style={{ minWidth: "120px" }}>
                       <Select
@@ -399,7 +460,10 @@ const PendingUsersDashboard = () => {
                   </div>
                 </div>
               </div>
-              <Typography variant="body2" sx={{ color: "#999", fontSize: "12px", mt: 1 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "#999", fontSize: "12px", mt: 1 }}
+              >
                 Click on any user row to view detailed profile
               </Typography>
 
@@ -410,7 +474,7 @@ const PendingUsersDashboard = () => {
                   boxShadow: "none",
                   border: "1px solid #E0E3EB",
                   borderRadius: "8px",
-                  marginTop: 5
+                  marginTop: 5,
                 }}
               >
                 <Table style={{ border: "1px solid #e0e0e0" }}>
@@ -533,15 +597,15 @@ const PendingUsersDashboard = () => {
                           onClick={() => handleUserClick(user.id)}
                           style={{
                             borderBottom: "1px solid #e0e0e0",
-                            cursor: "pointer"
+                            cursor: "pointer",
                           }}
                           sx={{
-                            '&:hover': {
-                              backgroundColor: '#f0f8ff',
-                              transform: 'translateY(-1px)',
-                              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                            "&:hover": {
+                              backgroundColor: "#f0f8ff",
+                              transform: "translateY(-1px)",
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                             },
-                            transition: 'all 0.2s ease-in-out',
+                            transition: "all 0.2s ease-in-out",
                           }}
                         >
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
@@ -553,10 +617,13 @@ const PendingUsersDashboard = () => {
                               }}
                             >
                               <Avatar
-                                src={user.image || "/placeholder.svg?height=40&width=40"}
+                                src={
+                                  user.image ||
+                                  "/placeholder.svg?height=40&width=40"
+                                }
                                 style={{ width: 40, height: 40 }}
                               >
-                                {user.fullName?.charAt(0).toUpperCase()}
+                                {user.firstName?.charAt(0).toUpperCase()}
                               </Avatar>
                               <div>
                                 <Typography
@@ -568,7 +635,11 @@ const PendingUsersDashboard = () => {
                                     margin: 0,
                                   }}
                                 >
-                                  {user.fullName || "N/A"}
+                                  {
+                                    (user.firstName,
+                                    " ",
+                                    user.lastName || "N/A")
+                                  }
                                 </Typography>
                                 <Typography
                                   variant="body2"
@@ -629,7 +700,9 @@ const PendingUsersDashboard = () => {
                               size="small"
                               style={{
                                 backgroundColor: getRoleColor(user.role).bg,
-                                border: `1px solid ${getRoleColor(user.role).border}`,
+                                border: `1px solid ${
+                                  getRoleColor(user.role).border
+                                }`,
                                 color: getRoleColor(user.role).color,
                                 fontWeight: 500,
                                 fontSize: "12px",
@@ -749,9 +822,16 @@ const PendingUsersDashboard = () => {
                               label={user.isOnBoard?.toUpperCase() || "PENDING"}
                               size="small"
                               style={{
-                                backgroundColor: getStatusColor(user.isOnBoard || "pending").bg,
-                                border: `1px solid ${getStatusColor(user.isOnBoard || "pending").border}`,
-                                color: getStatusColor(user.isOnBoard || "pending").color,
+                                backgroundColor: getStatusColor(
+                                  user.isOnBoard || "pending"
+                                ).bg,
+                                border: `1px solid ${
+                                  getStatusColor(user.isOnBoard || "pending")
+                                    .border
+                                }`,
+                                color: getStatusColor(
+                                  user.isOnBoard || "pending"
+                                ).color,
                                 fontWeight: 500,
                                 fontSize: "12px",
                               }}
@@ -765,35 +845,38 @@ const PendingUsersDashboard = () => {
               </TableContainer>
 
               {/* Pagination */}
-              {pendingUsersPagination && pendingUsersPagination.totalPages > 1 && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    mt: 3,
-                    gap: 2,
-                  }}
-                >
-                  <Typography variant="body2" sx={{ color: "#666" }}>
-                    Page {pendingUsersPagination.page} of{" "}
-                    {pendingUsersPagination.totalPages} ({pendingUsersPagination.total} total users)
-                  </Typography>
-                  <Pagination
-                    count={pendingUsersPagination.totalPages}
-                    page={currentPage}
-                    onChange={handlePageChange}
-                    color="primary"
-                    disabled={isLoadingPendingUsers}
-                  />
-                </Box>
-              )}
+              {pendingUsersPagination &&
+                pendingUsersPagination.totalPages > 1 && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      mt: 3,
+                      gap: 2,
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ color: "#666" }}>
+                      Page {pendingUsersPagination.page} of{" "}
+                      {pendingUsersPagination.totalPages} (
+                      {pendingUsersPagination.total} total users)
+                    </Typography>
+                    <Pagination
+                      count={pendingUsersPagination.totalPages}
+                      page={currentPage}
+                      onChange={handlePageChange}
+                      color="primary"
+                      disabled={isLoadingPendingUsers}
+                    />
+                  </Box>
+                )}
 
               {/* Show total count */}
               {filteredUsers.length > 0 && (
                 <div style={{ marginTop: "16px", textAlign: "center" }}>
                   <Typography variant="body2" style={{ color: "#666" }}>
-                    Showing {filteredUsers.length} of {pendingUsersPagination?.total || 0} pending users
+                    Showing {filteredUsers.length} of{" "}
+                    {pendingUsersPagination?.total || 0} pending users
                     {(searchTerm || roleFilter !== "ALL") && " (filtered)"}
                   </Typography>
                 </div>

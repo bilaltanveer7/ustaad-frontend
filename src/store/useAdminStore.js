@@ -15,7 +15,7 @@ import {
 export const useAdminStore = create((set, get) => ({
   // Stats data
   stats: null,
-  
+
   // Payment requests data
   paymentRequests: [],
   selectedPaymentRequest: null,
@@ -29,7 +29,7 @@ export const useAdminStore = create((set, get) => ({
 
   // User detail data
   selectedUser: null,
-  
+
   // Loading states
   isLoadingStats: false,
   isLoadingPaymentRequests: false,
@@ -53,10 +53,10 @@ export const useAdminStore = create((set, get) => ({
   // Fetch platform statistics
   fetchStats: async (days = null) => {
     set({ isLoadingStats: true, statsError: null });
-    
+
     try {
       const response = await getStats(days);
-    
+
       if (response.data && response.data.success) {
         set({
           stats: response.data.data,
@@ -72,13 +72,13 @@ export const useAdminStore = create((set, get) => ({
     } catch (error) {
       console.error("Fetch stats error:", error);
       let errorMessage = "Failed to fetch statistics";
-      
+
       if (error.response?.data?.errors) {
         errorMessage = error.response.data.errors[0]?.message || errorMessage;
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-      
+
       set({ statsError: errorMessage, isLoadingStats: false });
       return { success: false, error: errorMessage };
     }
@@ -87,10 +87,10 @@ export const useAdminStore = create((set, get) => ({
   // Fetch all payment requests
   fetchPaymentRequests: async () => {
     set({ isLoadingPaymentRequests: true, paymentRequestsError: null });
-    
+
     try {
       const response = await getAllPaymentRequests();
-      
+
       if (response.data && response.data.success) {
         set({
           paymentRequests: response.data.data || [],
@@ -109,13 +109,13 @@ export const useAdminStore = create((set, get) => ({
     } catch (error) {
       console.error("Fetch payment requests error:", error);
       let errorMessage = "Failed to fetch payment requests";
-      
+
       if (error.response?.data?.errors) {
         errorMessage = error.response.data.errors[0]?.message || errorMessage;
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-      
+
       set({
         paymentRequestsError: errorMessage,
         isLoadingPaymentRequests: false,
@@ -127,10 +127,10 @@ export const useAdminStore = create((set, get) => ({
   // Fetch payment request by ID
   fetchPaymentRequestDetails: async (requestId) => {
     set({ isLoadingPaymentRequests: true, paymentRequestsError: null });
-    
+
     try {
       const response = await getPaymentRequestById(requestId);
-      
+
       if (response.data && response.data.success) {
         set({
           selectedPaymentRequest: response.data.data,
@@ -149,13 +149,13 @@ export const useAdminStore = create((set, get) => ({
     } catch (error) {
       console.error("Fetch payment request details error:", error);
       let errorMessage = "Failed to fetch payment request details";
-      
+
       if (error.response?.data?.errors) {
         errorMessage = error.response.data.errors[0]?.message || errorMessage;
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-      
+
       set({
         paymentRequestsError: errorMessage,
         isLoadingPaymentRequests: false,
@@ -167,14 +167,14 @@ export const useAdminStore = create((set, get) => ({
   // Update payment request status
   updatePaymentStatus: async (requestId, status) => {
     set({ isUpdatingPaymentRequest: true, paymentRequestsError: null });
-    
+
     try {
       const response = await updatePaymentRequestStatus(requestId, status);
-      
+
       if (response.data && response.data.success) {
         // Update the payment request in the list
         const updatedRequests = get().paymentRequests.map((request) =>
-          request.id === requestId 
+          request.id === requestId
             ? {
                 ...request,
                 status: status,
@@ -182,7 +182,7 @@ export const useAdminStore = create((set, get) => ({
               }
             : request
         );
-        
+
         // Update selected payment request if it's the one being updated
         const selectedRequest = get().selectedPaymentRequest;
         const updatedSelectedRequest =
@@ -192,14 +192,14 @@ export const useAdminStore = create((set, get) => ({
                 status: status,
                 updatedAt: new Date().toISOString(),
               }
-          : selectedRequest;
-        
+            : selectedRequest;
+
         set({
           paymentRequests: updatedRequests,
           selectedPaymentRequest: updatedSelectedRequest,
           isUpdatingPaymentRequest: false,
         });
-        
+
         return { success: true, data: response.data.data };
       } else {
         const errorMessage =
@@ -262,11 +262,11 @@ export const useAdminStore = create((set, get) => ({
   },
 
   // Create new admin
-  createNewAdmin: async (fullName, email, password) => {
+  createNewAdmin: async (firstName, lastName, email, password) => {
     set({ isCreatingAdmin: true, adminsError: null });
 
     try {
-      const response = await createAdmin(fullName, email, password);
+      const response = await createAdmin(firstName, lastName, email, password);
 
       if (response.data && response.data.success) {
         // Add the new admin to the list
@@ -306,9 +306,9 @@ export const useAdminStore = create((set, get) => ({
       const response = await deleteAdmin(id);
       if (response.data && response.data.success) {
         const updatedAdmins = get().admins.filter((admin) => admin.id !== id);
-        set({ 
+        set({
           admins: updatedAdmins,
-          isDeletingAdmin: false 
+          isDeletingAdmin: false,
         });
         return { success: true, data: response.data.data };
       } else {
@@ -319,13 +319,13 @@ export const useAdminStore = create((set, get) => ({
     } catch (error) {
       console.error("Delete admin error:", error);
       let errorMessage = "Failed to delete admin";
-      
+
       if (error.response?.data?.errors) {
         errorMessage = error.response.data.errors[0]?.message || errorMessage;
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-      
+
       set({ adminsError: errorMessage, isDeletingAdmin: false });
       return { success: false, error: errorMessage };
     }
@@ -411,8 +411,7 @@ export const useAdminStore = create((set, get) => ({
         set({ isApprovingUser: false });
         return { success: true, data: response.data };
       } else {
-        const errorMessage =
-          response.data?.message || "Failed to approve user";
+        const errorMessage = response.data?.message || "Failed to approve user";
         set({ approveUserError: errorMessage, isApprovingUser: false });
         return { success: false, error: errorMessage };
       }
@@ -495,7 +494,7 @@ export const useAdminStore = create((set, get) => ({
   getStatsSummary: () => {
     const { stats } = get();
     if (!stats) return null;
-    
+
     return [
       {
         title: "Total Users",

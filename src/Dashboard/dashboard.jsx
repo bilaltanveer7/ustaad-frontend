@@ -122,7 +122,8 @@ const Dashboard = () => {
 
   const getChangeType = (key, fallbackType) => {
     const change = getStatChange(key);
-    if (typeof change?.delta === "number") return change.delta >= 0 ? "up" : "down";
+    if (typeof change?.delta === "number")
+      return change.delta >= 0 ? "up" : "down";
     if (typeof change?.percent === "number")
       return change.percent >= 0 ? "up" : "down";
     return fallbackType;
@@ -133,10 +134,12 @@ const Dashboard = () => {
     typeof stats?.totalParents === "number" &&
     typeof stats?.totalTutors === "number";
 
-  const totalUsersValue = typeof stats?.totalUsers === "number" ? stats.totalUsers : null;
+  const totalUsersValue =
+    typeof stats?.totalUsers === "number" ? stats.totalUsers : null;
   const totalParentsValue =
     typeof stats?.totalParents === "number" ? stats.totalParents : null;
-  const totalTutorsValue = typeof stats?.totalTutors === "number" ? stats.totalTutors : null;
+  const totalTutorsValue =
+    typeof stats?.totalTutors === "number" ? stats.totalTutors : null;
 
   const derivedOffloadedUsers =
     hasUsersData && totalUsersValue != null
@@ -167,23 +170,36 @@ const Dashboard = () => {
   //     )
   //     : null;
 
-  const derivedKnownUsersPercent = totalUsersValue > 0
-    ? Math.round(((totalParentsValue || 0 + totalTutorsValue || 0) / totalUsersValue) * 100)
-    : 0;
+  const derivedKnownUsersPercent =
+    totalUsersValue > 0
+      ? Math.round(
+          ((totalParentsValue || 0 + totalTutorsValue || 0) / totalUsersValue) *
+            100
+        )
+      : 0;
 
-  const derivedTutorsPercent = totalUsersValue > 0
-    ? Math.max(0, Math.min(100, ((totalTutorsValue || 0) / totalUsersValue) * 100))
-    : 0;
+  const derivedTutorsPercent =
+    totalUsersValue > 0
+      ? Math.max(
+          0,
+          Math.min(100, ((totalTutorsValue || 0) / totalUsersValue) * 100)
+        )
+      : 0;
 
-  const derivedParentsPercent = totalUsersValue > 0
-    ? Math.max(0, Math.min(100, ((totalParentsValue || 0) / totalUsersValue) * 100))
-    : 0;
+  const derivedParentsPercent =
+    totalUsersValue > 0
+      ? Math.max(
+          0,
+          Math.min(100, ((totalParentsValue || 0) / totalUsersValue) * 100)
+        )
+      : 0;
 
-  const derivedOffloadedPercent = totalUsersValue > 0
-    ? Math.max(0, 100 - derivedTutorsPercent - derivedParentsPercent)
-    : 0;
+  const derivedOffloadedPercent =
+    totalUsersValue > 0
+      ? Math.max(0, 100 - derivedTutorsPercent - derivedParentsPercent)
+      : 0;
 
-  console.log('Data Debug******************:', {
+  console.log("Data Debug******************:", {
     hasUsersData,
     totalUsersValue,
     totalTutorsValue,
@@ -192,33 +208,47 @@ const Dashboard = () => {
   });
 
   const hasSubscriptionsData = typeof stats?.totalSubscriptions === "number";
-  const totalSubscriptionsValue = hasSubscriptionsData ? stats.totalSubscriptions : null;
+  const totalSubscriptionsValue = hasSubscriptionsData
+    ? stats.totalSubscriptions
+    : null;
   const activeSubscriptionsValue =
-    typeof stats?.activeSubscriptions === "number" ? stats.activeSubscriptions : null;
+    typeof stats?.activeSubscriptions === "number"
+      ? stats.activeSubscriptions
+      : null;
   const completedSubscriptionsValue =
     typeof stats?.completedSubscriptions === "number"
       ? stats.completedSubscriptions
       : null;
   const remainingSubscriptionsValue =
     hasSubscriptionsData &&
-      typeof activeSubscriptionsValue === "number" &&
-      typeof completedSubscriptionsValue === "number"
+    typeof activeSubscriptionsValue === "number" &&
+    typeof completedSubscriptionsValue === "number"
       ? Math.max(
-        0,
-        totalSubscriptionsValue - activeSubscriptionsValue - completedSubscriptionsValue
-      )
+          0,
+          totalSubscriptionsValue -
+            activeSubscriptionsValue -
+            completedSubscriptionsValue
+        )
       : null;
 
   const computedJobData =
     hasSubscriptionsData &&
-      typeof activeSubscriptionsValue === "number" &&
-      typeof completedSubscriptionsValue === "number" &&
-      typeof remainingSubscriptionsValue === "number"
+    typeof activeSubscriptionsValue === "number" &&
+    typeof completedSubscriptionsValue === "number" &&
+    typeof remainingSubscriptionsValue === "number"
       ? [
-        { name: "Active", value: activeSubscriptionsValue, color: "#00bcd4" },
-        { name: "Completed", value: completedSubscriptionsValue, color: "#4caf50" },
-        { name: "Remaining", value: remainingSubscriptionsValue, color: "#e0e0e0" },
-      ]
+          { name: "Active", value: activeSubscriptionsValue, color: "#00bcd4" },
+          {
+            name: "Completed",
+            value: completedSubscriptionsValue,
+            color: "#4caf50",
+          },
+          {
+            name: "Remaining",
+            value: remainingSubscriptionsValue,
+            color: "#e0e0e0",
+          },
+        ]
       : jobData;
 
   // Fetch stats on component mount and when time filter changes
@@ -789,7 +819,6 @@ const Dashboard = () => {
                   width: "33.1%",
                 }}
               >
-
                 <Grid item xs={12}>
                   <Card
                     elevation={0}
@@ -849,28 +878,46 @@ const Dashboard = () => {
                         </Typography>
                       </Box> */}
 
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                      >
                         {/* Dynamic arrow based on calculation */}
                         {currentTotalUsers > prevTotalUsers ? (
                           <TrendingUp sx={{ fontSize: 16, color: "#38BC5C" }} />
                         ) : currentTotalUsers < prevTotalUsers ? (
-                          <TrendingDown sx={{ fontSize: 16, color: "#F31616" }} />
+                          <TrendingDown
+                            sx={{ fontSize: 16, color: "#F31616" }}
+                          />
                         ) : null}
 
                         <Typography
                           sx={{
-                            color: currentTotalUsers > prevTotalUsers ? "#38BC5C" : "#F31616",
+                            color:
+                              currentTotalUsers > prevTotalUsers
+                                ? "#38BC5C"
+                                : "#F31616",
                             fontWeight: 400,
                             fontSize: "14px",
                           }}
                         >
                           {/* DYNAMIC CHANGE % */}
                           {prevTotalUsers > 0
-                            ? `${currentTotalUsers > prevTotalUsers ? '+' : ''}${Math.round(((currentTotalUsers - prevTotalUsers) / prevTotalUsers) * 100)}%`
-                            : 'New'
-                          }
+                            ? `${
+                                currentTotalUsers > prevTotalUsers ? "+" : ""
+                              }${Math.round(
+                                ((currentTotalUsers - prevTotalUsers) /
+                                  prevTotalUsers) *
+                                  100
+                              )}%`
+                            : "New"}
                         </Typography>
-                        <Typography sx={{ color: "#4D5874", fontWeight: 400, fontSize: "14px" }}>
+                        <Typography
+                          sx={{
+                            color: "#4D5874",
+                            fontWeight: 400,
+                            fontSize: "14px",
+                          }}
+                        >
                           Last month
                         </Typography>
                       </Box>
@@ -884,10 +931,14 @@ const Dashboard = () => {
                         mb: 1.5,
                       }}
                     >
-                      <Typography sx={{ fontWeight: 600, fontSize: 20, color: "#101219" }}>
+                      <Typography
+                        sx={{ fontWeight: 600, fontSize: 20, color: "#101219" }}
+                      >
                         {(derivedKnownUsersPercent || 0).toString()}%
                       </Typography>
-                      <Typography sx={{ fontWeight: 500, fontSize: 14, color: "#101219" }}>
+                      <Typography
+                        sx={{ fontWeight: 500, fontSize: 14, color: "#101219" }}
+                      >
                         {(totalUsersValue || 0).toLocaleString()}
                       </Typography>
                     </Box>
@@ -931,14 +982,34 @@ const Dashboard = () => {
                         }}
                       /> */}
 
-                      <Box sx={{ width: `${derivedTutorsPercent || 0}%`, backgroundColor: "#25A798", flexShrink: 0 }} />
-                      <Box sx={{ width: `${derivedParentsPercent || 0}%`, backgroundColor: "#1E9CBC", flexShrink: 0 }} />
-                      <Box sx={{ width: `${derivedOffloadedPercent || 0}%`, backgroundColor: "#C8CDDA", flexShrink: 0 }} />
+                      <Box
+                        sx={{
+                          width: `${derivedTutorsPercent || 0}%`,
+                          backgroundColor: "#25A798",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          width: `${derivedParentsPercent || 0}%`,
+                          backgroundColor: "#1E9CBC",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          width: `${derivedOffloadedPercent || 0}%`,
+                          backgroundColor: "#C8CDDA",
+                          flexShrink: 0,
+                        }}
+                      />
                     </Box>
 
                     {/* Legend */}
                     <Box sx={{ display: "flex", gap: 3, mt: 2 }}>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                      >
                         <Box
                           sx={{
                             width: 8,
@@ -951,7 +1022,9 @@ const Dashboard = () => {
                           Tutors
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                      >
                         <Box
                           sx={{
                             width: 8,
@@ -964,7 +1037,9 @@ const Dashboard = () => {
                           Parents
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                      >
                         <Box
                           sx={{
                             width: 8,
@@ -1009,7 +1084,7 @@ const Dashboard = () => {
                             color: "#101219",
                           }}
                         >
-                          Job Summary
+                          Contracts Summary
                         </Typography>
                         <Box
                           sx={{
@@ -1018,7 +1093,8 @@ const Dashboard = () => {
                             gap: 0.5,
                           }}
                         >
-                          {getChangeType("totalSubscriptions", "up") === "up" ? (
+                          {getChangeType("totalSubscriptions", "up") ===
+                          "up" ? (
                             <TrendingUp
                               sx={{ fontSize: 16, color: "#4caf50", mr: 0.5 }}
                             />
@@ -1030,7 +1106,8 @@ const Dashboard = () => {
                           <Typography
                             sx={{
                               color:
-                                getChangeType("totalSubscriptions", "up") === "up"
+                                getChangeType("totalSubscriptions", "up") ===
+                                "up"
                                   ? "#38BC5C"
                                   : "#F31616",
                               fontWeight: 400,

@@ -44,7 +44,6 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { CiWallet } from "react-icons/ci";
 import config from "../utils/config";
 
-
 const drawerWidth = 260;
 
 const TutorsProfile = () => {
@@ -64,8 +63,8 @@ const TutorsProfile = () => {
   const [profileData, setProfileData] = useState({
     noOfHires: "12",
     joiningDate: "12/03/24",
-    children: "2",
-    amountSpent: "Rs. 150,000",
+    experienceYears: "2",
+    subjects: "Mathematics, Physics",
     description:
       "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
   });
@@ -85,16 +84,16 @@ const TutorsProfile = () => {
       setProfileData((prev) => ({
         ...prev,
         noOfHires:
-          typeof timesHired === "number" ? timesHired.toString() : prev.noOfHires,
+          typeof timesHired === "number"
+            ? timesHired.toString()
+            : prev.noOfHires,
         joiningDate: tutor?.createdAt
           ? new Date(tutor.createdAt).toLocaleDateString()
           : "N/A",
-        children: totalExperience
+        experienceYears: totalExperience
           ? Math.round(totalExperience).toString()
           : "0",
-        amountSpent: tutor?.balance
-          ? `Rs. ${tutor.balance.toFixed(2)}`
-          : "Rs. 0.00",
+        subjects: tutor?.subjects?.join(", ") || "N/A",
         description: tutor?.about || "No description available",
       }));
     }
@@ -302,88 +301,100 @@ const TutorsProfile = () => {
   const experienceData =
     experience?.length > 0
       ? experience?.map((exp) => ({
-        id: exp.id,
-        company: exp.company || "N/A",
-        title: exp.description || "N/A", // API uses 'description' for job title/role
-        startYear: exp.startDate
-          ? new Date(exp.startDate).getFullYear().toString()
-          : "N/A",
-        endYear: exp.endDate
-          ? new Date(exp.endDate).getFullYear().toString()
-          : "Present",
-      }))
+          id: exp.id,
+          company: exp.company || "N/A",
+          title: exp.description || "N/A", // API uses 'description' for job title/role
+          startYear: exp.startDate
+            ? new Date(exp.startDate).getFullYear().toString()
+            : "N/A",
+          endYear: exp.endDate
+            ? new Date(exp.endDate).getFullYear().toString()
+            : "Present",
+        }))
       : [];
 
   const educationData =
     education?.length > 0
       ? education?.map((edu) => ({
-        id: edu.id,
-        institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-        degree: edu.description || "N/A", // API uses 'description' for degree info
-        startYear: edu.startDate
-          ? new Date(edu.startDate).getFullYear().toString()
-          : "N/A",
-        endYear: edu.endDate
-          ? new Date(edu.endDate).getFullYear().toString()
-          : "Present",
-      }))
+          id: edu.id,
+          institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
+          degree: edu.description || "N/A", // API uses 'description' for degree info
+          startYear: edu.startDate
+            ? new Date(edu.startDate).getFullYear().toString()
+            : "N/A",
+          endYear: edu.endDate
+            ? new Date(edu.endDate).getFullYear().toString()
+            : "Present",
+        }))
       : [];
 
   // Transform API transactions data for display
   const transactionsData = transactions
     ? // Handle both single object and array cases
-    (Array.isArray(transactions) ? transactions : [transactions]).map(
-      (tx) => ({
-        id: tx.id,
-        payment: {
-          name: tutor?.User?.fullName || "Unknown",
-          cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
-        },
-        child: {
-          name: "Student", // API doesn't provide child info, using placeholder
-          avatar: "/placeholder.svg?height=32&width=32",
-        },
-        pay: tx.amount || 0,
-        paymentMethod: {
-          type: "bank",
-          accountNumber: tutor?.accountNumber || "N/A",
-        },
-        transactionDate: tx.createdAt
-          ? new Date(tx.createdAt).toLocaleDateString()
-          : "N/A",
-        status: tx.status || "UNKNOWN",
-      })
-    )
+      (Array.isArray(transactions) ? transactions : [transactions]).map(
+        (tx) => ({
+          id: tx.id,
+          payment: {
+            name: tutor?.User?.fullName || "Unknown",
+            cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
+          },
+          child: {
+            name: "Student", // API doesn't provide child info, using placeholder
+            avatar: "/placeholder.svg?height=32&width=32",
+          },
+          pay: tx.amount || 0,
+          paymentMethod: {
+            type: "bank",
+            accountNumber: tutor?.accountNumber || "N/A",
+          },
+          transactionDate: tx.createdAt
+            ? new Date(tx.createdAt).toLocaleDateString()
+            : "N/A",
+          status: tx.status || "UNKNOWN",
+        })
+      )
     : [];
 
   // Transform API documents data for display
   const documentsData = documents
     ? [
-      {
-        id: 1,
-        name: "Resume",
-        type: documents.resume ? (documents.resume.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
-        url: `${config.tutorDocumentUrl}${documents.resume}`,
-        uploadDate: "N/A", // Upload date not available in API
-        status: documents.resume ? "Available" : "Missing",
-      },
-      {
-        id: 2,
-        name: "ID Front",
-        type: documents.idFront ? (documents.idFront.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
-        url: `${config.tutorDocumentUrl}${documents.idFront}`,
-        uploadDate: "N/A", // Upload date not available in API
-        status: documents.idFront ? "Available" : "Missing",
-      },
-      {
-        id: 3,
-        name: "ID Back",
-        type: documents.idBack ? (documents.idBack.toLowerCase().endsWith('.pdf') ? 'PDF' : 'Image') : 'N/A',
-        url: `${config.tutorDocumentUrl}${documents.idBack}`,
-        uploadDate: "N/A", // Upload date not available in API
-        status: documents.idBack ? "Available" : "Missing",
-      },
-    ].filter((doc) => doc.url)
+        {
+          id: 1,
+          name: "Resume",
+          type: documents.resume
+            ? documents.resume.toLowerCase().endsWith(".pdf")
+              ? "PDF"
+              : "Image"
+            : "N/A",
+          url: `${config.tutorDocumentUrl}${documents.resume}`,
+          uploadDate: "N/A", // Upload date not available in API
+          status: documents.resume ? "Available" : "Missing",
+        },
+        {
+          id: 2,
+          name: "ID Front",
+          type: documents.idFront
+            ? documents.idFront.toLowerCase().endsWith(".pdf")
+              ? "PDF"
+              : "Image"
+            : "N/A",
+          url: `${config.tutorDocumentUrl}${documents.idFront}`,
+          uploadDate: "N/A", // Upload date not available in API
+          status: documents.idFront ? "Available" : "Missing",
+        },
+        {
+          id: 3,
+          name: "ID Back",
+          type: documents.idBack
+            ? documents.idBack.toLowerCase().endsWith(".pdf")
+              ? "PDF"
+              : "Image"
+            : "N/A",
+          url: `${config.tutorDocumentUrl}${documents.idBack}`,
+          uploadDate: "N/A", // Upload date not available in API
+          status: documents.idBack ? "Available" : "Missing",
+        },
+      ].filter((doc) => doc.url)
     : [];
 
   const childrenData = [
@@ -656,26 +667,26 @@ const TutorsProfile = () => {
                               row.status === "COMPLETED"
                                 ? "#EEFBF4"
                                 : row.status === "IN_REVIEW"
-                                  ? "#FFF4E6"
-                                  : row.status === "FAILED"
-                                    ? "#FFEBEE"
-                                    : "#F5F5F5",
+                                ? "#FFF4E6"
+                                : row.status === "FAILED"
+                                ? "#FFEBEE"
+                                : "#F5F5F5",
                             border:
                               row.status === "COMPLETED"
                                 ? "1px solid #B2EECC"
                                 : row.status === "IN_REVIEW"
-                                  ? "1px solid #FFD54F"
-                                  : row.status === "FAILED"
-                                    ? "1px solid #FFCDD2"
-                                    : "1px solid #E0E0E0",
+                                ? "1px solid #FFD54F"
+                                : row.status === "FAILED"
+                                ? "1px solid #FFCDD2"
+                                : "1px solid #E0E0E0",
                             color:
                               row.status === "COMPLETED"
                                 ? "#17663A"
                                 : row.status === "IN_REVIEW"
-                                  ? "#E65100"
-                                  : row.status === "FAILED"
-                                    ? "#C62828"
-                                    : "#424242",
+                                ? "#E65100"
+                                : row.status === "FAILED"
+                                ? "#C62828"
+                                : "#424242",
                             fontWeight: 500,
                             fontSize: "12px",
                           }}
@@ -1283,7 +1294,11 @@ const TutorsProfile = () => {
                             fontSize: "24px",
                           }}
                         >
-                          {tutor?.User?.fullName || "N/A"}
+                          {tutor?.User?.firstName && tutor?.User?.lastName
+                            ? `${tutor.User.firstName} ${tutor.User.lastName}`
+                            : tutor?.User?.firstName ||
+                              tutor?.User?.lastName ||
+                              "N/A"}
                         </h5>
                         <Typography
                           variant="body2"
@@ -1465,9 +1480,9 @@ const TutorsProfile = () => {
                         Experience (Years)
                       </div>
                       <TextField
-                        value={profileData.children}
+                        value={profileData.experienceYears}
                         onChange={(e) =>
-                          handleInputChange("children", e.target.value)
+                          handleInputChange("experienceYears", e.target.value)
                         }
                         variant="outlined"
                         size="small"
@@ -1492,12 +1507,12 @@ const TutorsProfile = () => {
                           marginBottom: "5px",
                         }}
                       >
-                        Total Jobs Done
+                        Subjects
                       </div>
                       <TextField
-                        value={profileData.amountSpent}
+                        value={profileData.subjects}
                         onChange={(e) =>
-                          handleInputChange("amountSpent", e.target.value)
+                          handleInputChange("subjects", e.target.value)
                         }
                         variant="outlined"
                         size="small"

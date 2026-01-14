@@ -39,16 +39,16 @@ const drawerWidth = 260;
 
 const AdminsDashboard = () => {
   const navigate = useNavigate();
-  const { 
-    admins, 
-    fetchAdmins, 
+  const {
+    admins,
+    fetchAdmins,
     deleteAdminById,
-    isLoadingAdmins, 
+    isLoadingAdmins,
     isDeletingAdmin,
-    adminsError, 
-    clearErrors 
+    adminsError,
+    clearErrors,
   } = useAdminStore();
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -65,8 +65,21 @@ const AdminsDashboard = () => {
     return (
       <>
         <SideNav />
-        <div style={{ marginLeft: `${drawerWidth}px`, marginTop: "4rem", padding: "20px" }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+        <div
+          style={{
+            marginLeft: `${drawerWidth}px`,
+            marginTop: "4rem",
+            padding: "20px",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "50vh",
+            }}
+          >
             <CircularProgress />
             <Typography sx={{ ml: 2 }}>Loading admins...</Typography>
           </Box>
@@ -80,11 +93,24 @@ const AdminsDashboard = () => {
     return (
       <>
         <SideNav />
-        <div style={{ marginLeft: `${drawerWidth}px`, marginTop: "4rem", padding: "20px" }}>
-          <Alert 
-            severity="error" 
+        <div
+          style={{
+            marginLeft: `${drawerWidth}px`,
+            marginTop: "4rem",
+            padding: "20px",
+          }}
+        >
+          <Alert
+            severity="error"
             action={
-              <Button color="inherit" size="small" onClick={() => { clearErrors(); fetchAdmins(); }}>
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  clearErrors();
+                  fetchAdmins();
+                }}
+              >
                 Retry
               </Button>
             }
@@ -97,10 +123,13 @@ const AdminsDashboard = () => {
   }
 
   // Filter admins
-  const filteredAdmins = admins.filter(admin => {
+  const filteredAdmins = admins.filter((admin) => {
     const searchLower = searchTerm.toLowerCase();
+    const fullName = `${admin.firstName || ""} ${
+      admin.lastName || ""
+    }`.toLowerCase();
     return (
-      admin.fullName?.toLowerCase().includes(searchLower) ||
+      fullName.includes(searchLower) ||
       admin.email?.toLowerCase().includes(searchLower) ||
       admin.id?.toString().includes(searchLower)
     );
@@ -136,7 +165,7 @@ const AdminsDashboard = () => {
         // No need to refresh - the store already updates the list
       }
     } catch (error) {
-      console.error('Error deleting admin:', error);
+      console.error("Error deleting admin:", error);
     }
   };
 
@@ -210,8 +239,17 @@ const AdminsDashboard = () => {
                 <div className="row">
                   <div className="col-md-3">
                     <div style={{ textAlign: "center" }}>
-                      <PersonIcon style={{ fontSize: "40px", color: "#1E9CBC", marginBottom: "10px" }} />
-                      <Typography variant="h4" style={{ fontWeight: 600, color: "#101219" }}>
+                      <PersonIcon
+                        style={{
+                          fontSize: "40px",
+                          color: "#1E9CBC",
+                          marginBottom: "10px",
+                        }}
+                      />
+                      <Typography
+                        variant="h4"
+                        style={{ fontWeight: 600, color: "#101219" }}
+                      >
                         {admins.length}
                       </Typography>
                       <Typography variant="body1" style={{ color: "#666" }}>
@@ -220,12 +258,21 @@ const AdminsDashboard = () => {
                     </div>
                   </div>
                   <div className="col-md-9">
-                    <Typography variant="h6" style={{ fontWeight: 500, color: "#101219", marginBottom: "10px" }}>
+                    <Typography
+                      variant="h6"
+                      style={{
+                        fontWeight: 500,
+                        color: "#101219",
+                        marginBottom: "10px",
+                      }}
+                    >
                       Admin Management
                     </Typography>
                     <Typography variant="body2" style={{ color: "#666" }}>
-                      Manage system administrators, create new admin accounts, and monitor admin activities.
-                      Admins have full access to the platform and can manage users, transactions, and system settings.
+                      Manage system administrators, create new admin accounts,
+                      and monitor admin activities. Admins have full access to
+                      the platform and can manage users, transactions, and
+                      system settings.
                     </Typography>
                   </div>
                 </div>
@@ -357,39 +404,48 @@ const AdminsDashboard = () => {
                           Created Date
                         </Box>
                       </TableCell>
-                                              <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              color: "#FFFFFF",
-                              alignItems: "center",
-                            }}
-                          >
-                            Status
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              fontWeight: 500,
-                              fontSize: "14px",
-                              color: "#FFFFFF",
-                              alignItems: "center",
-                            }}
-                          >
-                            Actions
-                          </Box>
-                        </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                            color: "#FFFFFF",
+                            alignItems: "center",
+                          }}
+                        >
+                          Status
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                            color: "#FFFFFF",
+                            alignItems: "center",
+                          }}
+                        >
+                          Actions
+                        </Box>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {displayedAdmins.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={6} style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-                          {searchTerm ? 'No admins found matching your search' : 'No admins found'}
+                        <TableCell
+                          colSpan={6}
+                          style={{
+                            textAlign: "center",
+                            padding: "40px",
+                            color: "#666",
+                          }}
+                        >
+                          {searchTerm
+                            ? "No admins found matching your search"
+                            : "No admins found"}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -410,9 +466,18 @@ const AdminsDashboard = () => {
                             </span>
                           </TableCell>
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "12px",
+                              }}
+                            >
                               <Avatar
-                                src={admin.image || "/placeholder.svg?height=40&width=40"}
+                                src={
+                                  admin.image ||
+                                  "/placeholder.svg?height=40&width=40"
+                                }
                                 style={{ width: 40, height: 40 }}
                               >
                                 {admin.fullName?.charAt(0).toUpperCase()}
@@ -427,7 +492,11 @@ const AdminsDashboard = () => {
                                     margin: 0,
                                   }}
                                 >
-                                  {admin.fullName || "N/A"}
+                                  {admin.firstName && admin.lastName
+                                    ? `${admin.firstName} ${admin.lastName}`
+                                    : admin.firstName ||
+                                      admin.lastName ||
+                                      "N/A"}
                                 </Typography>
                                 <Typography
                                   variant="body2"
@@ -461,10 +530,9 @@ const AdminsDashboard = () => {
                                 color: "#4D5874",
                               }}
                             >
-                              {admin.createdAt 
+                              {admin.createdAt
                                 ? new Date(admin.createdAt).toLocaleDateString()
-                                : "N/A"
-                              }
+                                : "N/A"}
                             </span>
                           </TableCell>
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
@@ -487,9 +555,9 @@ const AdminsDashboard = () => {
                                 disabled={isDeletingAdmin}
                                 size="small"
                                 sx={{
-                                  color: '#f44336',
-                                  '&:hover': {
-                                    backgroundColor: '#ffebee',
+                                  color: "#f44336",
+                                  "&:hover": {
+                                    backgroundColor: "#ffebee",
                                   },
                                 }}
                               >
@@ -508,7 +576,8 @@ const AdminsDashboard = () => {
               {admins.length > 0 && (
                 <div style={{ marginTop: "16px", textAlign: "center" }}>
                   <Typography variant="body2" style={{ color: "#666" }}>
-                    Showing {Math.min(displayedAdmins.length, rowsPerPage)} of {filteredAdmins.length} admins
+                    Showing {Math.min(displayedAdmins.length, rowsPerPage)} of{" "}
+                    {filteredAdmins.length} admins
                     {searchTerm && ` (filtered from ${admins.length} total)`}
                   </Typography>
                 </div>
