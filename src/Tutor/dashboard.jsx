@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useTutorStore } from "../store/useTutorStore";
-import { CircularProgress, Alert } from "@mui/material";
+import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import {
   Box,
@@ -472,18 +472,26 @@ const TutorDashboard = () => {
                               onClick={() =>
                                 navigate(`/tutor-profile/${row.id}`)
                               }
-                              style={{
-                                fontWeight: 400,
-                                fontSize: "16px",
-                                color: "#4D5874",
-                                border: "1px solid #e0e0e0",
-                                cursor: "pointer",
-                                py: 0,
-                              }}
                             >
-                              <div className="d-flex align-items-center justify-content-between">
-                                {row.clientId}
-                              </div>
+                              <Tooltip title={row.clientId} arrow>
+                                <div
+                                  style={{
+                                    fontWeight: 400,
+                                    fontSize: "16px",
+                                    color: "#4D5874",
+                                    // border: "1px solid #e0e0e0",
+                                    cursor: "pointer",
+                                    py: 0,
+                                    cursor: "pointer",
+                                    maxWidth: "60px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {row.clientId}
+                                </div>
+                              </Tooltip>
                             </TableCell>
                             <TableCell style={{ border: "1px solid #e0e0e0" }}>
                               <div className="d-flex align-items-center justify-content-between">
@@ -499,35 +507,71 @@ const TutorDashboard = () => {
                                   >
                                     {getInitials(row.name)}
                                   </Avatar>
-                                  <span
-                                    style={{
-                                      fontWeight: 400,
-                                      fontSize: "16px",
-                                      color: "#101219",
-                                    }}
-                                  >
-                                    {row.name}
-                                  </span>
+                                  <Tooltip title={row.name} arrow>
+                                    <div
+                                      style={{
+                                        fontWeight: 400,
+                                        fontSize: "16px",
+                                        color: "#101219",
+                                        cursor: "pointer",
+                                        maxWidth: "60px",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                      }}
+                                    >
+                                      {row.name}
+                                    </div>
+                                  </Tooltip>
                                 </div>
                               </div>
                             </TableCell>
                             <TableCell
                               style={{
+                                fontWeight: 400,
                                 fontSize: "16px",
                                 color: "#101219",
-                                fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                {row.email}
+                                <span
+                                  style={{
+                                    color: "#2e7d32",
+                                    fontWeight: 500,
+                                    backgroundColor: "#e8f5e8",
+                                    padding: "4px 8px",
+                                    borderRadius: "4px",
+                                  }}
+                                >
+                                  {row.hourlyRate}
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                fontWeight: 400,
+                                fontSize: "14px",
+                                color: "#101219",
+                                border: "1px solid #e0e0e0",
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between">
+                                <span
+                                  style={{
+                                    maxWidth: "200px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {row.subjects}
+                                </span>
                                 <IconButton
                                   size="small"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    handleCopy(row.email);
+                                    handleCopy(row.subjects);
                                   }}
                                   style={{ padding: "2px" }}
                                 >
@@ -539,43 +583,10 @@ const TutorDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "16px",
-                                color: "#101219",
                                 fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                {row.phone || "N/A"}
-                                {row.phone && (
-                                  <IconButton
-                                    size="small"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleCopy(row.phone);
-                                    }}
-                                    style={{ padding: "2px" }}
-                                  >
-                                    <ContentCopyIcon
-                                      style={{
-                                        fontSize: "14px",
-                                        color: "#666",
-                                      }}
-                                    />
-                                  </IconButton>
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
                                 fontSize: "16px",
                                 color: "#4D5874",
-                                fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">

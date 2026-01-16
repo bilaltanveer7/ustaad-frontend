@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useParentStore } from "../store/useParentStore";
-import { CircularProgress, Alert } from "@mui/material";
+import { CircularProgress, Alert, Tooltip } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
 import {
   Box,
   Table,
@@ -382,7 +383,20 @@ const ParentDashboard = () => {
             </div>
           )}
           {!isLoading && !error && (!tableData || tableData.length === 0) && (
-            <div>No parents yet</div>
+            <div className="row">
+              <div
+                className="col-12"
+                style={{
+                  textAlign: "center",
+                  padding: "4rem 2rem",
+                  color: "#666",
+                  fontSize: "16px",
+                }}
+              >
+                <PersonIcon sx={{ fontSize: 64, color: "#ccc", mb: 2 }} />
+                <div>No Parents yet</div>
+              </div>
+            </div>
           )}
 
           {/* Table */}
@@ -474,19 +488,26 @@ const ParentDashboard = () => {
                               onClick={() =>
                                 navigate(`/parent-profile/${row.id}`)
                               }
-                              style={{
-                                fontWeight: 400,
-                                fontSize: "16px",
-                                color: "#4D5874",
-                                border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
-                                cursor: "pointer",
-                              }}
                             >
-                              <div className="d-flex align-items-center justify-content-between">
-                                {row.clientId}
-                              </div>
+                              <Tooltip title={row.clientId} arrow>
+                                <div
+                                  style={{
+                                    fontWeight: 400,
+                                    fontSize: "16px",
+                                    color: "#4D5874",
+                                    // border: "1px solid #e0e0e0",
+                                    py: 0,
+                                    // height: 48,
+                                    cursor: "pointer",
+                                    maxWidth: "60px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {row.clientId}
+                                </div>
+                              </Tooltip>
                             </TableCell>
                             <TableCell
                               style={{
@@ -508,15 +529,22 @@ const ParentDashboard = () => {
                                   >
                                     {getInitials(row.name)}
                                   </Avatar>
-                                  <span
-                                    style={{
-                                      fontWeight: 400,
-                                      fontSize: "16px",
-                                      color: "#101219",
-                                    }}
-                                  >
-                                    {row.name}
-                                  </span>
+                                  <Tooltip title={row.name} arrow>
+                                    <div
+                                      style={{
+                                        fontWeight: 400,
+                                        fontSize: "16px",
+                                        color: "#101219",
+                                        cursor: "pointer",
+                                        maxWidth: "100px",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                      }}
+                                    >
+                                      {row.name}
+                                    </div>
+                                  </Tooltip>
                                 </div>
                               </div>
                             </TableCell>
@@ -531,7 +559,22 @@ const ParentDashboard = () => {
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                {row.email}
+                                <Tooltip title={row.email} arrow>
+                                  <div
+                                    style={{
+                                      fontWeight: 400,
+                                      fontSize: "16px",
+                                      color: "#101219",
+                                      cursor: "pointer",
+                                      maxWidth: "140px",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    {row.email}
+                                  </div>
+                                </Tooltip>
                                 <IconButton
                                   size="small"
                                   onClick={(e) => {
@@ -557,7 +600,22 @@ const ParentDashboard = () => {
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                {row.phone || "N/A"}
+                                <Tooltip title={row.phone || "N/A"} arrow>
+                                  <div
+                                    style={{
+                                      fontWeight: 400,
+                                      fontSize: "16px",
+                                      color: "#101219",
+                                      cursor: "pointer",
+                                      maxWidth: "120px",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    +{row.phone || "N/A"}
+                                  </div>
+                                </Tooltip>
                                 {row.phone && (
                                   <IconButton
                                     size="small"

@@ -16,7 +16,7 @@ function App() {
   return (
     <>
       <title>
-        Ustaad
+        Ustaad Admin Side
       </title>
       <Routes>
         {/* Public Routes */}

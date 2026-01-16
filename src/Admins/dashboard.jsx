@@ -399,6 +399,7 @@ const AdminsDashboard = () => {
                             fontSize: "14px",
                             color: "#FFFFFF",
                             alignItems: "center",
+                            whiteSpace: "nowrap",
                           }}
                         >
                           Created Date
@@ -455,15 +456,25 @@ const AdminsDashboard = () => {
                           style={{ borderBottom: "1px solid #e0e0e0" }}
                         >
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                            <span
-                              style={{
-                                fontSize: "16px",
-                                fontWeight: 500,
-                                color: "#1E9CBC",
-                              }}
-                            >
-                              #{admin.id}
-                            </span>
+                            <Tooltip title={admin.id} arrow>
+                              <div
+                                style={{
+                                  fontWeight: 400,
+                                  fontSize: "16px",
+                                  color: "#4D5874",
+                                  // border: "1px solid #e0e0e0",
+                                  py: 0,
+                                  // height: 48,
+                                  cursor: "pointer",
+                                  maxWidth: "60px",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {admin.id}
+                              </div>
+                            </Tooltip>
                           </TableCell>
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
                             <div
@@ -480,24 +491,34 @@ const AdminsDashboard = () => {
                                 }
                                 style={{ width: 40, height: 40 }}
                               >
-                                {admin.fullName?.charAt(0).toUpperCase()}
+                                {admin.firstName?.charAt(0).toUpperCase()}
                               </Avatar>
                               <div>
-                                <Typography
-                                  variant="body1"
-                                  style={{
-                                    fontSize: "16px",
-                                    fontWeight: 500,
-                                    color: "#101219",
-                                    margin: 0,
-                                  }}
+                                <Tooltip
+                                  title={
+                                    admin.firstName + " " + admin.lastName ||
+                                    "N/A"
+                                  }
+                                  arrow
                                 >
-                                  {admin.firstName && admin.lastName
-                                    ? `${admin.firstName} ${admin.lastName}`
-                                    : admin.firstName ||
-                                      admin.lastName ||
+                                  <div
+                                    variant="body1"
+                                    style={{
+                                      fontSize: "16px",
+                                      fontWeight: 500,
+                                      color: "#101219",
+                                      margin: 0,
+                                      cursor: "pointer",
+                                      maxWidth: "60px",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    {admin.firstName + " " + admin.lastName ||
                                       "N/A"}
-                                </Typography>
+                                  </div>
+                                </Tooltip>
                                 <Typography
                                   variant="body2"
                                   style={{
@@ -512,15 +533,22 @@ const AdminsDashboard = () => {
                             </div>
                           </TableCell>
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                            <span
-                              style={{
-                                fontSize: "16px",
-                                fontWeight: 400,
-                                color: "#101219",
-                              }}
-                            >
-                              {admin.email || "N/A"}
-                            </span>
+                            <Tooltip title={admin.email || "N/A"} arrow>
+                              <div
+                                style={{
+                                  fontSize: "16px",
+                                  fontWeight: 400,
+                                  color: "#101219",
+                                  cursor: "pointer",
+                                  maxWidth: "140px",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {admin.email || "N/A"}
+                              </div>
+                            </Tooltip>
                           </TableCell>
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
                             <span
