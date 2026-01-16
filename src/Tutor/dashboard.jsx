@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useTutorStore } from "../store/useTutorStore";
@@ -188,6 +188,7 @@ const TutorDashboard = () => {
       console.warn("Copy failed:", err);
     }
   };
+
   return (
     <>
       <SideNav />
@@ -544,7 +545,7 @@ const TutorDashboard = () => {
                                     borderRadius: "4px",
                                   }}
                                 >
-                                  {row.hourlyRate}
+                                  {row.email}
                                 </span>
                               </div>
                             </TableCell>
@@ -565,7 +566,7 @@ const TutorDashboard = () => {
                                     whiteSpace: "nowrap",
                                   }}
                                 >
-                                  {row.subjects}
+                                  {row.phone}
                                 </span>
                                 <IconButton
                                   size="small"

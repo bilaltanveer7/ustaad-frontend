@@ -341,7 +341,8 @@ export const useAdminStore = create((set, get) => ({
       if (response.data && response.data.success) {
         set({
           pendingUsers: response.data.data.items || [],
-          pendingUsersPagination: response.data.data.pagination || null,
+          pendingUsersPagination: response.data.data || null,
+
           isLoadingPendingUsers: false,
         });
         return { success: true, data: response.data.data };

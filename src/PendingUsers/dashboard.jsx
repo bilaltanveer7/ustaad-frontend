@@ -272,7 +272,7 @@ const PendingUsersDashboard = () => {
                             variant="h4"
                             sx={{ fontWeight: 600, color: "#101219" }}
                           >
-                            {pendingUsersPagination?.total || 0}
+                            {pendingUsersPagination?.totalPending || 0}
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Total Pending
@@ -306,10 +306,7 @@ const PendingUsersDashboard = () => {
                             variant="h4"
                             sx={{ fontWeight: 600, color: "#101219" }}
                           >
-                            {
-                              pendingUsers.filter((u) => u.role === "PARENT")
-                                .length
-                            }
+                            {pendingUsersPagination?.parentCount || 0}
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Parents
@@ -343,10 +340,7 @@ const PendingUsersDashboard = () => {
                             variant="h4"
                             sx={{ fontWeight: 600, color: "#101219" }}
                           >
-                            {
-                              pendingUsers.filter((u) => u.role === "TUTOR")
-                                .length
-                            }
+                            {pendingUsersPagination?.tutorCount || 0}
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Tutors
@@ -846,7 +840,7 @@ const PendingUsersDashboard = () => {
 
               {/* Pagination */}
               {pendingUsersPagination &&
-                pendingUsersPagination.totalPages > 1 && (
+                pendingUsersPagination.pagination.totalPages > 1 && (
                   <Box
                     sx={{
                       display: "flex",
@@ -857,12 +851,12 @@ const PendingUsersDashboard = () => {
                     }}
                   >
                     <Typography variant="body2" sx={{ color: "#666" }}>
-                      Page {pendingUsersPagination.page} of{" "}
-                      {pendingUsersPagination.totalPages} (
-                      {pendingUsersPagination.total} total users)
+                      Page {pendingUsersPagination.pagination.page} of{" "}
+                      {pendingUsersPagination.pagination.totalPages} (
+                      {pendingUsersPagination.pagination.total} total users)
                     </Typography>
                     <Pagination
-                      count={pendingUsersPagination.totalPages}
+                      count={pendingUsersPagination.pagination.totalPages}
                       page={currentPage}
                       onChange={handlePageChange}
                       color="primary"
@@ -876,7 +870,7 @@ const PendingUsersDashboard = () => {
                 <div style={{ marginTop: "16px", textAlign: "center" }}>
                   <Typography variant="body2" style={{ color: "#666" }}>
                     Showing {filteredUsers.length} of{" "}
-                    {pendingUsersPagination?.total || 0} pending users
+                    {pendingUsersPagination?.totalPending || 0} pending users
                     {(searchTerm || roleFilter !== "ALL") && " (filtered)"}
                   </Typography>
                 </div>
