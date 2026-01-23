@@ -116,19 +116,39 @@ const Dashboard = () => {
 
   const getStatChange = (key) => stats?.comparison?.change?.[key];
 
-  const getChangeText = (key, fallbackText) => {
-    const formatted = formatSignedPercent(getStatChange(key)?.percent);
-    return formatted ?? fallbackText;
+  // Function to format the change text (e.g., "-29 (-90.63%)")
+  const getChangeText = (metricKey) => {
+    const comparison = stats?.comparison?.[metricKey];
+
+    if (!comparison || stats?.period === "all time") return "0 (0%)";
+
+    const { delta, percent } = comparison;
+    const prefix = delta > 0 ? "+" : ""; // Add + for positive numbers
+
+    return `${prefix}${delta} (${prefix}${percent}%)`;
   };
 
-  const getChangeType = (key, fallbackType) => {
-    const change = getStatChange(key);
-    if (typeof change?.delta === "number")
-      return change.delta >= 0 ? "up" : "down";
-    if (typeof change?.percent === "number")
-      return change.percent >= 0 ? "up" : "down";
-    return fallbackType;
+  // Function to determine if the trend is "up", "down", or "neutral"
+  const getChangeType = (metricKey) => {
+    const delta = stats?.comparison?.[metricKey]?.delta;
+
+    if (!delta || delta === 0) return "neutral";
+    return delta > 0 ? "up" : "down";
   };
+
+  // const getChangeText = (key, fallbackText) => {
+  //   const formatted = formatSignedPercent(getStatChange(key)?.percent);
+  //   return formatted ?? fallbackText;
+  // };
+
+  // const getChangeType = (key, fallbackType) => {
+  //   const change = getStatChange(key);
+  //   if (typeof change?.delta === "number")
+  //     return change.delta >= 0 ? "up" : "down";
+  //   if (typeof change?.percent === "number")
+  //     return change.percent >= 0 ? "up" : "down";
+  //   return fallbackType;
+  // };
 
   const hasUsersData =
     typeof stats?.totalUsers === "number" &&
@@ -220,23 +240,16 @@ const Dashboard = () => {
     typeof stats?.completedSubscriptions === "number"
       ? stats.completedSubscriptions
       : null;
-  const remainingSubscriptionsValue =
-    hasSubscriptionsData &&
-    typeof activeSubscriptionsValue === "number" &&
-    typeof completedSubscriptionsValue === "number"
-      ? Math.max(
-          0,
-          totalSubscriptionsValue -
-            activeSubscriptionsValue -
-            completedSubscriptionsValue
-        )
+  const cancelledSubscriptionsValue =
+    typeof stats?.cancelledSubscriptions === "number"
+      ? stats.cancelledSubscriptions
       : null;
 
   const computedJobData =
     hasSubscriptionsData &&
     typeof activeSubscriptionsValue === "number" &&
     typeof completedSubscriptionsValue === "number" &&
-    typeof remainingSubscriptionsValue === "number"
+    typeof cancelledSubscriptionsValue === "number"
       ? [
           { name: "Active", value: activeSubscriptionsValue, color: "#00bcd4" },
           {
@@ -245,9 +258,9 @@ const Dashboard = () => {
             color: "#4caf50",
           },
           {
-            name: "Remaining",
-            value: remainingSubscriptionsValue,
-            color: "#e0e0e0",
+            name: "Cancelled",
+            value: cancelledSubscriptionsValue,
+            color: "#ff0505ff",
           },
         ]
       : jobData;
@@ -405,7 +418,7 @@ const Dashboard = () => {
             <Typography sx={{ color: changeColor, fontSize: 14 }}>
               {change}
             </Typography>
-            <Typography
+            {/* <Typography
               sx={{
                 color: "#4D5874",
                 fontWeight: 400,
@@ -413,7 +426,7 @@ const Dashboard = () => {
               }}
             >
               Last year
-            </Typography>
+            </Typography> */}
           </Box>
         </Box>
       </Paper>
@@ -703,9 +716,9 @@ const Dashboard = () => {
             <Box sx={{ width: 250 }}>
               <MetricCard
                 title="Terminated Users"
-                value={stats?.totalTerminatedUsers || 0}
-                change="-12%"
-                changeType="down"
+                value={stats?.terminatedUsers || 0}
+                change={getChangeText("terminatedUsers", "-12%")}
+                changeType={getChangeType("terminatedUsers", "down")}
                 icon={PersonOff}
               />
             </Box>
@@ -1103,8 +1116,7 @@ const Dashboard = () => {
                             gap: 0.5,
                           }}
                         >
-                          {getChangeType("totalSubscriptions", "up") ===
-                          "up" ? (
+                          {getChangeType("totalContracts", "up") === "up" ? (
                             <TrendingUp
                               sx={{ fontSize: 16, color: "#4caf50", mr: 0.5 }}
                             />
@@ -1116,17 +1128,16 @@ const Dashboard = () => {
                           <Typography
                             sx={{
                               color:
-                                getChangeType("totalSubscriptions", "up") ===
-                                "up"
+                                getChangeType("totalContracts", "up") === "up"
                                   ? "#38BC5C"
                                   : "#F31616",
                               fontWeight: 400,
                               fontSize: "14px",
                             }}
                           >
-                            {getChangeText("totalSubscriptions", "+5.5%")}
+                            {getChangeText("totalContracts", "+5.5%")}
                           </Typography>
-                          <Typography
+                          {/* <Typography
                             sx={{
                               color: "#4D5874",
                               fontWeight: 400,
@@ -1134,7 +1145,7 @@ const Dashboard = () => {
                             }}
                           >
                             Last month
-                          </Typography>
+                          </Typography> */}
                         </Box>
                       </Box>
 
@@ -1263,6 +1274,38 @@ const Dashboard = () => {
                             >
                               {completedSubscriptionsValue != null
                                 ? completedSubscriptionsValue.toLocaleString()
+                                : "20"}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Box
+                              sx={{
+                                width: 8,
+                                height: 8,
+                                bgcolor: "#e70d0dff",
+                                borderRadius: "50%",
+                                mr: 1,
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontWeight: 400,
+                                fontSize: 12,
+                                color: "#4D5874",
+                              }}
+                            >
+                              Cancelled
+                            </Typography>
+                            <Typography
+                              sx={{
+                                ml: 2,
+                                fontWeight: 500,
+                                fontSize: 12,
+                                color: "#191010ff",
+                              }}
+                            >
+                              {cancelledSubscriptionsValue != null
+                                ? cancelledSubscriptionsValue.toLocaleString()
                                 : "20"}
                             </Typography>
                           </Box>
