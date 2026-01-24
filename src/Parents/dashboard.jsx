@@ -73,6 +73,7 @@ const ParentDashboard = () => {
   // Transform API data to match table format
   const tableData = parents.map((parent) => ({
     id: parent.id,
+    image: parent.User?.image,
     clientId: parent.id.substring(0, 8).toUpperCase(),
     name:
       parent.User?.firstName && parent.User?.lastName
@@ -458,23 +459,24 @@ const ParentDashboard = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {tableData.map((row, index) => {
-                        const isItemSelected = isSelected(row.id);
-                        return (
-                          <TableRow
-                            key={row.id}
-                            hover
-                            onClick={() => handleSelectRow(row.id)}
-                            selected={isItemSelected}
-                            style={{
-                              cursor: "pointer",
-                              height: 48,
-                              backgroundColor:
-                                index % 2 === 0 ? "white" : "#fafafa",
-                              borderBottom: "1px solid #e0e0e0",
-                            }}
-                          >
-                            {/* <TableCell
+                      {tableData?.length > 0 ? (
+                        tableData.map((row, index) => {
+                          const isItemSelected = isSelected(row.id);
+                          return (
+                            <TableRow
+                              key={row.id}
+                              hover
+                              onClick={() => handleSelectRow(row.id)}
+                              selected={isItemSelected}
+                              style={{
+                                cursor: "pointer",
+                                height: 48,
+                                backgroundColor:
+                                  index % 2 === 0 ? "white" : "#fafafa",
+                                borderBottom: "1px solid #e0e0e0",
+                              }}
+                            >
+                              {/* <TableCell
                             padding="checkbox"
                             style={{
                               border: "1px solid #e0e0e0",
@@ -484,144 +486,103 @@ const ParentDashboard = () => {
                           >
                             <Checkbox checked={isItemSelected} size="small" />
                           </TableCell> */}
-                            <TableCell
-                              onClick={() =>
-                                navigate(`/parent-profile/${row.id}`)
-                              }
-                            >
-                              <Tooltip title={row.clientId} arrow>
-                                <div
-                                  style={{
-                                    fontWeight: 400,
-                                    fontSize: "16px",
-                                    color: "#4D5874",
-                                    // border: "1px solid #e0e0e0",
-                                    py: 0,
-                                    // height: 48,
-                                    cursor: "pointer",
-                                    maxWidth: "60px",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {row.clientId}
-                                </div>
-                              </Tooltip>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center">
-                                  <Avatar
+                              <TableCell
+                                onClick={() =>
+                                  navigate(`/parent-profile/${row.id}`)
+                                }
+                              >
+                                <Tooltip title={row.clientId} arrow>
+                                  <div
                                     style={{
-                                      width: "32px",
-                                      height: "32px",
-                                      backgroundColor: getAvatarColor(row.name),
-                                      fontSize: "12px",
-                                      marginRight: "12px",
+                                      fontWeight: 400,
+                                      fontSize: "16px",
+                                      color: "#4D5874",
+                                      // border: "1px solid #e0e0e0",
+                                      py: 0,
+                                      // height: 48,
+                                      cursor: "pointer",
+                                      maxWidth: "60px",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
                                     }}
                                   >
-                                    {getInitials(row.name)}
-                                  </Avatar>
-                                  <Tooltip title={row.name} arrow>
+                                    {row.clientId}
+                                  </div>
+                                </Tooltip>
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  border: "1px solid #e0e0e0",
+                                  py: 0,
+                                  height: 48,
+                                }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <div className="d-flex align-items-center">
+                                    <Avatar
+                                      src={
+                                        row.image
+                                          ? row.image
+                                          : getInitials(row.name)
+                                      }
+                                      style={{
+                                        width: 40,
+                                        height: 40,
+                                        marginRight: "10px",
+                                      }}
+                                    ></Avatar>
+                                    <Tooltip title={row.name} arrow>
+                                      <div
+                                        style={{
+                                          fontWeight: 400,
+                                          fontSize: "16px",
+                                          color: "#101219",
+                                          cursor: "pointer",
+                                          maxWidth: "100px",
+                                          overflow: "hidden",
+                                          textOverflow: "ellipsis",
+                                          whiteSpace: "nowrap",
+                                        }}
+                                      >
+                                        {row.name}
+                                      </div>
+                                    </Tooltip>
+                                  </div>
+                                </div>
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontSize: "16px",
+                                  color: "#101219",
+                                  fontWeight: 400,
+                                  border: "1px solid #e0e0e0",
+                                  py: 0,
+                                  height: 48,
+                                }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <Tooltip title={row.email} arrow>
                                     <div
                                       style={{
                                         fontWeight: 400,
                                         fontSize: "16px",
                                         color: "#101219",
                                         cursor: "pointer",
-                                        maxWidth: "100px",
+                                        maxWidth: "140px",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
                                       }}
                                     >
-                                      {row.name}
+                                      {row.email}
                                     </div>
                                   </Tooltip>
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "16px",
-                                color: "#101219",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                <Tooltip title={row.email} arrow>
-                                  <div
-                                    style={{
-                                      fontWeight: 400,
-                                      fontSize: "16px",
-                                      color: "#101219",
-                                      cursor: "pointer",
-                                      maxWidth: "140px",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    {row.email}
-                                  </div>
-                                </Tooltip>
-                                <IconButton
-                                  size="small"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleCopy(row.email);
-                                  }}
-                                  style={{ padding: "2px" }}
-                                >
-                                  <ContentCopyIcon
-                                    style={{ fontSize: "14px", color: "#666" }}
-                                  />
-                                </IconButton>
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "16px",
-                                color: "#101219",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                <Tooltip title={row.phone || "N/A"} arrow>
-                                  <div
-                                    style={{
-                                      fontWeight: 400,
-                                      fontSize: "16px",
-                                      color: "#101219",
-                                      cursor: "pointer",
-                                      maxWidth: "120px",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    +{row.phone || "N/A"}
-                                  </div>
-                                </Tooltip>
-                                {row.phone && (
                                   <IconButton
                                     size="small"
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      handleCopy(row.phone);
+                                      handleCopy(row.email);
                                     }}
                                     style={{ padding: "2px" }}
                                   >
@@ -632,26 +593,84 @@ const ParentDashboard = () => {
                                       }}
                                     />
                                   </IconButton>
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "16px",
-                                color: "#4D5874",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                {row.date}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                                </div>
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontSize: "16px",
+                                  color: "#101219",
+                                  fontWeight: 400,
+                                  border: "1px solid #e0e0e0",
+                                  py: 0,
+                                  height: 48,
+                                }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <Tooltip title={row.phone || "N/A"} arrow>
+                                    <div
+                                      style={{
+                                        fontWeight: 400,
+                                        fontSize: "16px",
+                                        color: "#101219",
+                                        cursor: "pointer",
+                                        maxWidth: "120px",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                      }}
+                                    >
+                                      +{row.phone || "N/A"}
+                                    </div>
+                                  </Tooltip>
+                                  {row.phone && (
+                                    <IconButton
+                                      size="small"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCopy(row.phone);
+                                      }}
+                                      style={{ padding: "2px" }}
+                                    >
+                                      <ContentCopyIcon
+                                        style={{
+                                          fontSize: "14px",
+                                          color: "#666",
+                                        }}
+                                      />
+                                    </IconButton>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontSize: "16px",
+                                  color: "#4D5874",
+                                  fontWeight: 400,
+                                  border: "1px solid #e0e0e0",
+                                  py: 0,
+                                  height: 48,
+                                }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  {row.date}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })
+                      ) : (
+                        <TableRow style={{ height: 100 }}>
+                          <TableCell
+                            colSpan={5}
+                            align="center"
+                            style={{ color: "#4D5874" }}
+                          >
+                            <div style={{ padding: "20px", fontSize: "16px" }}>
+                              No Parents Found
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>

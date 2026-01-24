@@ -4,6 +4,7 @@ import SideNav from "../sidebar/sidenav";
 import DocumentModal from "../components/DocumentModal";
 import { useAdminStore } from "../store/useAdminStore";
 import { useTutorStore } from "../store/useTutorStore";
+import { useParentStore } from "../store/useParentStore";
 import config from "../utils/config";
 import {
   Button,
@@ -62,7 +63,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const drawerWidth = 260;
 
 const UserDetail = () => {
-  const { userId } = useParams();
+  const { userId, role } = useParams();
   const navigate = useNavigate();
 
   const {
@@ -72,6 +73,16 @@ const UserDetail = () => {
     error: tutorError,
     clearSelectedTutor,
   } = useTutorStore();
+
+  const {
+    parentDetails,
+    fetchParentDetails,
+    isLoading: isLoadingParent,
+    error: parentError,
+    clearSelectedParent,
+  } = useParentStore();
+
+  console.log(role);
 
   const { approveUser, isApprovingUser, approveUserError, clearErrors } =
     useAdminStore();
@@ -83,10 +94,12 @@ const UserDetail = () => {
 
   // Fetch tutor details if user is a tutor
   useEffect(() => {
-    if (userId) {
+    if (userId && role === "TUTOR") {
       fetchTutorDetails(userId);
+    } else if (userId && role === "PARENT") {
+      fetchParentDetails(userId);
     }
-  }, [userId, fetchTutorDetails]);
+  }, [userId, fetchTutorDetails, role]);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -319,7 +332,7 @@ const UserDetail = () => {
   console.log("documents", documents);
 
   const renderBasicInfo = () => (
-    <Card sx={{ mb: 3, bgcolor:'#EEFBFD', border: "1px solid #D1D1DB", }}>
+    <Card sx={{ mb: 3, bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
       <CardContent>
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
           Basic Information

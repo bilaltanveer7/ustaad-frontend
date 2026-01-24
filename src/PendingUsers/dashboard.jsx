@@ -139,8 +139,13 @@ const PendingUsersDashboard = () => {
     setCurrentPage(1); // Reset to first page
   };
 
-  const handleUserClick = (userId) => {
-    navigate(`/pending-users/${userId}`);
+  const handleUserClick = (userId, role) => {
+    if (!userId) {
+      console.error("Cannot navigate: userId is null or undefined!");
+      return;
+    }
+
+    navigate(`/pending-users/${userId}/${role}`);
   };
 
   // Filter users based on search and role filter
@@ -150,8 +155,9 @@ const PendingUsersDashboard = () => {
       user.firstName?.toLowerCase().includes(searchLower) ||
       user.lastName?.toLowerCase().includes(searchLower) ||
       user.email?.toLowerCase().includes(searchLower) ||
-      user.phone?.includes(searchTerm) ||
-      user.id?.toLowerCase().includes(searchLower);
+      (user.phone && user.phone.includes(searchTerm)) ||
+      (user.profileId && user.profileId.toString().includes(searchTerm)) ||
+      (user.id && user.id.toLowerCase().includes(searchLower));
 
     const matchesRole = roleFilter === "ALL" || user.role === roleFilter;
 
@@ -588,7 +594,9 @@ const PendingUsersDashboard = () => {
                       filteredUsers.map((user) => (
                         <TableRow
                           key={user.id}
-                          onClick={() => handleUserClick(user.id)}
+                          onClick={() =>
+                            handleUserClick(user.profileId, user.role)
+                          }
                           style={{
                             borderBottom: "1px solid #e0e0e0",
                             cursor: "pointer",
@@ -629,11 +637,9 @@ const PendingUsersDashboard = () => {
                                     margin: 0,
                                   }}
                                 >
-                                  {
-                                    (user.firstName,
-                                    " ",
-                                    user.lastName || "N/A")
-                                  }
+                                  {`${user.firstName || ""} ${
+                                    user.lastName || "N/A"
+                                  }`}
                                 </Typography>
                                 <Typography
                                   variant="body2"
@@ -664,7 +670,10 @@ const PendingUsersDashboard = () => {
                                 />
                                 <Typography
                                   variant="body2"
-                                  style={{ fontSize: "14px", color: "#101219" }}
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "#101219",
+                                  }}
                                 >
                                   {user.email}
                                 </Typography>
@@ -681,7 +690,10 @@ const PendingUsersDashboard = () => {
                                 />
                                 <Typography
                                   variant="body2"
-                                  style={{ fontSize: "14px", color: "#101219" }}
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "#101219",
+                                  }}
                                 >
                                   +{user.phone || "N/A"}
                                 </Typography>

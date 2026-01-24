@@ -72,6 +72,7 @@ const TutorDashboard = () => {
   // Transform API data to match table format
   const tableData = tutors.map((tutor) => ({
     id: tutor.id,
+    image: tutor.User?.image,
     clientId: tutor.id.substring(0, 8).toUpperCase(),
     name:
       tutor.User?.firstName && tutor.User?.lastName
@@ -451,152 +452,173 @@ const TutorDashboard = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {tableData.map((row, index) => {
-                        const isItemSelected = isSelected(row.id);
-                        return (
-                          <TableRow
-                            key={row.id}
-                            hover
-                            onClick={() => handleSelectRow(row.id)}
-                            selected={isItemSelected}
-                            style={{
-                              cursor: "pointer",
-                              backgroundColor:
-                                index % 2 === 0 ? "white" : "#fafafa",
-                              borderBottom: "1px solid #e0e0e0",
-                            }}
-                          >
-                            {/* <TableCell padding="checkbox" style={{ border: "1px solid #e0e0e0" }}>
+                      {tableData?.length > 0 ? (
+                        tableData.map((row, index) => {
+                          const isItemSelected = isSelected(row.id);
+
+                          return (
+                            <TableRow
+                              key={row.id}
+                              hover
+                              onClick={() => handleSelectRow(row.id)}
+                              selected={isItemSelected}
+                              style={{
+                                cursor: "pointer",
+                                backgroundColor:
+                                  index % 2 === 0 ? "white" : "#fafafa",
+                                borderBottom: "1px solid #e0e0e0",
+                              }}
+                            >
+                              {/* <TableCell padding="checkbox" style={{ border: "1px solid #e0e0e0" }}>
                                                         <Checkbox checked={isItemSelected} size="small" />
                                                     </TableCell> */}
-                            <TableCell
-                              onClick={() =>
-                                navigate(`/tutor-profile/${row.id}`)
-                              }
-                            >
-                              <Tooltip title={row.clientId} arrow>
-                                <div
-                                  style={{
-                                    fontWeight: 400,
-                                    fontSize: "16px",
-                                    color: "#4D5874",
-                                    // border: "1px solid #e0e0e0",
-                                    cursor: "pointer",
-                                    py: 0,
-                                    cursor: "pointer",
-                                    maxWidth: "60px",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {row.clientId}
-                                </div>
-                              </Tooltip>
-                            </TableCell>
-                            <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                              <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center">
-                                  <Avatar
+                              <TableCell
+                                onClick={() =>
+                                  navigate(`/tutor-profile/${row.id}`)
+                                }
+                              >
+                                <Tooltip title={row.clientId} arrow>
+                                  <div
                                     style={{
-                                      width: "32px",
-                                      height: "32px",
-                                      backgroundColor: getAvatarColor(row.name),
-                                      fontSize: "12px",
-                                      marginRight: "12px",
+                                      fontWeight: 400,
+                                      fontSize: "16px",
+                                      color: "#4D5874",
+                                      // border: "1px solid #e0e0e0",
+                                      cursor: "pointer",
+                                      py: 0,
+                                      cursor: "pointer",
+                                      maxWidth: "60px",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
                                     }}
                                   >
-                                    {getInitials(row.name)}
-                                  </Avatar>
-                                  <Tooltip title={row.name} arrow>
-                                    <div
+                                    {row.clientId}
+                                  </div>
+                                </Tooltip>
+                              </TableCell>
+                              <TableCell
+                                style={{ border: "1px solid #e0e0e0" }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <div className="d-flex align-items-center">
+                                    <Avatar
+                                      src={
+                                        row.image
+                                          ? row.image
+                                          : getInitials(row.name)
+                                      }
                                       style={{
-                                        fontWeight: 400,
-                                        fontSize: "16px",
-                                        color: "#101219",
-                                        cursor: "pointer",
-                                        maxWidth: "60px",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
+                                        width: 40,
+                                        height: 40,
+                                        marginRight: "10px",
                                       }}
-                                    >
-                                      {row.name}
-                                    </div>
-                                  </Tooltip>
+                                    ></Avatar>
+                                    <Tooltip title={row.name} arrow>
+                                      <div
+                                        style={{
+                                          fontWeight: 400,
+                                          fontSize: "16px",
+                                          color: "#101219",
+                                          cursor: "pointer",
+                                          maxWidth: "60px",
+                                          overflow: "hidden",
+                                          textOverflow: "ellipsis",
+                                          whiteSpace: "nowrap",
+                                        }}
+                                      >
+                                        {row.name}
+                                      </div>
+                                    </Tooltip>
+                                  </div>
                                 </div>
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontWeight: 400,
-                                fontSize: "16px",
-                                color: "#101219",
-                                border: "1px solid #e0e0e0",
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                <span
-                                  style={{
-                                    color: "#2e7d32",
-                                    fontWeight: 500,
-                                    backgroundColor: "#e8f5e8",
-                                    padding: "4px 8px",
-                                    borderRadius: "4px",
-                                  }}
-                                >
-                                  {row.email}
-                                </span>
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontWeight: 400,
-                                fontSize: "14px",
-                                color: "#101219",
-                                border: "1px solid #e0e0e0",
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                <span
-                                  style={{
-                                    maxWidth: "200px",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {row.phone}
-                                </span>
-                                <IconButton
-                                  size="small"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleCopy(row.subjects);
-                                  }}
-                                  style={{ padding: "2px" }}
-                                >
-                                  <ContentCopyIcon
-                                    style={{ fontSize: "14px", color: "#666" }}
-                                  />
-                                </IconButton>
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontWeight: 400,
-                                fontSize: "16px",
-                                color: "#4D5874",
-                                border: "1px solid #e0e0e0",
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                {row.date}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: 400,
+                                  fontSize: "16px",
+                                  color: "#101219",
+                                  border: "1px solid #e0e0e0",
+                                }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <span
+                                    style={{
+                                      color: "#2e7d32",
+                                      fontWeight: 500,
+                                      backgroundColor: "#e8f5e8",
+                                      padding: "4px 8px",
+                                      borderRadius: "4px",
+                                    }}
+                                  >
+                                    {row.email}
+                                  </span>
+                                </div>
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: 400,
+                                  fontSize: "14px",
+                                  color: "#101219",
+                                  border: "1px solid #e0e0e0",
+                                }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <span
+                                    style={{
+                                      maxWidth: "200px",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    {row.phone}
+                                  </span>
+                                  <IconButton
+                                    size="small"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleCopy(row.subjects);
+                                    }}
+                                    style={{ padding: "2px" }}
+                                  >
+                                    <ContentCopyIcon
+                                      style={{
+                                        fontSize: "14px",
+                                        color: "#666",
+                                      }}
+                                    />
+                                  </IconButton>
+                                </div>
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: 400,
+                                  fontSize: "16px",
+                                  color: "#4D5874",
+                                  border: "1px solid #e0e0e0",
+                                }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  {row.date}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })
+                      ) : (
+                        <TableRow style={{ height: 100 }}>
+                          <TableCell
+                            colSpan={5}
+                            align="center"
+                            style={{ color: "#4D5874" }}
+                          >
+                            <div style={{ padding: "20px", fontSize: "16px" }}>
+                              No Tutors Found
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>
