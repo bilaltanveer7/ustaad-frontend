@@ -9,6 +9,7 @@ import {
   deleteAdmin,
   getPendingOnboardUsers,
   getUserById,
+  getUserDataById,
   approveUserOnboarding,
 } from "../api/admin";
 
@@ -29,6 +30,7 @@ export const useAdminStore = create((set, get) => ({
 
   // User detail data
   selectedUser: null,
+  userData: null,
 
   // Loading states
   isLoadingStats: false,
@@ -39,6 +41,7 @@ export const useAdminStore = create((set, get) => ({
   isDeletingAdmin: false,
   isLoadingPendingUsers: false,
   isLoadingUserDetail: false,
+  isLoadingUserData: false,
   isApprovingUser: false,
 
   // Error states
@@ -48,6 +51,7 @@ export const useAdminStore = create((set, get) => ({
   adminsError: null,
   pendingUsersError: null,
   userDetailError: null,
+  userDataError: null,
   approveUserError: null,
 
   // Fetch platform statistics
@@ -401,6 +405,40 @@ export const useAdminStore = create((set, get) => ({
     }
   },
 
+  // Fetch user data by ID (using new endpoint)
+  fetchUserData: async (userId) => {
+    set({ isLoadingUserData: true, userDataError: null });
+
+    try {
+      const response = await getUserDataById(userId);
+
+      if (response.data && response.data.success) {
+        set({
+          userData: response.data.data || null,
+          isLoadingUserData: false,
+        });
+        return { success: true, data: response.data.data };
+      } else {
+        const errorMessage =
+          response.data?.message || "Failed to fetch user data";
+        set({ userDataError: errorMessage, isLoadingUserData: false });
+        return { success: false, error: errorMessage };
+      }
+    } catch (error) {
+      console.error("Fetch user data error:", error);
+      let errorMessage = "Failed to fetch user data";
+
+      if (error.response?.data?.errors) {
+        errorMessage = error.response.data.errors[0]?.message || errorMessage;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      set({ userDataError: errorMessage, isLoadingUserData: false });
+      return { success: false, error: errorMessage };
+    }
+  },
+
   // Approve user onboarding
   approveUser: async (userId) => {
     set({ isApprovingUser: true, approveUserError: null });
@@ -439,10 +477,12 @@ export const useAdminStore = create((set, get) => ({
   setAdmins: (admins) => set({ admins }),
   setPendingUsers: (pendingUsers) => set({ pendingUsers }),
   setSelectedUser: (user) => set({ selectedUser: user }),
+  setUserData: (userData) => set({ userData }),
 
   // Clear selected items
   clearSelectedPaymentRequest: () => set({ selectedPaymentRequest: null }),
   clearSelectedUser: () => set({ selectedUser: null }),
+  clearUserData: () => set({ userData: null }),
 
   // Error helpers
   setError: (error) => set({ error }),
@@ -451,6 +491,7 @@ export const useAdminStore = create((set, get) => ({
   setAdminsError: (error) => set({ adminsError: error }),
   setPendingUsersError: (error) => set({ pendingUsersError: error }),
   setUserDetailError: (error) => set({ userDetailError: error }),
+  setUserDataError: (error) => set({ userDataError: error }),
   setApproveUserError: (error) => set({ approveUserError: error }),
   clearErrors: () =>
     set({
@@ -460,6 +501,7 @@ export const useAdminStore = create((set, get) => ({
       adminsError: null,
       pendingUsersError: null,
       userDetailError: null,
+      userDataError: null,
       approveUserError: null,
     }),
 
@@ -473,12 +515,14 @@ export const useAdminStore = create((set, get) => ({
       pendingUsers: [],
       pendingUsersPagination: null,
       selectedUser: null,
+      userData: null,
       error: null,
       statsError: null,
       paymentRequestsError: null,
       adminsError: null,
       pendingUsersError: null,
       userDetailError: null,
+      userDataError: null,
       approveUserError: null,
     }),
 

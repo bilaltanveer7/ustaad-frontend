@@ -140,11 +140,6 @@ const PendingUsersDashboard = () => {
   };
 
   const handleUserClick = (userId, role) => {
-    if (!userId) {
-      console.error("Cannot navigate: userId is null or undefined!");
-      return;
-    }
-
     navigate(`/pending-users/${userId}/${role}`);
   };
 
@@ -163,6 +158,8 @@ const PendingUsersDashboard = () => {
 
     return matchesSearch && matchesRole;
   });
+
+  console.log(filteredUsers);
 
   const getVerificationStatus = (user) => {
     const verifications = [];
