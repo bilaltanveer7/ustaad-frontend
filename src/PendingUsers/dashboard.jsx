@@ -478,30 +478,24 @@ const PendingUsersDashboard = () => {
                 }}
               >
                 <Table style={{ border: "1px solid #e0e0e0" }}>
-                  <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
+                  <TableHead sx={{
+                    backgroundColor: "#1E9CBC", height: 32
+                  }}>
                     <TableRow
                       sx={{
-                        "& th": {
-                          height: "32px",
-                          paddingTop: "0px",
-                          paddingBottom: "0px",
-                          lineHeight: "32px",
-                          backgroundColor: "#1E9CBC",
-                          color: "white",
-                          fontWeight: "bold",
-                          fontSize: "14px",
-                          border: "1px solid #4db6ac",
-                        },
+                        fontSize: "16px",
+                        fontWeight: 600,
+                        color: "#FFFFFF",
                       }}
                     >
                       <TableCell>
                         <Box
                           sx={{
-                            display: "flex",
-                            fontWeight: 500,
-                            fontSize: "14px",
+                            // display: "flex",
+                            fontWeight: 600,
+                            fontSize: "16px",
                             color: "#FFFFFF",
-                            alignItems: "center",
+                            // alignItems: "center",
                           }}
                         >
                           User Details
@@ -510,11 +504,11 @@ const PendingUsersDashboard = () => {
                       <TableCell>
                         <Box
                           sx={{
-                            display: "flex",
-                            fontWeight: 500,
-                            fontSize: "14px",
+                            // display: "flex",
+                            fontWeight: 600,
+                            fontSize: "16px",
                             color: "#FFFFFF",
-                            alignItems: "center",
+                            // alignItems: "center",
                           }}
                         >
                           Contact Info
@@ -523,11 +517,11 @@ const PendingUsersDashboard = () => {
                       <TableCell>
                         <Box
                           sx={{
-                            display: "flex",
-                            fontWeight: 500,
-                            fontSize: "14px",
+                            // display: "flex",
+                            fontWeight: 600,
+                            fontSize: "16px",
                             color: "#FFFFFF",
-                            alignItems: "center",
+                            // alignItems: "center",
                           }}
                         >
                           Role
@@ -536,11 +530,11 @@ const PendingUsersDashboard = () => {
                       <TableCell>
                         <Box
                           sx={{
-                            display: "flex",
-                            fontWeight: 500,
-                            fontSize: "14px",
+                            // display: "flex",
+                            fontWeight: 600,
+                            fontSize: "16px",
                             color: "#FFFFFF",
-                            alignItems: "center",
+                            // alignItems: "center",
                           }}
                         >
                           Verification Status
@@ -549,11 +543,11 @@ const PendingUsersDashboard = () => {
                       <TableCell>
                         <Box
                           sx={{
-                            display: "flex",
-                            fontWeight: 500,
-                            fontSize: "14px",
+                            // display: "flex",
+                            fontWeight: 600,
+                            fontSize: "16px",
                             color: "#FFFFFF",
-                            alignItems: "center",
+                            // alignItems: "center",
                           }}
                         >
                           Registration Date
@@ -562,11 +556,11 @@ const PendingUsersDashboard = () => {
                       <TableCell>
                         <Box
                           sx={{
-                            display: "flex",
-                            fontWeight: 500,
-                            fontSize: "14px",
+                            // display: "flex",
+                            fontWeight: 600,
+                            fontSize: "16px",
                             color: "#FFFFFF",
-                            alignItems: "center",
+                            // alignItems: "center",
                           }}
                         >
                           Status
@@ -597,23 +591,23 @@ const PendingUsersDashboard = () => {
                           onClick={() => handleUserClick(user.id)}
                           style={{
                             borderBottom: "1px solid #e0e0e0",
-                            cursor: "pointer",
+                            // cursor: "pointer",
                           }}
-                          sx={{
-                            "&:hover": {
-                              backgroundColor: "#f0f8ff",
-                              transform: "translateY(-1px)",
-                              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                            },
-                            transition: "all 0.2s ease-in-out",
-                          }}
+                          // sx={{
+                          //   "&:hover": {
+                          //     backgroundColor: "#f0f8ff",
+                          //     transform: "translateY(-1px)",
+                          //     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                          //   },
+                          //   transition: "all 0.2s ease-in-out",
+                          // }}
                         >
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
                             <div
                               style={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: "12px",
+                                gap: "6px",
                               }}
                             >
                               <Avatar
@@ -627,27 +621,27 @@ const PendingUsersDashboard = () => {
                               </Avatar>
                               <div>
                                 <Typography
-                                  variant="body1"
+                                  // variant="body1"
                                   style={{
-                                    fontSize: "16px",
-                                    fontWeight: 500,
-                                    color: "#101219",
+                                    fontSize: "14px",
+                                    fontWeight: 600,
+                                    color: "#000",
                                     margin: 0,
                                   }}
                                 >
                                   {
                                     (user.firstName,
-                                    " ",
-                                    user.lastName || "N/A")
+                                      " ",
+                                      user.lastName || "N/A")
                                   }
                                 </Typography>
                                 <Typography
-                                  variant="body2"
+                                  // variant="body2"
                                   style={{
                                     fontSize: "12px",
                                     color: "#666",
                                     margin: 0,
-                                    fontFamily: "monospace",
+                                    // fontFamily: "monospace",
                                   }}
                                 >
                                   ID: {user.id?.substring(0, 8)}...
@@ -669,8 +663,8 @@ const PendingUsersDashboard = () => {
                                   style={{ fontSize: "16px", color: "#666" }}
                                 />
                                 <Typography
-                                  variant="body2"
-                                  style={{ fontSize: "14px", color: "#101219" }}
+                                  // variant="body2"
+                                  style={{ fontSize: "14px", color: "#000", fontWeight:400 }}
                                 >
                                   {user.email}
                                 </Typography>
@@ -686,8 +680,8 @@ const PendingUsersDashboard = () => {
                                   style={{ fontSize: "16px", color: "#666" }}
                                 />
                                 <Typography
-                                  variant="body2"
-                                  style={{ fontSize: "14px", color: "#101219" }}
+                                  // variant="body2"
+                                  style={{ fontSize: "14px", color: "#000", fontWeight:400 }}
                                 >
                                   +{user.phone || "N/A"}
                                 </Typography>
@@ -700,9 +694,8 @@ const PendingUsersDashboard = () => {
                               size="small"
                               style={{
                                 backgroundColor: getRoleColor(user.role).bg,
-                                border: `1px solid ${
-                                  getRoleColor(user.role).border
-                                }`,
+                                border: `1px solid ${getRoleColor(user.role).border
+                                  }`,
                                 color: getRoleColor(user.role).color,
                                 fontWeight: 500,
                                 fontSize: "12px",
@@ -740,8 +733,8 @@ const PendingUsersDashboard = () => {
                                   />
                                 )}
                                 <Typography
-                                  variant="body2"
-                                  style={{ fontSize: "12px", color: "#666" }}
+                                  // variant="body2"
+                                  style={{ fontSize: "12px", color: "#000" }}
                                 >
                                   Email
                                 </Typography>
@@ -769,8 +762,8 @@ const PendingUsersDashboard = () => {
                                   />
                                 )}
                                 <Typography
-                                  variant="body2"
-                                  style={{ fontSize: "12px", color: "#666" }}
+                                  // variant="body2"
+                                  style={{ fontSize: "12px", color: "#000" }}
                                 >
                                   Phone
                                 </Typography>
@@ -798,8 +791,8 @@ const PendingUsersDashboard = () => {
                                   />
                                 )}
                                 <Typography
-                                  variant="body2"
-                                  style={{ fontSize: "12px", color: "#666" }}
+                                  // variant="body2"
+                                  style={{ fontSize: "12px", color: "#000" }}
                                 >
                                   Admin
                                 </Typography>
@@ -808,10 +801,11 @@ const PendingUsersDashboard = () => {
                           </TableCell>
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
                             <Typography
-                              variant="body2"
+                              // variant="body2"
                               style={{
                                 fontSize: "14px",
-                                color: "#4D5874",
+                                color: "#000",
+                                fontWeight:400
                               }}
                             >
                               {formatDate(user.createdAt)}
@@ -825,10 +819,9 @@ const PendingUsersDashboard = () => {
                                 backgroundColor: getStatusColor(
                                   user.isOnBoard || "pending"
                                 ).bg,
-                                border: `1px solid ${
-                                  getStatusColor(user.isOnBoard || "pending")
+                                border: `1px solid ${getStatusColor(user.isOnBoard || "pending")
                                     .border
-                                }`,
+                                  }`,
                                 color: getStatusColor(
                                   user.isOnBoard || "pending"
                                 ).color,
@@ -856,11 +849,11 @@ const PendingUsersDashboard = () => {
                       gap: 2,
                     }}
                   >
-                    <Typography variant="body2" sx={{ color: "#666" }}>
+                    {/* <Typography variant="body2" sx={{ color: "#666" }}>
                       Page {pendingUsersPagination.page} of{" "}
                       {pendingUsersPagination.totalPages} (
                       {pendingUsersPagination.total} total users)
-                    </Typography>
+                    </Typography> */}
                     <Pagination
                       count={pendingUsersPagination.totalPages}
                       page={currentPage}

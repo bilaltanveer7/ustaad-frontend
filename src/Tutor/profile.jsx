@@ -301,100 +301,100 @@ const TutorsProfile = () => {
   const experienceData =
     experience?.length > 0
       ? experience?.map((exp) => ({
-          id: exp.id,
-          company: exp.company || "N/A",
-          title: exp.description || "N/A", // API uses 'description' for job title/role
-          startYear: exp.startDate
-            ? new Date(exp.startDate).getFullYear().toString()
-            : "N/A",
-          endYear: exp.endDate
-            ? new Date(exp.endDate).getFullYear().toString()
-            : "Present",
-        }))
+        id: exp.id,
+        company: exp.company || "N/A",
+        title: exp.description || "N/A", // API uses 'description' for job title/role
+        startYear: exp.startDate
+          ? new Date(exp.startDate).getFullYear().toString()
+          : "N/A",
+        endYear: exp.endDate
+          ? new Date(exp.endDate).getFullYear().toString()
+          : "Present",
+      }))
       : [];
 
   const educationData =
     education?.length > 0
       ? education?.map((edu) => ({
-          id: edu.id,
-          institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-          degree: edu.description || "N/A", // API uses 'description' for degree info
-          startYear: edu.startDate
-            ? new Date(edu.startDate).getFullYear().toString()
-            : "N/A",
-          endYear: edu.endDate
-            ? new Date(edu.endDate).getFullYear().toString()
-            : "Present",
-        }))
+        id: edu.id,
+        institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
+        degree: edu.description || "N/A", // API uses 'description' for degree info
+        startYear: edu.startDate
+          ? new Date(edu.startDate).getFullYear().toString()
+          : "N/A",
+        endYear: edu.endDate
+          ? new Date(edu.endDate).getFullYear().toString()
+          : "Present",
+      }))
       : [];
 
   // Transform API transactions data for display
   const transactionsData = transactions
     ? // Handle both single object and array cases
-      (Array.isArray(transactions) ? transactions : [transactions]).map(
-        (tx) => ({
-          id: tx.id,
-          payment: {
-            name: tutor?.User?.fullName || "Unknown",
-            cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
-          },
-          child: {
-            name: "Student", // API doesn't provide child info, using placeholder
-            avatar: "/placeholder.svg?height=32&width=32",
-          },
-          pay: tx.amount || 0,
-          paymentMethod: {
-            type: "bank",
-            accountNumber: tutor?.accountNumber || "N/A",
-          },
-          transactionDate: tx.createdAt
-            ? new Date(tx.createdAt).toLocaleDateString()
-            : "N/A",
-          status: tx.status || "UNKNOWN",
-        })
-      )
+    (Array.isArray(transactions) ? transactions : [transactions]).map(
+      (tx) => ({
+        id: tx.id,
+        payment: {
+          name: tutor?.User?.fullName || "Unknown",
+          cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
+        },
+        child: {
+          name: "Student", // API doesn't provide child info, using placeholder
+          avatar: "/placeholder.svg?height=32&width=32",
+        },
+        pay: tx.amount || 0,
+        paymentMethod: {
+          type: "bank",
+          accountNumber: tutor?.accountNumber || "N/A",
+        },
+        transactionDate: tx.createdAt
+          ? new Date(tx.createdAt).toLocaleDateString()
+          : "N/A",
+        status: tx.status || "UNKNOWN",
+      })
+    )
     : [];
 
   // Transform API documents data for display
   const documentsData = documents
     ? [
-        {
-          id: 1,
-          name: "Resume",
-          type: documents.resume
-            ? documents.resume.toLowerCase().endsWith(".pdf")
-              ? "PDF"
-              : "Image"
-            : "N/A",
-          url: `${config.tutorDocumentUrl}${documents.resume}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.resume ? "Available" : "Missing",
-        },
-        {
-          id: 2,
-          name: "ID Front",
-          type: documents.idFront
-            ? documents.idFront.toLowerCase().endsWith(".pdf")
-              ? "PDF"
-              : "Image"
-            : "N/A",
-          url: `${config.tutorDocumentUrl}${documents.idFront}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.idFront ? "Available" : "Missing",
-        },
-        {
-          id: 3,
-          name: "ID Back",
-          type: documents.idBack
-            ? documents.idBack.toLowerCase().endsWith(".pdf")
-              ? "PDF"
-              : "Image"
-            : "N/A",
-          url: `${config.tutorDocumentUrl}${documents.idBack}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.idBack ? "Available" : "Missing",
-        },
-      ].filter((doc) => doc.url)
+      {
+        id: 1,
+        name: "Resume",
+        type: documents.resume
+          ? documents.resume.toLowerCase().endsWith(".pdf")
+            ? "PDF"
+            : "Image"
+          : "N/A",
+        url: `${config.tutorDocumentUrl}${documents.resume}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.resume ? "Available" : "Missing",
+      },
+      {
+        id: 2,
+        name: "ID Front",
+        type: documents.idFront
+          ? documents.idFront.toLowerCase().endsWith(".pdf")
+            ? "PDF"
+            : "Image"
+          : "N/A",
+        url: `${config.tutorDocumentUrl}${documents.idFront}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.idFront ? "Available" : "Missing",
+      },
+      {
+        id: 3,
+        name: "ID Back",
+        type: documents.idBack
+          ? documents.idBack.toLowerCase().endsWith(".pdf")
+            ? "PDF"
+            : "Image"
+          : "N/A",
+        url: `${config.tutorDocumentUrl}${documents.idBack}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.idBack ? "Available" : "Missing",
+      },
+    ].filter((doc) => doc.url)
     : [];
 
   const childrenData = [
@@ -448,25 +448,17 @@ const TutorsProfile = () => {
               <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
                 <TableRow
                   sx={{
-                    "& th": {
-                      height: "32px",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      lineHeight: "32px",
-                      backgroundColor: "#1E9CBC",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      border: "1px solid #4db6ac",
-                    },
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -480,8 +472,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -495,8 +487,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -510,8 +502,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -525,8 +517,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -667,26 +659,26 @@ const TutorsProfile = () => {
                               row.status === "COMPLETED"
                                 ? "#EEFBF4"
                                 : row.status === "IN_REVIEW"
-                                ? "#FFF4E6"
-                                : row.status === "FAILED"
-                                ? "#FFEBEE"
-                                : "#F5F5F5",
+                                  ? "#FFF4E6"
+                                  : row.status === "FAILED"
+                                    ? "#FFEBEE"
+                                    : "#F5F5F5",
                             border:
                               row.status === "COMPLETED"
                                 ? "1px solid #B2EECC"
                                 : row.status === "IN_REVIEW"
-                                ? "1px solid #FFD54F"
-                                : row.status === "FAILED"
-                                ? "1px solid #FFCDD2"
-                                : "1px solid #E0E0E0",
+                                  ? "1px solid #FFD54F"
+                                  : row.status === "FAILED"
+                                    ? "1px solid #FFCDD2"
+                                    : "1px solid #E0E0E0",
                             color:
                               row.status === "COMPLETED"
                                 ? "#17663A"
                                 : row.status === "IN_REVIEW"
-                                ? "#E65100"
-                                : row.status === "FAILED"
-                                ? "#C62828"
-                                : "#424242",
+                                  ? "#E65100"
+                                  : row.status === "FAILED"
+                                    ? "#C62828"
+                                    : "#424242",
                             fontWeight: 500,
                             fontSize: "12px",
                           }}
@@ -714,25 +706,17 @@ const TutorsProfile = () => {
               <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
                 <TableRow
                   sx={{
-                    "& th": {
-                      height: "32px",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      lineHeight: "32px",
-                      backgroundColor: "#1E9CBC",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      border: "1px solid #4db6ac",
-                    },
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -746,8 +730,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -761,8 +745,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -776,8 +760,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -878,25 +862,17 @@ const TutorsProfile = () => {
               <TableHead style={{ backgroundColor: "#1E9CBC" }}>
                 <TableRow
                   sx={{
-                    "& th": {
-                      height: "32px",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      lineHeight: "32px",
-                      backgroundColor: "#1E9CBC",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      border: "1px solid #4db6ac",
-                    },
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -910,8 +886,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -925,8 +901,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -940,8 +916,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -1041,7 +1017,7 @@ const TutorsProfile = () => {
                             <IconButton
                               size="small"
                               onClick={() => handleDocumentView(row.url)}
-                              sx={{ color: "#1976D2" }}
+                              sx={{ color: "#1E9CBC" }}
                             >
                               <ViewIcon />
                             </IconButton>
@@ -1070,25 +1046,17 @@ const TutorsProfile = () => {
               <TableHead style={{ backgroundColor: "#1E9CBC" }}>
                 <TableRow
                   sx={{
-                    "& th": {
-                      height: "32px",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      lineHeight: "32px",
-                      backgroundColor: "#1E9CBC",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      border: "1px solid #4db6ac",
-                    },
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("institution")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -1102,8 +1070,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -1117,8 +1085,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -1297,8 +1265,8 @@ const TutorsProfile = () => {
                           {tutor?.User?.firstName && tutor?.User?.lastName
                             ? `${tutor.User.firstName} ${tutor.User.lastName}`
                             : tutor?.User?.firstName ||
-                              tutor?.User?.lastName ||
-                              "N/A"}
+                            tutor?.User?.lastName ||
+                            "N/A"}
                         </h5>
                         <Typography
                           variant="body2"
@@ -1378,7 +1346,7 @@ const TutorsProfile = () => {
                         Rs {tutor?.balance?.toFixed(2) || "0.00"}
                       </Button>
                     )}
-                    <Button
+                    {/* <Button
                       variant="contained"
                       startIcon={<EditIcon />}
                       style={{
@@ -1390,7 +1358,7 @@ const TutorsProfile = () => {
                       }}
                     >
                       Edit Details
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
 
@@ -1410,9 +1378,9 @@ const TutorsProfile = () => {
                       </div>
                       <TextField
                         value={profileData.noOfHires}
-                        onChange={(e) =>
-                          handleInputChange("noOfHires", e.target.value)
-                        }
+                        // onChange={(e) =>
+                        //   handleInputChange("noOfHires", e.target.value)
+                        // }
                         variant="outlined"
                         size="small"
                         style={{ width: "100%" }}
@@ -1421,6 +1389,7 @@ const TutorsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
+                            cursor: 'default'
                           },
                         }}
                       />
@@ -1440,9 +1409,9 @@ const TutorsProfile = () => {
                       </div>
                       <TextField
                         value={profileData.joiningDate}
-                        onChange={(e) =>
-                          handleInputChange("joiningDate", e.target.value)
-                        }
+                        // onChange={(e) =>
+                        //   handleInputChange("joiningDate", e.target.value)
+                        // }
                         variant="outlined"
                         size="small"
                         style={{ width: "100%" }}
@@ -1451,6 +1420,7 @@ const TutorsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
+                            cursor: 'default'
                           },
                           endAdornment: (
                             <InputAdornment position="end">
@@ -1481,9 +1451,9 @@ const TutorsProfile = () => {
                       </div>
                       <TextField
                         value={profileData.experienceYears}
-                        onChange={(e) =>
-                          handleInputChange("experienceYears", e.target.value)
-                        }
+                        // onChange={(e) =>
+                        //   handleInputChange("experienceYears", e.target.value)
+                        // }
                         variant="outlined"
                         size="small"
                         style={{ width: "100%" }}
@@ -1492,6 +1462,7 @@ const TutorsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
+                            cursor: 'default'
                           },
                         }}
                       />
@@ -1511,9 +1482,9 @@ const TutorsProfile = () => {
                       </div>
                       <TextField
                         value={profileData.subjects}
-                        onChange={(e) =>
-                          handleInputChange("subjects", e.target.value)
-                        }
+                        // onChange={(e) =>
+                        //   handleInputChange("subjects", e.target.value)
+                        // }
                         variant="outlined"
                         size="small"
                         style={{ width: "100%" }}
@@ -1522,6 +1493,7 @@ const TutorsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
+                            cursor: 'default'
                           },
                         }}
                       />
@@ -1543,9 +1515,9 @@ const TutorsProfile = () => {
                   </h6>
                   <TextField
                     value={profileData.description}
-                    onChange={(e) =>
-                      handleInputChange("description", e.target.value)
-                    }
+                    // onChange={(e) =>
+                    //   handleInputChange("description", e.target.value)
+                    // }
                     variant="outlined"
                     multiline
                     rows={4}
@@ -1558,6 +1530,7 @@ const TutorsProfile = () => {
                         borderRadius: "8px",
                         backgroundColor: "#FFFFFF",
                         lineHeight: "1.5",
+                        cursor: 'default'
                       },
                     }}
                   />
@@ -1583,7 +1556,7 @@ const TutorsProfile = () => {
                     border: "1px solid #D1D1DB",
                     borderRadius: "8px",
                     marginBottom: "20px",
-                    width: "51%",
+                    width: "52%",
                   }}
                 >
                   <Tabs

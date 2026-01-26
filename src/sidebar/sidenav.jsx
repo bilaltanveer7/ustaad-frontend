@@ -34,6 +34,8 @@ import SchoolIcon from '@mui/icons-material/School';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Badge from '@mui/material/Badge';
+import { LiaFileContractSolid } from "react-icons/lia";
+
 const drawerWidth = 260;
 const selectedItem = 'Dashboard';
 
@@ -93,6 +95,7 @@ export default function SideNav() {
                 { text: 'Transaction Log', icon: <ReceiptLongIcon />, path: '/transaction-dashboard' },
                 { text: 'Admins', icon: <AdminPanelSettingsIcon />, path: '/admins-dashboard' },
                 { text: 'Pending Users', icon: <HourglassEmptyIcon />, path: '/pending-users' },
+                { text: 'Contracts', icon: <LiaFileContractSolid style={{height:25, width:25}} />, path: '/contracts-dashboard' },
             ],
         },
         {

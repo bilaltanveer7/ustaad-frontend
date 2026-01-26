@@ -11,6 +11,7 @@ import PendingUsersDashboard from './PendingUsers/dashboard';
 import UserDetail from './PendingUsers/UserDetail';
 import LoginScreen from './Auth/Login';
 import PrivateRoute from './components/PrivateRoute';
+import ContractDashboard from './Contracts/dashboard';
 
 function App() {
   return (
@@ -91,6 +92,15 @@ function App() {
           element={
             <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
               <PendingUsersDashboard/>
+            </PrivateRoute>
+          } 
+        />
+
+        <Route 
+          path="/contracts-dashboard" 
+          element={
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <ContractDashboard/>
             </PrivateRoute>
           } 
         />

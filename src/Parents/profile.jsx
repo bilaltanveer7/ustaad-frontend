@@ -349,25 +349,17 @@ const ParentsProfile = () => {
               <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
                 <TableRow
                   sx={{
-                    "& th": {
-                      height: "32px",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      lineHeight: "32px",
-                      backgroundColor: "#1E9CBC",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      border: "1px solid #4db6ac",
-                    },
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -381,8 +373,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -396,8 +388,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -411,8 +403,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -551,25 +543,17 @@ const ParentsProfile = () => {
               <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
                 <TableRow
                   sx={{
-                    "& th": {
-                      height: "32px",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      lineHeight: "32px",
-                      backgroundColor: "#1E9CBC",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      border: "1px solid #4db6ac",
-                    },
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -583,8 +567,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -598,8 +582,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -613,8 +597,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -628,8 +612,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -746,25 +730,17 @@ const ParentsProfile = () => {
               <TableHead style={{ backgroundColor: "#1E9CBC" }}>
                 <TableRow
                   sx={{
-                    "& th": {
-                      height: "32px",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      lineHeight: "32px",
-                      backgroundColor: "#1E9CBC",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      border: "1px solid #4db6ac",
-                    },
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -778,8 +754,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -793,8 +769,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -808,8 +784,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 500,
-                        fontSize: "14px",
+                        fontWeight: 600,
+                        fontSize: "16px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -1228,7 +1204,7 @@ const ParentsProfile = () => {
                   </div>
 
                   {/* Right Column - Edit Button */}
-                  <div className="col-md-4 d-flex justify-content-end align-items-start">
+                  {/* <div className="col-md-4 d-flex justify-content-end align-items-start">
                     <Button
                       variant="contained"
                       startIcon={<EditIcon />}
@@ -1242,7 +1218,7 @@ const ParentsProfile = () => {
                     >
                       Edit Details
                     </Button>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Stats Row with Input Fields */}
@@ -1261,17 +1237,22 @@ const ParentsProfile = () => {
                       </div>
                       <TextField
                         value={profileData.noOfHires}
-                        onChange={(e) =>
-                          handleInputChange("noOfHires", e.target.value)
-                        }
+                        // onChange={(e) =>
+                        //   handleInputChange("noOfHires", e.target.value)
+                        // }
                         variant="outlined"
                         size="small"
-                        style={{ width: "100%" }}
+                        fullWidth
+                        // style={{ width: "100%" }}
+                        inputProps={{
+                          readOnly: true,
+                        }}
                         InputProps={{
                           style: {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
+                            cursor: 'default',
                           },
                         }}
                       />
@@ -1291,17 +1272,21 @@ const ParentsProfile = () => {
                       </div>
                       <TextField
                         value={profileData.joiningDate}
-                        onChange={(e) =>
-                          handleInputChange("joiningDate", e.target.value)
-                        }
+                        // onChange={(e) =>
+                        //   handleInputChange("joiningDate", e.target.value)
+                        // }
                         variant="outlined"
                         size="small"
-                        style={{ width: "100%" }}
+                        // style={{ width: "100%" }}
+                        inputProps={{
+                          readOnly: true,
+                        }}
                         InputProps={{
                           style: {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
+                            cursor: 'default'
                           },
                           endAdornment: (
                             <InputAdornment position="end">
@@ -1332,17 +1317,21 @@ const ParentsProfile = () => {
                       </div>
                       <TextField
                         value={profileData.children}
-                        onChange={(e) =>
-                          handleInputChange("children", e.target.value)
-                        }
+                        // onChange={(e) =>
+                        //   handleInputChange("children", e.target.value)
+                        // }
                         variant="outlined"
                         size="small"
-                        style={{ width: "100%" }}
+                        // style={{ width: "100%" }}
+                        inputProps={{
+                          readOnly: true,
+                        }}
                         InputProps={{
                           style: {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
+                            cursor: 'default'
                           },
                         }}
                       />
@@ -1362,17 +1351,21 @@ const ParentsProfile = () => {
                       </div>
                       <TextField
                         value={profileData.amountSpent}
-                        onChange={(e) =>
-                          handleInputChange("amountSpent", e.target.value)
-                        }
+                        // onChange={(e) =>
+                        //   handleInputChange("amountSpent", e.target.value)
+                        // }
                         variant="outlined"
                         size="small"
-                        style={{ width: "100%" }}
+                        // style={{ width: "100%" }}
+                        inputProps={{
+                          readOnly: true,
+                        }}
                         InputProps={{
                           style: {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
+                            cursor: 'default'
                           },
                         }}
                       />
@@ -1394,21 +1387,26 @@ const ParentsProfile = () => {
                   </h6>
                   <TextField
                     value={profileData.description}
-                    onChange={(e) =>
-                      handleInputChange("description", e.target.value)
-                    }
+                    // onChange={(e) =>
+                    //   handleInputChange("description", e.target.value)
+                    // }
                     variant="outlined"
                     multiline
                     rows={4}
                     style={{ width: "100%" }}
+                    inputProps={{
+                      readOnly: true,
+                    }}
                     InputProps={{
                       style: {
+                        // width:'100%',
                         fontSize: "14px",
                         fontWeight: 400,
                         color: "#30417D",
                         borderRadius: "8px",
                         backgroundColor: "#FFFFFF",
                         lineHeight: "1.5",
+                        cursor: 'default'
                       },
                     }}
                   />

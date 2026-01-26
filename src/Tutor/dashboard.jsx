@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useTutorStore } from "../store/useTutorStore";
@@ -301,7 +301,7 @@ const TutorDashboard = () => {
                   >
                     {selected.length} Selected
                   </span>
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     startIcon={<FilterIcon />}
                     style={{
@@ -325,7 +325,7 @@ const TutorDashboard = () => {
                         height: "20px",
                       }}
                     />
-                  </Button>
+                  </Button> */}
                   <span
                     style={{
                       fontWeight: 400,
@@ -425,12 +425,9 @@ const TutorDashboard = () => {
                           <TableCell
                             key={key}
                             sx={{
-                              fontSize: "14px",
-                              fontWeight: 500,
+                              fontSize: "16px",
+                              fontWeight: 600,
                               color: "#FFFFFF",
-                              // cursor: "pointer",
-                              py: 0,
-                              height: 32,
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -459,16 +456,19 @@ const TutorDashboard = () => {
                             onClick={() => handleSelectRow(row.id)}
                             selected={isItemSelected}
                             style={{
-                              cursor: "pointer",
-                              backgroundColor:
-                                index % 2 === 0 ? "white" : "#fafafa",
-                              borderBottom: "1px solid #e0e0e0",
+                              height: '40px',
+                              backgroundColor: 'transparent'
                             }}
                           >
                             {/* <TableCell padding="checkbox" style={{ border: "1px solid #e0e0e0" }}>
                                                         <Checkbox checked={isItemSelected} size="small" />
                                                     </TableCell> */}
-                            <TableCell
+                            <TableCell sx={{
+                              padding: '0 8px',
+                              height: '40px',
+                              lineHeight: '40px',
+                              border: "1px solid #e0e0e0",
+                            }}
                               onClick={() =>
                                 navigate(`/tutor-profile/${row.id}`)
                               }
@@ -476,12 +476,10 @@ const TutorDashboard = () => {
                               <Tooltip title={row.clientId} arrow>
                                 <div
                                   style={{
-                                    fontWeight: 400,
+                                    fontWeight: 600,
                                     fontSize: "16px",
-                                    color: "#4D5874",
+                                    color: "#000",
                                     // border: "1px solid #e0e0e0",
-                                    cursor: "pointer",
-                                    py: 0,
                                     cursor: "pointer",
                                     maxWidth: "60px",
                                     overflow: "hidden",
@@ -493,7 +491,12 @@ const TutorDashboard = () => {
                                 </div>
                               </Tooltip>
                             </TableCell>
-                            <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                            <TableCell style={{
+                              padding: '0 8px',
+                              height: '40px',
+                              lineHeight: '40px',
+                              border: "1px solid #e0e0e0",
+                            }}>
                               <div className="d-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center">
                                   <Avatar
@@ -510,11 +513,11 @@ const TutorDashboard = () => {
                                   <Tooltip title={row.name} arrow>
                                     <div
                                       style={{
+                                        fontSize: "14px",
+                                        color: "#000",
                                         fontWeight: 400,
-                                        fontSize: "16px",
-                                        color: "#101219",
                                         cursor: "pointer",
-                                        maxWidth: "60px",
+                                        maxWidth: "100px",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
@@ -528,20 +531,18 @@ const TutorDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                fontWeight: 400,
-                                fontSize: "16px",
-                                color: "#101219",
+                                padding: '0 8px',
+                                height: '40px',
+                                lineHeight: '40px',
                                 border: "1px solid #e0e0e0",
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <span
                                   style={{
-                                    color: "#2e7d32",
-                                    fontWeight: 500,
-                                    backgroundColor: "#e8f5e8",
-                                    padding: "4px 8px",
-                                    borderRadius: "4px",
+                                    fontSize: "14px",
+                                    color: "#000",
+                                    fontWeight: 400,
                                   }}
                                 >
                                   {row.hourlyRate}
@@ -550,9 +551,9 @@ const TutorDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                fontWeight: 400,
-                                fontSize: "14px",
-                                color: "#101219",
+                                padding: '0 8px',
+                                height: '40px',
+                                lineHeight: '40px',
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -563,6 +564,9 @@ const TutorDashboard = () => {
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
+                                    fontSize: "14px",
+                                    color: "#000",
+                                    fontWeight: 400,
                                   }}
                                 >
                                   {row.subjects}
@@ -576,20 +580,25 @@ const TutorDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "14px", color: "#666" }}
+                                    style={{ fontSize: "16px", color: "#666" }}
                                   />
                                 </IconButton>
                               </div>
                             </TableCell>
                             <TableCell
                               style={{
-                                fontWeight: 400,
-                                fontSize: "16px",
-                                color: "#4D5874",
+                                padding: '0 8px',
+                                height: '40px',
+                                lineHeight: '40px',
                                 border: "1px solid #e0e0e0",
                               }}
                             >
-                              <div className="d-flex align-items-center justify-content-between">
+                              <div className="d-flex align-items-center justify-content-between"
+                                style={{
+                                  fontSize: "14px",
+                                  color: "#000",
+                                  fontWeight: 400,
+                                }}>
                                 {row.date}
                               </div>
                             </TableCell>

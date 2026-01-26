@@ -238,7 +238,7 @@ const TransactionDashboard = () => {
                   >
                     {selected.length} Selected
                   </span>
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     startIcon={<FilterIcon />}
                     style={{
@@ -262,7 +262,7 @@ const TransactionDashboard = () => {
                         height: "20px",
                       }}
                     />
-                  </Button>
+                  </Button> */}
                   <span
                     style={{
                       fontWeight: 400,
@@ -361,12 +361,9 @@ const TransactionDashboard = () => {
                           <TableCell
                             key={key}
                             sx={{
-                              fontSize: "14px",
-                              fontWeight: 500,
+                              fontSize: "16px",
+                              fontWeight: 600,
                               color: "#FFFFFF",
-                              // cursor: "pointer",
-                              py: 0,
-                              height: 32,
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -393,19 +390,20 @@ const TransactionDashboard = () => {
                             key={row.id}
                             selected={isItemSelected}
                             sx={{
-                              backgroundColor:
-                                index % 2 === 0 ? "white" : "#fafafa",
+                              height: '40px',
+                              backgroundColor: 'transparent',
                               borderBottom: "1px solid #e0e0e0",
                             }}
                           >
                             <TableCell
                               style={{
-                                fontWeight: 500,
+                                fontWeight: 400,
                                 fontSize: "14px",
-                                color: "#101219",
+                                color: "#000",
+                                padding: '0 8px',
+                                height: '40px',
+                                lineHeight: '40px',
                                 border: "1px solid #e0e0e0",
-                                cursor: "pointer",
-                                py: 0,
                               }}
                             >
                               <div className="d-flex align-items-center gap-2">
@@ -424,7 +422,7 @@ const TransactionDashboard = () => {
                                   }}
                                 >
                                   {row.type === "Withdraw" ? (
-                                    <ArrowUpwardIcon
+                                    <ArrowDownwardIcon
                                       style={{
                                         color: "#F31616",
                                         fontSize: "16px",
@@ -432,7 +430,7 @@ const TransactionDashboard = () => {
                                       }}
                                     />
                                   ) : (
-                                    <ArrowDownwardIcon
+                                    <ArrowUpwardIcon
                                       style={{
                                         color: "#38BC5C",
                                         fontSize: "16px",
@@ -448,7 +446,7 @@ const TransactionDashboard = () => {
                               style={{
                                 fontWeight: 400,
                                 fontSize: "14px",
-                                color: "#101219",
+                                color: "#000",
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -460,7 +458,7 @@ const TransactionDashboard = () => {
                               style={{
                                 fontWeight: 400,
                                 fontSize: "14px",
-                                color: "#101219",
+                                color: "#000",
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -472,8 +470,8 @@ const TransactionDashboard = () => {
                             <TableCell
                               style={{
                                 fontWeight: 400,
-                                fontSize: "16px",
-                                color: "#101219",
+                                fontSize: "14px",
+                                color: "#000",
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -548,6 +546,7 @@ const TransactionDashboard = () => {
                                         borderRadius: "6px",
                                         fontWeight: 500,
                                         fontSize: "14px",
+                                        // textTransform:''
                                       }}
                                     >
                                       <InfoIcon
@@ -564,11 +563,11 @@ const TransactionDashboard = () => {
                                   style={{
                                     fontWeight: 400,
                                     fontSize: "14px",
-                                    color: "#101219",
-                                    fontFamily: "monospace",
-                                    backgroundColor: "#f5f5f5",
-                                    padding: "2px 6px",
-                                    borderRadius: "4px",
+                                    color: "#000",
+                                    // fontFamily: "monospace",
+                                    // backgroundColor: "#f5f5f5",
+                                    // padding: "2px 6px",
+                                    // borderRadius: "4px",
                                   }}
                                 >
                                   {row.tutorId?.substring(0, 8) || "N/A"}
@@ -579,7 +578,7 @@ const TransactionDashboard = () => {
                               style={{
                                 fontWeight: 400,
                                 fontSize: "14px",
-                                color: "#101219",
+                                color: "#000",
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -590,8 +589,8 @@ const TransactionDashboard = () => {
                             <TableCell
                               style={{
                                 fontWeight: 400,
-                                fontSize: "16px",
-                                color: "#4D5874",
+                                fontSize: "14px",
+                                color: "#000",
                                 border: "1px solid #e0e0e0",
                                 textAlign: "center",
                               }}
@@ -599,17 +598,17 @@ const TransactionDashboard = () => {
                               <Button
                                 variant="outlined"
                                 size="small"
-                                startIcon={<VisibilityIcon />}
+                                startIcon={<VisibilityIcon style={{color:'#1E9CBC'}} />}
                                 onClick={() => handleViewTransaction(row.id)}
                                 sx={{
                                   textTransform: "none",
                                   fontSize: "12px",
                                   minWidth: "80px",
-                                  borderColor: "#1976D2",
-                                  color: "#1976D2",
+                                  borderColor: "#1E9CBC",
+                                  color: "#1E9CBC",
                                   "&:hover": {
-                                    borderColor: "#1565C0",
-                                    backgroundColor: "#E3F2FD",
+                                    borderColor: "#1E9CBC",
+                                    // backgroundColor: "#E3F2FD",
                                   },
                                 }}
                               >

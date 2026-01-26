@@ -304,7 +304,7 @@ const ParentDashboard = () => {
                   >
                     {selected.length} Selected
                   </span>
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     startIcon={<FilterIcon />}
                     style={{
@@ -328,7 +328,7 @@ const ParentDashboard = () => {
                         height: "20px",
                       }}
                     />
-                  </Button>
+                  </Button> */}
                   <span
                     style={{
                       fontWeight: 400,
@@ -433,12 +433,12 @@ const ParentDashboard = () => {
                           <TableCell
                             key={key}
                             sx={{
-                              fontSize: "14px",
-                              fontWeight: 500,
+                              fontSize: "16px",
+                              fontWeight: 600,
                               color: "#FFFFFF",
                               // cursor: "pointer",
-                              py: 0,
-                              height: 32,
+                              // py: 0,
+                              // height: 32,
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -466,12 +466,12 @@ const ParentDashboard = () => {
                             hover
                             onClick={() => handleSelectRow(row.id)}
                             selected={isItemSelected}
-                            style={{
-                              cursor: "pointer",
-                              height: 48,
-                              backgroundColor:
-                                index % 2 === 0 ? "white" : "#fafafa",
-                              borderBottom: "1px solid #e0e0e0",
+                            sx={{
+                              // cursor: "pointer",
+                              height: '40px',
+                              backgroundColor: 'transparent'
+                              // index % 2 === 0 ? "white" : "#fafafa",
+                              // borderBottom: "1px solid #e0e0e0",
                             }}
                           >
                             {/* <TableCell
@@ -484,7 +484,12 @@ const ParentDashboard = () => {
                           >
                             <Checkbox checked={isItemSelected} size="small" />
                           </TableCell> */}
-                            <TableCell
+                            <TableCell sx={{
+                              padding: '0 8px',
+                              height: '40px',
+                              lineHeight: '40px',
+                              border: "1px solid #e0e0e0",
+                            }}
                               onClick={() =>
                                 navigate(`/parent-profile/${row.id}`)
                               }
@@ -492,11 +497,9 @@ const ParentDashboard = () => {
                               <Tooltip title={row.clientId} arrow>
                                 <div
                                   style={{
-                                    fontWeight: 400,
-                                    fontSize: "16px",
-                                    color: "#4D5874",
-                                    // border: "1px solid #e0e0e0",
-                                    py: 0,
+                                    fontWeight: 600,
+                                    fontSize: "14px",
+                                    color: "#000",
                                     // height: 48,
                                     cursor: "pointer",
                                     maxWidth: "60px",
@@ -512,8 +515,10 @@ const ParentDashboard = () => {
                             <TableCell
                               style={{
                                 border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
+                                padding: '0 8px',
+                                height: '40px',
+                                lineHeight: '40px',
+                                // height: 48,
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
@@ -533,8 +538,8 @@ const ParentDashboard = () => {
                                     <div
                                       style={{
                                         fontWeight: 400,
-                                        fontSize: "16px",
-                                        color: "#101219",
+                                        fontSize: "14px",
+                                        color: "#000",
                                         cursor: "pointer",
                                         maxWidth: "100px",
                                         overflow: "hidden",
@@ -550,12 +555,14 @@ const ParentDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "16px",
-                                color: "#101219",
+                                fontSize: "14px",
+                                color: "#000",
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
+                                padding: '0 8px',
+                                height: '40px',
+                                lineHeight: '40px',
+                                // height: 48,
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
@@ -563,8 +570,8 @@ const ParentDashboard = () => {
                                   <div
                                     style={{
                                       fontWeight: 400,
-                                      fontSize: "16px",
-                                      color: "#101219",
+                                      fontSize: "14px",
+                                      color: "#000",
                                       cursor: "pointer",
                                       maxWidth: "140px",
                                       overflow: "hidden",
@@ -591,12 +598,13 @@ const ParentDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "16px",
-                                color: "#101219",
+                                fontSize: "14px",
+                                color: "#000",
                                 fontWeight: 400,
+                                padding: '0 8px',
+                                height: '40px',
+                                lineHeight: '40px',
                                 border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
@@ -604,8 +612,8 @@ const ParentDashboard = () => {
                                   <div
                                     style={{
                                       fontWeight: 400,
-                                      fontSize: "16px",
-                                      color: "#101219",
+                                      fontSize: "14px",
+                                      color: "#000",
                                       cursor: "pointer",
                                       maxWidth: "120px",
                                       overflow: "hidden",
@@ -627,7 +635,7 @@ const ParentDashboard = () => {
                                   >
                                     <ContentCopyIcon
                                       style={{
-                                        fontSize: "14px",
+                                        fontSize: "16px",
                                         color: "#666",
                                       }}
                                     />
@@ -637,12 +645,14 @@ const ParentDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "16px",
-                                color: "#4D5874",
+                                fontSize: "14px",
+                                color: "#000",
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                py: 0,
-                                height: 48,
+                                padding: '0 8px',
+                                height: '40px',
+                                lineHeight: '40px',
+                                // height: 48,
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
