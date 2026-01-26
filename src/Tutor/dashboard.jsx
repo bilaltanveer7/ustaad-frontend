@@ -73,7 +73,7 @@ const TutorDashboard = () => {
   const tableData = tutors.map((tutor) => ({
     id: tutor.id,
     image: tutor.User?.image,
-    clientId: tutor.id.substring(0, 8).toUpperCase(),
+    clientId: tutor.userId.substring(0, 8).toUpperCase(),
     name:
       tutor.User?.firstName && tutor.User?.lastName
         ? `${tutor.User.firstName} ${tutor.User.lastName}`
