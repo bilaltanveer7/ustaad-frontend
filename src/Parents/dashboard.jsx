@@ -74,7 +74,7 @@ const ParentDashboard = () => {
   const tableData = parents.map((parent) => ({
     id: parent.id,
     image: parent.User?.image,
-    clientId: parent.id.substring(0, 8).toUpperCase(),
+    clientId: parent.userId.substring(0, 8).toUpperCase(),
     name:
       parent.User?.firstName && parent.User?.lastName
         ? `${parent.User.firstName} ${parent.User.lastName}`
