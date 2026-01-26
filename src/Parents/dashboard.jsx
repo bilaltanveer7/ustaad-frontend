@@ -250,7 +250,7 @@ const ParentDashboard = () => {
                 <div style={{ width: "300px" }}>
                   <TextField
                     size="small"
-                    placeholder="Search by name email or phone"
+                    placeholder="Search by id, name, email or phone"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     InputProps={{
