@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IQ Analysis - Final Page</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .main-container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        padding: 48px;
+        max-width: 500px;
+        width: 100%;
+        margin: 20px;
+        text-align: center;
+      }
+
+      .title {
+        font-size: 30px !important;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 16px;
+        line-height: 1.2em !important;
+      }
+
+      .title .highlight {
+        color: #e56135;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 32px;
+        line-height: 1.5;
+      }
+
+      .form-container {
+        margin-bottom: 40px;
+      }
+
+      .email-input {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        transition: border-color 0.3s ease;
+        background-color: #f8f9fa;
+      }
+
+      .email-input:focus {
+        outline: none;
+        border-color: #e56135;
+        background-color: white;
+      }
+
+      .checkbox-container {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        margin-bottom: 24px;
+        text-align: left;
+      }
+
+      .checkbox-input {
+        margin-right: 12px;
+        margin-top: 2px;
+        width: 18px;
+        height: 18px;
+        accent-color: #e56135;
+      }
+
+      .checkbox-label {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.4;
+        cursor: pointer;
+      }
+
+      .checkbox-label a {
+        color: #e56135;
+        text-decoration: none;
+      }
+
+      .checkbox-label a:hover {
+        text-decoration: underline;
+      }
+
+      .continue-button {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #e56135 0%, #e56135 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: none;
+      }
+
+      .continue-button:hover {
+        background: linear-gradient(135deg, #4a9b90 0%, #69b3a8 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(92, 179, 168, 0.3);
+      }
+
+      .continue-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .stats-container {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 40px;
+        padding-top: 32px;
+        border-top: 1px solid #e1e5e9;
+      }
+
+      .stat-item {
+        text-align: center;
+        flex: 1;
+      }
+
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #e561352f 0%, #e5613538 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+        color: #e56135;
+        font-size: 20px;
+      }
+
+      .stat-value {
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 4px;
+        line-height: 1.3em;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .main-container {
+          padding: 32px 24px;
+          margin: 16px;
+          border-radius: 12px;
+        }
+
+        .title {
+          font-size: 24px;
+        }
+
+        .subtitle {
+          font-size: 15px;
+          margin-bottom: 28px;
+        }
+
+        .email-input {
+          padding: 14px 16px;
+          font-size: 16px;
+        }
+
+        .continue-button {
+          padding: 14px;
+          font-size: 16px;
+        }
+
+        .stats-container {
+          margin-top: 32px;
+          padding-top: 24px;
+        }
+
+        .stat-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 18px;
+        }
+
+        .stat-value {
+          font-size: 16px;
+        }
+
+        .stat-label {
+          font-size: 11px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .main-container {
+          padding: 24px 20px;
+          margin: 12px;
+        }
+
+        .title {
+          font-size: 22px;
+        }
+
+        .subtitle {
+          font-size: 14px;
+        }
+
+        .checkbox-container {
+          text-align: center;
+        }
+
+        .stats-container {
+          flex-direction: row;
+          justify-content: space-between;
+          gap: 8px;
+        }
+
+        .stat-item {
+          text-align: center;
+          flex: 1;
+        }
+
+        .stat-icon {
+          width: 32px;
+          height: 32px;
+          font-size: 14px;
+          margin: 0 auto 8px;
+        }
+
+        .stat-value {
+          font-size: 12px;
+          margin-bottom: 2px;
+        }
+
+        .stat-label {
+          font-size: 9px;
+          line-height: 1.2;
+        }
+      }
+    </style>
+
+    <div class="main-container mx-auto">
+      <div class="row">
+        <h1 class="title">
+          Discover <span class="highlight">Your IQ</span> Potential!
+        </h1>
+        <p class="subtitle">
+          Enter your email to unlock your complete IQ analysis and personalized
+          cognitive profile.
+        </p>
+
+        <form id="quick-page-latest-form" method="POST" class="form-container">
+          <input
+            type="text"
+            id="first_name"
+            name="first_name"
+            class="email-input"
+            placeholder="First Name"
+            required
+          />
+          <input
+            type="text"
+            id="last_name"
+            name="last_name"
+            class="email-input"
+            placeholder="Last Name"
+            required
+          />
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="email-input"
+            placeholder="Email"
+            required
+          />
+
+          <div class="checkbox-container">
+            <input
+              type="checkbox"
+              id="terms"
+              name="terms"
+              class="checkbox-input"
+              required
+            />
+            <label for="terms" class="checkbox-label">
+              I accept the
+              <a
+                href="https://brainowl.com/terms-and-conditions/"
+                target="_blank"
+                >Terms & Conditions</a
+              >
+              and
+              <a href="https://brainowl.com/refund-policy/" target="_blank"
+                >Refund Policy</a
+              >
+            </label>
+          </div>
+
+          <button type="submit" class="continue-button" name="quick-page2-form">
+            Continue
+          </button>
+        </form>
+
+        <div class="stats-container">
+          <div class="stat-item">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Completion Time</div>
+              <div class="stat-value">0m 13s</div>
+            </div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Faster Than</div>
+              <div class="stat-value">94% of test takers</div>
+            </div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">
+              <i class="fas fa-compass"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Strongest Skill</div>
+              <div class="stat-value">Spatial Orientation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      jQuery("input[name=first_name]").focus();
+
+      jQuery("input[name=first_name]").blur(function () {
+        validate(jQuery(this));
+      });
+      jQuery("input[name=last_name]").blur(function () {
+        validate(jQuery(this));
+      });
+      jQuery("input[name=email]").blur(function () {
+        validate(jQuery(this));
+      });
+      function validate(field) {
+        jQuery(field).next(".red").remove();
+        if (field.val().length == 0) {
+          jQuery(field).after('<div class="red">This field is required</div>');
+          return false;
+        } else {
+          jQuery(field).next(".red").remove();
+          return true;
+        }
+      }
+    </script>
+  </body>
+</html>

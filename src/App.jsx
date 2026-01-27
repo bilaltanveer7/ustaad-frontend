@@ -6,47 +6,116 @@ import ParentsProfile from './Parents/profile';
 import TutorDashboard from './Tutor/dashboard';
 import TutorsProfile from './Tutor/profile';
 import TransactionDashboard from './Transaction/dashboard';
-import LoginScreen from './Auth/Login'
-import PrivateRoute from './PrivateRoute';
+import AdminsDashboard from './Admins/dashboard';
+import PendingUsersDashboard from './PendingUsers/dashboard';
+import UserDetail from './PendingUsers/UserDetail';
+import LoginScreen from './Auth/Login';
+import PrivateRoute from './components/PrivateRoute';
+import ContractDashboard from './Contracts/dashboard';
 
 function App() {
   return (
     <>
       <title>
-        Ustaad
+        Ustaad Admin Side
       </title>
       <Routes>
-        {/* Public route */}
-        <Route path="/" element={<LoginScreen />} />
+        {/* Public Routes */}
+        <Route path="/" element={<LoginScreen/>} />
+        
+        {/* Protected Routes */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <Dashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/parent-dashboard" 
+          element={
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <ParentDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/parent-profile/:id" 
+          element={
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <ParentsProfile/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/tutor-dashboard" 
+          element={
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <TutorDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/tutor-profile/:id" 
+          element={
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <TutorsProfile/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/transaction-dashboard" 
+          element={
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <TransactionDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/admins-dashboard" 
+          element={
+            <PrivateRoute requiredRole={["SUPER_ADMIN"]}>
+              <AdminsDashboard/>
+            </PrivateRoute>
+          } 
+        />
+        
+        <Route 
+          path="/pending-users" 
+          element={
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <PendingUsersDashboard/>
+            </PrivateRoute>
+          } 
+        />
 
-        {/* Protected routes */}
-        <Route path="/dashboard" element={<PrivateRoute> <Dashboard /> </PrivateRoute>} />
-        <Route path="/parent-dashboard" element={<PrivateRoute> <ParentDashboard /> </PrivateRoute>} />
-        <Route path="/parent-profile" element={<PrivateRoute> <ParentsProfile /> </PrivateRoute>} />
-        <Route
-          path="/tutor-dashboard"
+        <Route 
+          path="/contracts-dashboard" 
           element={
-            <PrivateRoute>
-              <TutorDashboard />
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <ContractDashboard/>
             </PrivateRoute>
-          }
+          } 
         />
-        <Route
-          path="/tutor-profile"
+        
+        <Route 
+          path="/pending-users/:userId" 
           element={
-            <PrivateRoute>
-              <TutorsProfile />
+            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
+              <UserDetail/>
             </PrivateRoute>
-          }
+          } 
         />
-        <Route
-          path="/transaction-dashboard"
-          element={
-            <PrivateRoute>
-              <TransactionDashboard />
-            </PrivateRoute>
-          }
-        />
+        
+        {/* Catch all route - redirect to login */}
+        <Route path="*" element={<LoginScreen/>} />
       </Routes>
     </>
   );
