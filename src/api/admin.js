@@ -88,6 +88,14 @@ export const getUserById = async (userId) => {
   return data;
 };
 
+export const getUserDataById = async (userId) => {
+  const data = await invoke({
+    url: `/admin/users/data/${userId}`,
+    method: "GET",
+  });
+  return data;
+};
+
 export const approveUserOnboarding = async (userId) => {
   const data = await invoke({
     url: `/admin/users/approve-onboarding`,

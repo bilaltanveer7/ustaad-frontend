@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import DocumentModal from "../components/DocumentModal";
 import { useAdminStore } from "../store/useAdminStore";
-import { useTutorStore } from "../store/useTutorStore";
 import config from "../utils/config";
 import {
   Button,
@@ -62,31 +61,36 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const drawerWidth = 260;
 
 const UserDetail = () => {
-  const { userId } = useParams();
+  const { userId, role } = useParams();
   const navigate = useNavigate();
 
   const {
-    tutorDetails,
-    fetchTutorDetails,
-    isLoading: isLoadingTutor,
-    error: tutorError,
-    clearSelectedTutor,
-  } = useTutorStore();
+    approveUser,
+    isApprovingUser,
+    approveUserError,
+    clearErrors,
+    fetchUserData,
+    userData,
+    isLoadingUserData,
+    userDataError,
+    clearUserData,
+  } = useAdminStore();
 
-  const { approveUser, isApprovingUser, approveUserError, clearErrors } =
-    useAdminStore();
+  console.log("role:", role);
 
   const [activeTab, setActiveTab] = useState(0);
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  // Fetch tutor details if user is a tutor
   useEffect(() => {
     if (userId) {
-      fetchTutorDetails(userId);
+      fetchUserData(userId);
     }
-  }, [userId, fetchTutorDetails]);
+  }, [userId, fetchUserData]);
+
+  // Log userData for debugging
+  console.log("userData", userData);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -102,15 +106,15 @@ const UserDetail = () => {
     setIsModalOpen(false);
   };
 
-  const handleApproveUser = async () => {
-    if (!userId) return;
+  const handleApproveUser = async (id) => {
+    if (!id) return;
 
-    const result = await approveUser(userId);
+    const result = await approveUser(id);
     if (result.success) {
       setShowSuccessMessage(true);
-      // Optionally refresh the tutor details to show updated status
+      // Refresh the user data to show updated status
       setTimeout(() => {
-        fetchTutorDetails(userId);
+        fetchUserData(userId);
       }, 1000);
     }
   };
@@ -165,8 +169,8 @@ const UserDetail = () => {
     }
   };
 
-  // Loading state - show loading if either user details or tutor details are loading
-  const isLoading = isLoadingTutor;
+  // Loading state
+  const isLoading = isLoadingUserData;
 
   if (isLoading) {
     return (
@@ -188,7 +192,7 @@ const UserDetail = () => {
             }}
           >
             <CircularProgress />
-            <Typography sx={{ ml: 2 }}>Loading tutor details...</Typography>
+            <Typography sx={{ ml: 2 }}>Loading user details...</Typography>
           </Box>
         </div>
       </>
@@ -196,7 +200,7 @@ const UserDetail = () => {
   }
 
   // Error state
-  const currentError = tutorError;
+  const currentError = userDataError;
 
   if (currentError) {
     return (
@@ -216,20 +220,15 @@ const UserDetail = () => {
                 color="inherit"
                 size="small"
                 onClick={() => {
-                  clearSelectedTutor();
-                  fetchTutorDetails(userId);
-                  if (tutorDetails?.role === "TUTOR") {
-                    fetchTutorDetails(userId);
-                  }
+                  clearUserData();
+                  fetchUserData(userId);
                 }}
               >
                 Retry
               </Button>
             }
           >
-            Error loading{" "}
-            {tutorDetails?.role === "TUTOR" && tutorError ? "tutor" : "user"}{" "}
-            details: {currentError}
+            Error loading user details: {currentError}
           </Alert>
         </div>
       </>
@@ -237,7 +236,7 @@ const UserDetail = () => {
   }
 
   // No user found
-  if (!tutorDetails) {
+  if (!userData) {
     return (
       <>
         <SideNav />
@@ -264,54 +263,85 @@ const UserDetail = () => {
     );
   }
 
-  const user = tutorDetails?.tutor?.User;
-  const tutorProfile = tutorDetails?.tutor;
+  const user = userData?.user;
+  const tutorProfile = userData?.tutor;
+  const parentProfile = userData?.parent;
 
-  // Get documents from tutor details
+  // Get documents based on user role
   const getDocuments = () => {
-    if (tutorDetails?.documents) {
-      const docs = [];
-      const documents = tutorDetails.documents;
+    const docs = [];
 
-      if (documents.idFront) {
-        const extension = documents.idFront.split(".").pop().toLowerCase();
+    // Handle tutor documents
+    if (userData?.tutor) {
+      const tutor = userData.tutor;
+
+      if (tutor.idBackUrl) {
+        const extension = tutor.idBackUrl.split(".").pop().toLowerCase();
         docs.push({
           id: "id-front",
           name: "ID Front",
           type: extension === "pdf" ? "application/pdf" : "image/png",
-          url: `${config.tutorDocumentUrl}${documents.idFront}`,
-          uploadedAt: tutorProfile?.createdAt,
+          url: `${config.tutorDocumentUrl}${tutor.idBackUrl}`,
+          uploadedAt: tutor.createdAt,
           category: "Identity",
         });
       }
 
-      if (documents.idBack) {
-        const extension = documents.idBack.split(".").pop().toLowerCase();
+      if (tutor.idFrontUrl) {
+        const extension = tutor.idFrontUrl.split(".").pop().toLowerCase();
         docs.push({
           id: "id-back",
           name: "ID Back",
           type: extension === "pdf" ? "application/pdf" : "image/png",
-          url: `${config.tutorDocumentUrl}${documents.idBack}`,
-          uploadedAt: tutorProfile?.createdAt,
+          url: `${config.tutorDocumentUrl}${tutor.idFrontUrl}`,
+          uploadedAt: tutor.createdAt,
           category: "Identity",
         });
       }
 
-      if (documents.resume) {
-        const extension = documents.resume.split(".").pop().toLowerCase();
+      if (tutor.resumeUrl) {
+        const extension = tutor.resumeUrl.split(".").pop().toLowerCase();
         docs.push({
           id: "resume",
           name: "Resume/CV",
           type: extension === "pdf" ? "application/pdf" : "image/png",
-          url: `${config.tutorDocumentUrl}${documents.resume}`,
-          uploadedAt: tutorProfile?.createdAt,
+          url: `${config.tutorDocumentUrl}${tutor.resumeUrl}`,
+          uploadedAt: tutor.createdAt,
           category: "Education",
         });
       }
-
-      return docs;
     }
-    return [];
+
+    // Handle parent documents
+    if (userData?.parent) {
+      const parent = userData.parent;
+
+      if (parent.idFrontUrl) {
+        const extension = parent.idFrontUrl.split(".").pop().toLowerCase();
+        docs.push({
+          id: "id-front",
+          name: "ID Front",
+          type: extension === "pdf" ? "application/pdf" : "image/png",
+          url: `${config.parentDocumentUrl}${parent.idFrontUrl}`,
+          uploadedAt: parent.createdAt,
+          category: "Identity",
+        });
+      }
+
+      if (parent.idBackUrl) {
+        const extension = parent.idBackUrl.split(".").pop().toLowerCase();
+        docs.push({
+          id: "id-back",
+          name: "ID Back",
+          type: extension === "pdf" ? "application/pdf" : "image/png",
+          url: `${config.parentDocumentUrl}${parent.idBackUrl}`,
+          uploadedAt: parent.createdAt,
+          category: "Identity",
+        });
+      }
+    }
+
+    return docs;
   };
 
   const documents = getDocuments();
@@ -319,7 +349,7 @@ const UserDetail = () => {
   console.log("documents", documents);
 
   const renderBasicInfo = () => (
-    <Card sx={{ mb: 3, bgcolor:'#EEFBFD', border: "1px solid #D1D1DB", }}>
+    <Card sx={{ mb: 3, bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
       <CardContent>
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
           Basic Information
@@ -339,12 +369,12 @@ const UserDetail = () => {
                   : user?.firstName || user?.lastName || "N/A"}
               </Typography>
               <Chip
-                label="TUTOR"
+                label={user?.role || "USER"}
                 size="medium"
                 sx={{
-                  backgroundColor: getRoleColor("TUTOR").bg,
-                  border: `1px solid ${getRoleColor("TUTOR").border}`,
-                  color: getRoleColor("TUTOR").color,
+                  backgroundColor: getRoleColor(user?.role).bg,
+                  border: `1px solid ${getRoleColor(user?.role).border}`,
+                  color: getRoleColor(user?.role).color,
                   fontWeight: 500,
                   fontSize: "14px",
                   mb: 1,
@@ -541,11 +571,12 @@ const UserDetail = () => {
   );
 
   const renderTutorInfo = () => {
-    if (!tutorDetails) return null;
+    if (!userData?.tutor) return null;
 
-    const education = tutorDetails.education || [];
-    const experience = tutorDetails.experience || [];
-    const totalExperience = tutorDetails.totalExperience || 0;
+    const tutor = userData.tutor;
+    const education = userData.tutorEducation || [];
+    const experience = userData.tutorExperience || [];
+    const totalExperience = tutor.totalExperience || 0;
 
     return (
       <Card sx={{ mb: 3 }}>
@@ -588,8 +619,8 @@ const UserDetail = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary="Bank Details"
-                    secondary={`${tutorProfile?.bankName || "N/A"} - ${
-                      tutorProfile?.accountNumber || "N/A"
+                    secondary={`${tutor.bankName || "N/A"} - ${
+                      tutor.accountNumber || "N/A"
                     }`}
                   />
                 </ListItem>
@@ -599,7 +630,7 @@ const UserDetail = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary="Grade Level"
-                    secondary={tutorProfile?.grade || "N/A"}
+                    secondary={tutor.grade || "N/A"}
                   />
                 </ListItem>
               </List>
@@ -629,7 +660,7 @@ const UserDetail = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary="Profile Created"
-                    secondary={formatDate(tutorProfile?.createdAt)}
+                    secondary={formatDate(tutor.createdAt)}
                   />
                 </ListItem>
               </List>
@@ -639,7 +670,7 @@ const UserDetail = () => {
                 Subjects:
               </Typography>
               <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
-                {(tutorProfile?.subjects || ["N/A"]).map((subject, index) => (
+                {(tutor.subjects || ["N/A"]).map((subject, index) => (
                   <Chip
                     key={index}
                     label={subject}
@@ -656,12 +687,251 @@ const UserDetail = () => {
                 About:
               </Typography>
               <Typography variant="body2" sx={{ color: "#666" }}>
-                {tutorProfile?.about || "No description available."}
+                {tutor.about || "No description available."}
               </Typography>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
+    );
+  };
+
+  const renderParentInfo = () => {
+    if (!userData?.parent) return null;
+
+    const parent = userData.parent;
+
+    return (
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Parent Information
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Parent ID"
+                    secondary={
+                      <Typography
+                        component="span"
+                        sx={{
+                          fontFamily: "monospace",
+                          backgroundColor: "#f5f5f5",
+                          padding: "2px 6px",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        {parent.id}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <CalendarIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Profile Created"
+                    secondary={formatDate(parent.createdAt)}
+                  />
+                </ListItem>
+              </List>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <CalendarIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Last Updated"
+                    secondary={formatDateTime(parent.updatedAt)}
+                  />
+                </ListItem>
+                {parent.customerId && (
+                  <ListItem>
+                    <ListItemIcon>
+                      <CardIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Customer ID"
+                      secondary={parent.customerId}
+                    />
+                  </ListItem>
+                )}
+              </List>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const renderEducationExperience = () => {
+    if (!userData?.tutor) return null;
+
+    const education = userData.tutorEducation || [];
+    const experience = userData.tutorExperience || [];
+
+    return (
+      <>
+        {/* Education Section */}
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Education History
+            </Typography>
+            {education.length === 0 ? (
+              <Box sx={{ textAlign: "center", py: 4, color: "#666" }}>
+                <SchoolIcon sx={{ fontSize: 48, mb: 2, opacity: 0.5 }} />
+                <Typography>No education records found</Typography>
+              </Box>
+            ) : (
+              <Grid container spacing={3}>
+                {education.map((edu, index) => (
+                  <Grid item xs={12} key={edu.id || index}>
+                    <Card
+                      variant="outlined"
+                      sx={{
+                        border: "1px solid #E0E3EB",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                        },
+                      }}
+                    >
+                      <CardContent>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "flex-start",
+                            mb: 2,
+                          }}
+                        >
+                          <Box sx={{ flex: 1 }}>
+                            <Typography
+                              variant="h6"
+                              sx={{ fontWeight: 600, color: "#101219" }}
+                            >
+                              {edu.degree || "N/A"}
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              sx={{ color: "#1976D2", mb: 1 }}
+                            >
+                              {edu.institute || "N/A"}
+                            </Typography>
+                          </Box>
+                          <Chip
+                            label={`${formatDate(edu.startDate)} - ${
+                              edu.endDate === "Present"
+                                ? "Present"
+                                : formatDate(edu.endDate)
+                            }`}
+                            size="small"
+                            sx={{
+                              backgroundColor: "#EEF3FF",
+                              color: "#235DFF",
+                              fontWeight: 500,
+                            }}
+                          />
+                        </Box>
+                        {edu.description && (
+                          <Typography variant="body2" sx={{ color: "#666" }}>
+                            {edu.description}
+                          </Typography>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Experience Section */}
+        <Card>
+          <CardContent>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Work Experience
+            </Typography>
+            {experience.length === 0 ? (
+              <Box sx={{ textAlign: "center", py: 4, color: "#666" }}>
+                <WorkIcon sx={{ fontSize: 48, mb: 2, opacity: 0.5 }} />
+                <Typography>No work experience records found</Typography>
+              </Box>
+            ) : (
+              <Grid container spacing={3}>
+                {experience.map((exp, index) => (
+                  <Grid item xs={12} key={exp.id || index}>
+                    <Card
+                      variant="outlined"
+                      sx={{
+                        border: "1px solid #E0E3EB",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                        },
+                      }}
+                    >
+                      <CardContent>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "flex-start",
+                            mb: 2,
+                          }}
+                        >
+                          <Box sx={{ flex: 1 }}>
+                            <Typography
+                              variant="h6"
+                              sx={{ fontWeight: 600, color: "#101219" }}
+                            >
+                              {exp.designation || "N/A"}
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              sx={{ color: "#7B1FA2", mb: 1 }}
+                            >
+                              {exp.company || "N/A"}
+                            </Typography>
+                          </Box>
+                          <Chip
+                            label={`${formatDate(exp.startDate)} - ${
+                              exp.endDate === "Present"
+                                ? "Present"
+                                : formatDate(exp.endDate)
+                            }`}
+                            size="small"
+                            sx={{
+                              backgroundColor: "#F3E5F5",
+                              color: "#7B1FA2",
+                              fontWeight: 500,
+                            }}
+                          />
+                        </Box>
+                        {exp.description && (
+                          <Typography variant="body2" sx={{ color: "#666" }}>
+                            {exp.description}
+                          </Typography>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            )}
+          </CardContent>
+        </Card>
+      </>
     );
   };
 
@@ -829,7 +1099,7 @@ const UserDetail = () => {
                     <VerifiedIcon />
                   )
                 }
-                onClick={handleApproveUser}
+                onClick={() => handleApproveUser(user.id)}
                 disabled={isApprovingUser || user?.isOnBoard === "approved"}
                 sx={{
                   backgroundColor:
@@ -866,7 +1136,10 @@ const UserDetail = () => {
             <Tabs value={activeTab} onChange={handleTabChange}>
               <Tab label="Overview" />
               <Tab label="Documents" />
-              <Tab label="Tutor Profile" />
+              <Tab
+                label={`${user?.role === "TUTOR" ? "Tutor" : "Parent"} Profile`}
+              />
+              {user?.role === "TUTOR" && <Tab label="Education & Experience" />}
             </Tabs>
           </Box>
 
@@ -880,7 +1153,16 @@ const UserDetail = () => {
 
           {activeTab === 1 && <Box>{renderDocuments()}</Box>}
 
-          {activeTab === 2 && <Box>{renderTutorInfo()}</Box>}
+          {activeTab === 2 && (
+            <Box>
+              {user?.role === "TUTOR" && renderTutorInfo()}
+              {user?.role === "PARENT" && renderParentInfo()}
+            </Box>
+          )}
+
+          {activeTab === 3 && user?.role === "TUTOR" && (
+            <Box>{renderEducationExperience()}</Box>
+          )}
 
           {/* Error Display for Approve User */}
           {approveUserError && (

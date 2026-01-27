@@ -139,8 +139,8 @@ const PendingUsersDashboard = () => {
     setCurrentPage(1); // Reset to first page
   };
 
-  const handleUserClick = (userId) => {
-    navigate(`/pending-users/${userId}`);
+  const handleUserClick = (userId, role) => {
+    navigate(`/pending-users/${userId}/${role}`);
   };
 
   // Filter users based on search and role filter
@@ -150,13 +150,16 @@ const PendingUsersDashboard = () => {
       user.firstName?.toLowerCase().includes(searchLower) ||
       user.lastName?.toLowerCase().includes(searchLower) ||
       user.email?.toLowerCase().includes(searchLower) ||
-      user.phone?.includes(searchTerm) ||
-      user.id?.toLowerCase().includes(searchLower);
+      (user.phone && user.phone.includes(searchTerm)) ||
+      (user.profileId && user.profileId.toString().includes(searchTerm)) ||
+      (user.id && user.id.toLowerCase().includes(searchLower));
 
     const matchesRole = roleFilter === "ALL" || user.role === roleFilter;
 
     return matchesSearch && matchesRole;
   });
+
+  console.log(filteredUsers);
 
   const getVerificationStatus = (user) => {
     const verifications = [];
@@ -272,7 +275,7 @@ const PendingUsersDashboard = () => {
                             variant="h4"
                             sx={{ fontWeight: 600, color: "#101219" }}
                           >
-                            {pendingUsersPagination?.total || 0}
+                            {pendingUsersPagination?.totalPending || 0}
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Total Pending
@@ -306,10 +309,7 @@ const PendingUsersDashboard = () => {
                             variant="h4"
                             sx={{ fontWeight: 600, color: "#101219" }}
                           >
-                            {
-                              pendingUsers.filter((u) => u.role === "PARENT")
-                                .length
-                            }
+                            {pendingUsersPagination?.parentCount || 0}
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Parents
@@ -343,10 +343,7 @@ const PendingUsersDashboard = () => {
                             variant="h4"
                             sx={{ fontWeight: 600, color: "#101219" }}
                           >
-                            {
-                              pendingUsers.filter((u) => u.role === "TUTOR")
-                                .length
-                            }
+                            {pendingUsersPagination?.tutorCount || 0}
                           </Typography>
                           <Typography variant="body2" sx={{ color: "#666" }}>
                             Tutors
@@ -588,7 +585,9 @@ const PendingUsersDashboard = () => {
                       filteredUsers.map((user) => (
                         <TableRow
                           key={user.id}
-                          onClick={() => handleUserClick(user.id)}
+                          onClick={() =>
+                            handleUserClick(user.profileId, user.role)
+                          }
                           style={{
                             borderBottom: "1px solid #e0e0e0",
                             // cursor: "pointer",
@@ -839,7 +838,7 @@ const PendingUsersDashboard = () => {
 
               {/* Pagination */}
               {pendingUsersPagination &&
-                pendingUsersPagination.totalPages > 1 && (
+                pendingUsersPagination.pagination.totalPages > 1 && (
                   <Box
                     sx={{
                       display: "flex",
@@ -855,7 +854,7 @@ const PendingUsersDashboard = () => {
                       {pendingUsersPagination.total} total users)
                     </Typography> */}
                     <Pagination
-                      count={pendingUsersPagination.totalPages}
+                      count={pendingUsersPagination.pagination.totalPages}
                       page={currentPage}
                       onChange={handlePageChange}
                       color="primary"
@@ -869,7 +868,7 @@ const PendingUsersDashboard = () => {
                 <div style={{ marginTop: "16px", textAlign: "center" }}>
                   <Typography variant="body2" style={{ color: "#666" }}>
                     Showing {filteredUsers.length} of{" "}
-                    {pendingUsersPagination?.total || 0} pending users
+                    {pendingUsersPagination?.totalPending || 0} pending users
                     {(searchTerm || roleFilter !== "ALL") && " (filtered)"}
                   </Typography>
                 </div>

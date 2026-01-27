@@ -73,7 +73,8 @@ const ParentDashboard = () => {
   // Transform API data to match table format
   const tableData = parents.map((parent) => ({
     id: parent.id,
-    clientId: parent.id.substring(0, 8).toUpperCase(),
+    image: parent.User?.image,
+    clientId: parent.userId.substring(0, 8).toUpperCase(),
     name:
       parent.User?.firstName && parent.User?.lastName
         ? `${parent.User.firstName} ${parent.User.lastName}`
@@ -249,7 +250,7 @@ const ParentDashboard = () => {
                 <div style={{ width: "300px" }}>
                   <TextField
                     size="small"
-                    placeholder="Search by name email or phone"
+                    placeholder="Search by id, name, email or phone"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     InputProps={{
@@ -436,6 +437,7 @@ const ParentDashboard = () => {
                               fontSize: "16px",
                               fontWeight: 600,
                               color: "#FFFFFF",
+                              whiteSpace:'nowrap'
                               // cursor: "pointer",
                               // py: 0,
                               // height: 32,
@@ -467,11 +469,8 @@ const ParentDashboard = () => {
                             onClick={() => handleSelectRow(row.id)}
                             selected={isItemSelected}
                             sx={{
-                              // cursor: "pointer",
-                              height: '40px',
+                              height: '30px',
                               backgroundColor: 'transparent'
-                              // index % 2 === 0 ? "white" : "#fafafa",
-                              // borderBottom: "1px solid #e0e0e0",
                             }}
                           >
                             {/* <TableCell
@@ -486,8 +485,8 @@ const ParentDashboard = () => {
                           </TableCell> */}
                             <TableCell sx={{
                               padding: '0 8px',
-                              height: '40px',
-                              lineHeight: '40px',
+                              height: '30px',
+                              lineHeight: '30px',
                               border: "1px solid #e0e0e0",
                             }}
                               onClick={() =>
@@ -512,28 +511,29 @@ const ParentDashboard = () => {
                                 </div>
                               </Tooltip>
                             </TableCell>
+
                             <TableCell
                               style={{
-                                border: "1px solid #e0e0e0",
                                 padding: '0 8px',
-                                height: '40px',
-                                lineHeight: '40px',
-                                // height: 48,
+                                height: '30px',
+                                lineHeight: '30px',
+                                border: "1px solid #e0e0e0",
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center">
                                   <Avatar
+                                    src={
+                                      row.image
+                                        ? row.image
+                                        : getInitials(row.name)
+                                    }
                                     style={{
-                                      width: "32px",
-                                      height: "32px",
-                                      backgroundColor: getAvatarColor(row.name),
-                                      fontSize: "12px",
-                                      marginRight: "12px",
+                                      width: 25,
+                                      height: 25,
+                                      marginRight: "20px",
                                     }}
-                                  >
-                                    {getInitials(row.name)}
-                                  </Avatar>
+                                  />
                                   <Tooltip title={row.name} arrow>
                                     <div
                                       style={{
@@ -553,6 +553,7 @@ const ParentDashboard = () => {
                                 </div>
                               </div>
                             </TableCell>
+
                             <TableCell
                               style={{
                                 fontSize: "14px",
@@ -560,8 +561,8 @@ const ParentDashboard = () => {
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
                                 padding: '0 8px',
-                                height: '40px',
-                                lineHeight: '40px',
+                                height: '30px',
+                                lineHeight: '30px',
                                 // height: 48,
                               }}
                             >
@@ -591,7 +592,7 @@ const ParentDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "14px", color: "#666" }}
+                                    style={{ fontSize: "16px", color: "#666" }}
                                   />
                                 </IconButton>
                               </div>
@@ -602,8 +603,8 @@ const ParentDashboard = () => {
                                 color: "#000",
                                 fontWeight: 400,
                                 padding: '0 8px',
-                                height: '40px',
-                                lineHeight: '40px',
+                                height: '30px',
+                                lineHeight: '30px',
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -629,7 +630,7 @@ const ParentDashboard = () => {
                                     size="small"
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      handleCopy(row.phone);
+                                      handleCopy(row.email);
                                     }}
                                     style={{ padding: "2px" }}
                                   >
@@ -650,8 +651,8 @@ const ParentDashboard = () => {
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
                                 padding: '0 8px',
-                                height: '40px',
-                                lineHeight: '40px',
+                                height: '30px',
+                                lineHeight: '30px',
                                 // height: 48,
                               }}
                             >
@@ -669,7 +670,7 @@ const ParentDashboard = () => {
             </div>
           )}
         </div>
-      </div>
+      </div >
     </>
   );
 };

@@ -440,15 +440,15 @@ const AdminsDashboard = () => {
                         >
                           <TableCell style={{
                             padding: '0 8px',
-                            height: '40px',
-                            lineHeight: '40px',
+                            height: '30px',
+                            lineHeight: '30px',
                             border: "1px solid #e0e0e0",
                           }}>
                             <Tooltip title={admin.id} arrow>
                               <div
                                 style={{
                                   fontWeight: 600,
-                                  fontSize: "16px",
+                                  fontSize: "14px",
                                   color: "#000",
                                   // border: "1px solid #e0e0e0",
                                   py: 0,
@@ -466,8 +466,8 @@ const AdminsDashboard = () => {
                           </TableCell>
                           <TableCell style={{
                             padding: '0 8px',
-                            height: '40px',
-                            lineHeight: '40px',
+                            height: '30px',
+                            lineHeight: '30px',
                             border: "1px solid #e0e0e0",
                           }}>
                             <div
@@ -482,7 +482,7 @@ const AdminsDashboard = () => {
                                   admin.image ||
                                   "/placeholder.svg?height=40&width=40"
                                 }
-                                style={{ width: 40, height: 40 }}
+                                style={{ width: 25, height: 25 }}
                               >
                                 {admin.firstName?.charAt(0).toUpperCase()}
                               </Avatar>
@@ -527,8 +527,8 @@ const AdminsDashboard = () => {
                           </TableCell>
                           <TableCell style={{
                             padding: '0 8px',
-                            height: '40px',
-                            lineHeight: '40px',
+                            height: '30px',
+                            lineHeight: '30px',
                             border: "1px solid #e0e0e0",
                           }}>
                             <Tooltip title={admin.email || "N/A"} arrow>
@@ -550,8 +550,8 @@ const AdminsDashboard = () => {
                           </TableCell>
                           <TableCell style={{
                             padding: '0 8px',
-                            height: '40px',
-                            lineHeight: '40px',
+                            height: '30px',
+                            lineHeight: '30px',
                             border: "1px solid #e0e0e0",
                           }}>
                             <span
@@ -568,8 +568,8 @@ const AdminsDashboard = () => {
                           </TableCell>
                           <TableCell style={{
                             padding: '0 8px',
-                            height: '40px',
-                            lineHeight: '40px',
+                            height: '30px',
+                            lineHeight: '30px',
                             border: "1px solid #e0e0e0",
                           }}>
                             <Chip
@@ -586,8 +586,8 @@ const AdminsDashboard = () => {
                           </TableCell>
                           <TableCell style={{
                             padding: '0 8px',
-                            height: '40px',
-                            lineHeight: '40px',
+                            height: '30px',
+                            lineHeight: '30px',
                             border: "1px solid #e0e0e0",
                           }}>
                             <Tooltip title="Delete Admin">

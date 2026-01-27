@@ -72,7 +72,8 @@ const TutorDashboard = () => {
   // Transform API data to match table format
   const tableData = tutors.map((tutor) => ({
     id: tutor.id,
-    clientId: tutor.id.substring(0, 8).toUpperCase(),
+    image: tutor.User?.image,
+    clientId: tutor.userId.substring(0, 8).toUpperCase(),
     name:
       tutor.User?.firstName && tutor.User?.lastName
         ? `${tutor.User.firstName} ${tutor.User.lastName}`
@@ -188,6 +189,7 @@ const TutorDashboard = () => {
       console.warn("Copy failed:", err);
     }
   };
+
   return (
     <>
       <SideNav />
@@ -246,7 +248,7 @@ const TutorDashboard = () => {
                 <div style={{ width: "300px" }}>
                   <TextField
                     size="small"
-                    placeholder="Search by name email or phone"
+                    placeholder="Search by id, name, email or phone"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     InputProps={{
@@ -405,16 +407,6 @@ const TutorDashboard = () => {
                   <Table>
                     <TableHead>
                       <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
-                        {/* <TableCell padding="checkbox" sx={{ py: 0, height: 32 }}>
-                                                <Checkbox
-                                                    indeterminate={selected.length > 0 && selected.length < tableData.length}
-                                                    checked={tableData.length > 0 && selected.length === tableData.length}
-                                                    onChange={handleSelectAll}
-                                                    size="small"
-                                                    sx={{ p: 0.5 }}
-                                                />
-                                            </TableCell> */}
-
                         {[
                           { label: "Tutor ID", key: "clientId" },
                           { label: "Tutor Name", key: "name" },
@@ -428,6 +420,7 @@ const TutorDashboard = () => {
                               fontSize: "16px",
                               fontWeight: 600,
                               color: "#FFFFFF",
+                              whiteSpace:'nowrap'
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -460,13 +453,10 @@ const TutorDashboard = () => {
                               backgroundColor: 'transparent'
                             }}
                           >
-                            {/* <TableCell padding="checkbox" style={{ border: "1px solid #e0e0e0" }}>
-                                                        <Checkbox checked={isItemSelected} size="small" />
-                                                    </TableCell> */}
                             <TableCell sx={{
                               padding: '0 8px',
-                              height: '40px',
-                              lineHeight: '40px',
+                              height: '30px',
+                              lineHeight: '30px',
                               border: "1px solid #e0e0e0",
                             }}
                               onClick={() =>
@@ -477,7 +467,7 @@ const TutorDashboard = () => {
                                 <div
                                   style={{
                                     fontWeight: 600,
-                                    fontSize: "16px",
+                                    fontSize: "14px",
                                     color: "#000",
                                     // border: "1px solid #e0e0e0",
                                     cursor: "pointer",
@@ -491,36 +481,41 @@ const TutorDashboard = () => {
                                 </div>
                               </Tooltip>
                             </TableCell>
-                            <TableCell style={{
-                              padding: '0 8px',
-                              height: '40px',
-                              lineHeight: '40px',
-                              border: "1px solid #e0e0e0",
-                            }}>
+
+                            <TableCell
+                              style={{
+                                padding: '0 8px',
+                                height: '30px',
+                                lineHeight: '30px',
+                                border: "1px solid #e0e0e0",
+                              }}
+                            >
                               <div className="d-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center">
                                   <Avatar
+                                    src={
+                                      row.image
+                                        ? row.image
+                                        : getInitials(row.name)
+                                    }
                                     style={{
-                                      width: "32px",
-                                      height: "32px",
-                                      backgroundColor: getAvatarColor(row.name),
-                                      fontSize: "12px",
-                                      marginRight: "12px",
+                                      width: 25,
+                                      height: 25,
+                                      marginRight: "20px",
                                     }}
-                                  >
-                                    {getInitials(row.name)}
-                                  </Avatar>
+                                  />
                                   <Tooltip title={row.name} arrow>
                                     <div
                                       style={{
+                                        fontWeight: 400,
                                         fontSize: "14px",
                                         color: "#000",
-                                        fontWeight: 400,
                                         cursor: "pointer",
-                                        maxWidth: "100px",
+                                        maxWidth: "120px",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
+                                        marginLeft: '6px'
                                       }}
                                     >
                                       {row.name}
@@ -532,8 +527,8 @@ const TutorDashboard = () => {
                             <TableCell
                               style={{
                                 padding: '0 8px',
-                                height: '40px',
-                                lineHeight: '40px',
+                                height: '30px',
+                                lineHeight: '30px',
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -552,8 +547,8 @@ const TutorDashboard = () => {
                             <TableCell
                               style={{
                                 padding: '0 8px',
-                                height: '40px',
-                                lineHeight: '40px',
+                                height: '30px',
+                                lineHeight: '30px',
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -588,8 +583,8 @@ const TutorDashboard = () => {
                             <TableCell
                               style={{
                                 padding: '0 8px',
-                                height: '40px',
-                                lineHeight: '40px',
+                                height: '30px',
+                                lineHeight: '30px',
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -612,7 +607,7 @@ const TutorDashboard = () => {
             </div>
           )}
         </div>
-      </div>
+      </div >
     </>
   );
 };
