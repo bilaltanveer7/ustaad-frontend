@@ -310,9 +310,11 @@ const ParentsProfile = () => {
     status: tx.status || "unknown",
   }));
 
+  console.log("transactionsData", children);
+
   const childrenData = children.map((child) => ({
     id: child.id,
-    childName: child.fullName || "N/A",
+    childName: child.firstName + " " + child.lastName || "N/A",
     grade: child.grade || "N/A",
     age: child.age || "N/A",
     subjects: child.subjects?.join(", ") || "N/A",
@@ -325,6 +327,8 @@ const ParentsProfile = () => {
         .map((sub) => sub.tutor?.name || "Unknown")
         .join(", ") || "-",
   }));
+
+  console.log("childrenData", childrenData);
 
   // For now, we don't have notes data from the API, so we'll show a placeholder
   const notesByTutorsData = [];
@@ -1252,7 +1256,7 @@ const ParentsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
-                            cursor: 'default',
+                            cursor: "default",
                           },
                         }}
                       />
@@ -1286,7 +1290,7 @@ const ParentsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
-                            cursor: 'default'
+                            cursor: "default",
                           },
                           endAdornment: (
                             <InputAdornment position="end">
@@ -1331,7 +1335,7 @@ const ParentsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
-                            cursor: 'default'
+                            cursor: "default",
                           },
                         }}
                       />
@@ -1365,7 +1369,7 @@ const ParentsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
-                            cursor: 'default'
+                            cursor: "default",
                           },
                         }}
                       />
@@ -1406,7 +1410,7 @@ const ParentsProfile = () => {
                         borderRadius: "8px",
                         backgroundColor: "#FFFFFF",
                         lineHeight: "1.5",
-                        cursor: 'default'
+                        cursor: "default",
                       },
                     }}
                   />
