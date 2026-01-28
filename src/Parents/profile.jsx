@@ -310,7 +310,7 @@ const ParentsProfile = () => {
     status: tx.status || "unknown",
   }));
 
-  console.log("transactionsData", children);
+  // console.log("transactionsData", children);
 
   const childrenData = children.map((child) => ({
     id: child.id,
@@ -328,7 +328,7 @@ const ParentsProfile = () => {
         .join(", ") || "-",
   }));
 
-  console.log("childrenData", childrenData);
+  // console.log("childrenData", childrenData);
 
   // For now, we don't have notes data from the API, so we'll show a placeholder
   const notesByTutorsData = [];
