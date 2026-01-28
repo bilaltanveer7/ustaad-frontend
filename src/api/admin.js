@@ -104,3 +104,20 @@ export const approveUserOnboarding = async (userId) => {
   });
   return data;
 };
+
+export const getDisputedContracts = async (query = "") => {
+  const data = await invoke({
+    url: `/admin/contracts/disputed${query}`,
+    method: "GET",
+  });
+  return data;
+};
+
+export const resolveDispute = async (contractId, data) => {
+  const response = await invoke({
+    url: `/admin/contracts/${contractId}/resolve`,
+    method: "PUT",
+    data: data,
+  });
+  return response;
+};

@@ -11,6 +11,8 @@ import {
   getUserById,
   getUserDataById,
   approveUserOnboarding,
+  getDisputedContracts,
+  resolveDispute,
 } from "../api/admin";
 
 export const useAdminStore = create((set, get) => ({
@@ -43,6 +45,7 @@ export const useAdminStore = create((set, get) => ({
   isLoadingUserDetail: false,
   isLoadingUserData: false,
   isApprovingUser: false,
+  isLoadingDisputedContracts: false,
 
   // Error states
   error: null,
@@ -53,6 +56,7 @@ export const useAdminStore = create((set, get) => ({
   userDetailError: null,
   userDataError: null,
   approveUserError: null,
+  disputedContractsError: null,
 
   // Fetch platform statistics
   fetchStats: async (days = null) => {
@@ -469,6 +473,65 @@ export const useAdminStore = create((set, get) => ({
     }
   },
 
+  // Fetch disputed contracts
+  fetchDisputedContracts: async (query = "") => {
+    set({ isLoadingDisputedContracts: true, disputedContractsError: null });
+    try {
+      const response = await getDisputedContracts(query);
+
+      // Ensure we're setting an array, or items from response
+      const contracts = response?.data?.data?.items;
+
+      set({
+        disputedContracts: Array.isArray(contracts) ? contracts : [],
+        disputedContractsPagination: response?.data?.data?.pagination,
+        isLoadingDisputedContracts: false,
+      });
+    } catch (error) {
+      console.error("Fetch disputed contracts error:", error);
+      let errorMessage = "Failed to fetch disputed contracts";
+
+      if (error.response?.data?.errors) {
+        errorMessage = error.response.data.errors[0]?.message || errorMessage;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      set({
+        disputedContractsError: errorMessage,
+        isLoadingDisputedContracts: false,
+      });
+    }
+  },
+
+  isResolvingDispute: false,
+  resolveDisputeError: null,
+  resolveDisputeContract: async (contractId, finalStatus, adminNotes) => {
+    set({ isResolvingDispute: true, resolveDisputeError: null });
+    try {
+      await resolveDispute(contractId, { finalStatus, adminNotes });
+      set((state) => ({
+        isResolvingDispute: false,
+        // Optimistically update: remove the resolved contract from the list
+        disputedContracts: state.disputedContracts.filter(
+          (c) => c.id !== contractId
+        ),
+      }));
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      let errorMessage = "Failed to resolve dispute";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      set({
+        resolveDisputeError: errorMessage,
+        isResolvingDispute: false,
+      });
+      throw error;
+    }
+  },
+
   // Manual setters
   setStats: (stats) => set({ stats }),
   setPaymentRequests: (paymentRequests) => set({ paymentRequests }),
@@ -502,7 +565,10 @@ export const useAdminStore = create((set, get) => ({
       pendingUsersError: null,
       userDetailError: null,
       userDataError: null,
+      userDataError: null,
       approveUserError: null,
+      disputedContractsError: null,
+      resolveDisputeError: null,
     }),
 
   // Clear all data
@@ -523,7 +589,10 @@ export const useAdminStore = create((set, get) => ({
       pendingUsersError: null,
       userDetailError: null,
       userDataError: null,
+      userDataError: null,
       approveUserError: null,
+      disputedContractsError: null,
+      resolveDisputeError: null,
     }),
 
   // Get payment request status options
