@@ -140,6 +140,7 @@ const PendingUsersDashboard = () => {
   };
 
   const handleUserClick = (userId, role) => {
+    if (!userId || !role) return;
     navigate(`/pending-users/${userId}/${role}`);
   };
 
@@ -475,9 +476,12 @@ const PendingUsersDashboard = () => {
                 }}
               >
                 <Table style={{ border: "1px solid #e0e0e0" }}>
-                  <TableHead sx={{
-                    backgroundColor: "#1E9CBC", height: 32
-                  }}>
+                  <TableHead
+                    sx={{
+                      backgroundColor: "#1E9CBC",
+                      height: 32,
+                    }}
+                  >
                     <TableRow
                       sx={{
                         fontSize: "16px",
@@ -630,8 +634,8 @@ const PendingUsersDashboard = () => {
                                 >
                                   {
                                     (user.firstName,
-                                      " ",
-                                      user.lastName || "N/A")
+                                    " ",
+                                    user.lastName || "N/A")
                                   }
                                 </Typography>
                                 <Typography
@@ -663,7 +667,11 @@ const PendingUsersDashboard = () => {
                                 />
                                 <Typography
                                   // variant="body2"
-                                  style={{ fontSize: "14px", color: "#000", fontWeight:400 }}
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "#000",
+                                    fontWeight: 400,
+                                  }}
                                 >
                                   {user.email}
                                 </Typography>
@@ -680,7 +688,11 @@ const PendingUsersDashboard = () => {
                                 />
                                 <Typography
                                   // variant="body2"
-                                  style={{ fontSize: "14px", color: "#000", fontWeight:400 }}
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "#000",
+                                    fontWeight: 400,
+                                  }}
                                 >
                                   +{user.phone || "N/A"}
                                 </Typography>
@@ -693,8 +705,9 @@ const PendingUsersDashboard = () => {
                               size="small"
                               style={{
                                 backgroundColor: getRoleColor(user.role).bg,
-                                border: `1px solid ${getRoleColor(user.role).border
-                                  }`,
+                                border: `1px solid ${
+                                  getRoleColor(user.role).border
+                                }`,
                                 color: getRoleColor(user.role).color,
                                 fontWeight: 500,
                                 fontSize: "12px",
@@ -804,7 +817,7 @@ const PendingUsersDashboard = () => {
                               style={{
                                 fontSize: "14px",
                                 color: "#000",
-                                fontWeight:400
+                                fontWeight: 400,
                               }}
                             >
                               {formatDate(user.createdAt)}
@@ -818,9 +831,10 @@ const PendingUsersDashboard = () => {
                                 backgroundColor: getStatusColor(
                                   user.isOnBoard || "pending"
                                 ).bg,
-                                border: `1px solid ${getStatusColor(user.isOnBoard || "pending")
+                                border: `1px solid ${
+                                  getStatusColor(user.isOnBoard || "pending")
                                     .border
-                                  }`,
+                                }`,
                                 color: getStatusColor(
                                   user.isOnBoard || "pending"
                                 ).color,
