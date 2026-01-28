@@ -26,6 +26,7 @@ import {
   Grid,
   Typography,
   Divider,
+  TablePagination,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -58,6 +59,10 @@ const ContractDashboard = () => {
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
 
+  // Pagination State
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const open = Boolean(anchorEl);
 
   const handleMenuOpen = (event) => {
@@ -68,9 +73,20 @@ const ContractDashboard = () => {
     setAnchorEl(null);
   };
 
+  // Fetch with pagination
   useEffect(() => {
-    fetchDisputedContracts();
-  }, [fetchDisputedContracts]);
+    const query = `?page=${page + 1}&limit=${rowsPerPage}`;
+    fetchDisputedContracts(query);
+  }, [fetchDisputedContracts, page, rowsPerPage]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const [selectedContract, setSelectedContract] = useState(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
@@ -689,6 +705,19 @@ const ContractDashboard = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
+
+              {/* Pagination */}
+              {disputedContractsPagination && (
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={disputedContractsPagination.total || 0}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              )}
             </div>
           </div>
         </div>
