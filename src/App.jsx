@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./Dashboard/dashboard";
-import ParentDashboard from './Parents/dashboard';
-import ParentsProfile from './Parents/profile';
-import TutorDashboard from './Tutor/dashboard';
-import TutorsProfile from './Tutor/profile';
-import TransactionDashboard from './Transaction/dashboard';
-import AdminsDashboard from './Admins/dashboard';
-import PendingUsersDashboard from './PendingUsers/dashboard';
-import UserDetail from './PendingUsers/UserDetail';
-import LoginScreen from './Auth/Login';
-import PrivateRoute from './components/PrivateRoute';
-import ContractDashboard from './Contracts/dashboard';
+import ParentDashboard from "./Parents/dashboard";
+import ParentsProfile from "./Parents/profile";
+import TutorDashboard from "./Tutor/dashboard";
+import TutorsProfile from "./Tutor/profile";
+import TransactionDashboard from "./Transaction/dashboard";
+import AdminsDashboard from "./Admins/dashboard";
+import PendingUsersDashboard from "./PendingUsers/dashboard";
+import UserDetail from "./PendingUsers/UserDetail";
+import LoginScreen from "./Auth/Login";
+import PrivateRoute from "./components/PrivateRoute";
+import ContractDashboard from "./Contracts/dashboard";
 
 function App() {
   return (
@@ -94,17 +94,17 @@ function App() {
           }
         />
 
-        <Route 
-          path="/contracts-dashboard" 
+        <Route
+          path="/contracts-dashboard"
           element={
-            <PrivateRoute requiredRole={["SUPER_ADMIN","ADMIN"]}>
-              <ContractDashboard/>
+            <PrivateRoute requiredRole={["SUPER_ADMIN", "ADMIN"]}>
+              <ContractDashboard />
             </PrivateRoute>
-          } 
+          }
         />
-        
-        <Route 
-          path="/pending-users/:userId" 
+
+        <Route
+          path="/pending-users/:userId/:role"
           element={
             <PrivateRoute requiredRole={["SUPER_ADMIN", "ADMIN"]}>
               <UserDetail />
