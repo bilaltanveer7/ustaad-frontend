@@ -160,8 +160,6 @@ const PendingUsersDashboard = () => {
     return matchesSearch && matchesRole;
   });
 
-  console.log(filteredUsers);
-
   const getVerificationStatus = (user) => {
     const verifications = [];
     if (user.isEmailVerified) verifications.push("Email");
@@ -614,10 +612,7 @@ const PendingUsersDashboard = () => {
                               }}
                             >
                               <Avatar
-                                src={
-                                  user.image ||
-                                  "/placeholder.svg?height=40&width=40"
-                                }
+                                src={user.image ? user.image : ""}
                                 style={{ width: 40, height: 40 }}
                               >
                                 {user.firstName?.charAt(0).toUpperCase()}
