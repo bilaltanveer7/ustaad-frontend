@@ -176,6 +176,7 @@ const ParentsProfile = () => {
     children = [],
     subscriptions = [],
     transactions = [],
+    childNotes = [],
   } = parentDetails || {};
 
   const handleSort = (key) => {
@@ -296,10 +297,12 @@ const ParentsProfile = () => {
           : parent?.User?.firstName || parent?.User?.lastName || "N/A"),
       cost: `$${tx.amount?.toFixed(2) || "0.00"}`,
     },
+    tutorName: tx.tutor.name || "N/A",
     child: {
       name: tx.childName || "N/A",
       avatar: "/placeholder.svg?height=32&width=32",
     },
+    invoiceId: tx.invoiceId || "N/A",
     paymentMethod: {
       type: "stripe",
       accountNumber: tx.invoiceId || "N/A",
@@ -312,26 +315,67 @@ const ParentsProfile = () => {
 
   // console.log("transactionsData", children);
 
-  const childrenData = children.map((child) => ({
-    id: child.id,
-    childName: child.firstName + " " + child.lastName || "N/A",
-    grade: child.grade || "N/A",
-    age: child.age || "N/A",
-    subjects: child.subjects?.join(", ") || "N/A",
-    tutorHired: subscriptions.some((sub) => sub.status === "active")
-      ? "Yes"
-      : "No",
-    currentTutors:
-      subscriptions
-        .filter((sub) => sub.status === "active")
-        .map((sub) => sub.tutor?.name || "Unknown")
-        .join(", ") || "-",
-  }));
+  const childrenData = children.map((child) => {
+    const subscriptionSessionInfo = child.subscriptions?.length
+      ? child.subscriptions
+          .map(
+            (sub) =>
+              `${sub.Offer?.sessions || 0} / ${
+                sub.tutorSessionsDetailCount || 0
+              }`
+          )
+          .join(", ")
+      : null;
 
-  // console.log("childrenData", childrenData);
+    return {
+      id: child.id,
+      childName: child.firstName + " " + child.lastName || "N/A",
+      grade: child.grade || "N/A",
+      age: child.age || "N/A",
+      gender: child.gender || "N/A",
+      curriculum: child.curriculum || "N/A",
+      subjects: child.subscriptions?.length
+        ? [
+            ...new Set(
+              child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
+            ),
+          ].join(", ") || "N/A"
+        : child.subjects?.join(", ") || "N/A",
+      tutorHired:
+        subscriptionSessionInfo ||
+        (subscriptions.some((sub) => sub.status === "active") ? "Yes" : "No"),
+      currentTutors:
+        subscriptions
+          .filter((sub) => sub.status === "active")
+          .map((sub) => sub.tutor?.name || "Unknown")
+          .join(", ") || "-",
+    };
+  });
 
-  // For now, we don't have notes data from the API, so we'll show a placeholder
-  const notesByTutorsData = [];
+  // Map childNotes to the structure expected by the table
+  const notesByTutorsData =
+    childNotes?.map((note) => ({
+      id: note.id,
+      note: (
+        <>
+          <strong>{note.headline}</strong>
+          {note.description ? `: ${note.description}` : ""}
+        </>
+      ),
+      fromTutor: {
+        name: note.User
+          ? `${note.User.firstName} ${note.User.lastName}`
+          : "Unknown",
+        avatar: note.User?.image || "/placeholder.svg?height=32&width=32",
+      },
+      toChild: {
+        name: note.childName || "Unknown",
+        avatar: "/placeholder.svg?height=32&width=32", // Child avatar not in provided data
+      },
+      date: note.createdAt
+        ? new Date(note.createdAt).toLocaleDateString()
+        : "N/A",
+    })) || [];
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -399,8 +443,8 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Payment Method
-                      {getSortIcon("paymentMethod")}
+                      Invoice Id
+                      {getSortIcon("invoiceId")}
                     </Box>
                   </TableCell>
                   <TableCell onClick={() => handleSort("name")}>
@@ -454,7 +498,7 @@ const ParentsProfile = () => {
                             marginLeft: "5px",
                           }}
                         >
-                          {row.payment.name}
+                          {row.tutorName}
                         </span>
                       </TableCell>
                       <TableCell style={{ border: "1px solid #e0e0e0" }}>
@@ -483,7 +527,7 @@ const ParentsProfile = () => {
                               gap: "5px",
                             }}
                           >
-                            <img
+                            {/* <img
                               src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e2/75/5f/e2755f3b-22fc-2929-4619-2fe03c47e635/AppIcon-1x_U007emarketing-0-6-0-sRGB-85-220-0.png/256x256bb.jpg"
                               alt="Meezan Bank"
                               style={{
@@ -491,7 +535,7 @@ const ParentsProfile = () => {
                                 height: 32,
                                 borderRadius: "50%",
                               }}
-                            />
+                            /> */}
                             <span
                               style={{
                                 fontSize: "16px",
@@ -499,15 +543,13 @@ const ParentsProfile = () => {
                                 color: "#101219",
                               }}
                             >
-                              ****{row.paymentMethod.accountNumber.slice(-4)}
+                              {row.invoiceId.slice(-7)}
                             </span>
                           </div>
                           <Tooltip title="Copy Account Number">
                             <IconButton
                               size="small"
-                              onClick={() =>
-                                handleCopy(row.paymentMethod.accountNumber)
-                              }
+                              onClick={() => handleCopy(row.invoiceId)}
                               style={{ padding: "1px", width: 20, height: 20 }}
                             >
                               <ContentCopyIcon style={{ color: "#A6ADBF" }} />
@@ -608,8 +650,8 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Subjects
-                      {getSortIcon("subjects")}
+                      Curriculum
+                      {getSortIcon("curriculum")}
                     </Box>
                   </TableCell>
                   <TableCell onClick={() => handleSort("name")}>
@@ -623,8 +665,8 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Tutor Hired?
-                      {getSortIcon("tutorHired")}
+                      Gender
+                      {getSortIcon("gender")}
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -687,19 +729,7 @@ const ParentsProfile = () => {
                           border: "1px solid #e0e0e0",
                         }}
                       >
-                        <Tooltip title={row.subjects}>
-                          <span
-                            style={{
-                              display: "block",
-                              maxWidth: "150px",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {row.subjects}
-                          </span>
-                        </Tooltip>
+                        {row.curriculum}
                       </TableCell>
                       <TableCell
                         style={{
@@ -710,7 +740,7 @@ const ParentsProfile = () => {
                           fontWeight: "400",
                         }}
                       >
-                        {row.tutorHired}
+                        {row.gender}
                       </TableCell>
                     </TableRow>
                   ))

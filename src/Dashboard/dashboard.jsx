@@ -1116,7 +1116,8 @@ const Dashboard = () => {
                             gap: 0.5,
                           }}
                         >
-                          {getChangeType("totalContracts", "up") === "up" ? (
+                          {getChangeType("totalSubscriptions", "up") ===
+                          "up" ? (
                             <TrendingUp
                               sx={{ fontSize: 16, color: "#4caf50", mr: 0.5 }}
                             />
@@ -1128,14 +1129,15 @@ const Dashboard = () => {
                           <Typography
                             sx={{
                               color:
-                                getChangeType("totalContracts", "up") === "up"
+                                getChangeType("totalSubscriptions", "up") ===
+                                "up"
                                   ? "#38BC5C"
                                   : "#F31616",
                               fontWeight: 400,
                               fontSize: "14px",
                             }}
                           >
-                            {getChangeText("totalContracts", "+5.5%")}
+                            {getChangeText("totalSubscriptions", "+5.5%")}
                           </Typography>
                           {/* <Typography
                             sx={{
