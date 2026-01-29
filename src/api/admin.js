@@ -21,9 +21,12 @@ export const getStats = async (days = null) => {
 };
 
 // Get all payment requests
-export const getAllPaymentRequests = async () => {
+export const getAllPaymentRequests = async (query = "") => {
+  const url = query
+    ? `/admin/payment-requests?search=${query}`
+    : `/admin/payment-requests`;
   const data = await invoke({
-    url: `/admin/payment-requests`,
+    url: url,
     method: "GET",
   });
   return data;

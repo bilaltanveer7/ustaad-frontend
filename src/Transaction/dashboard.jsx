@@ -69,21 +69,54 @@ const TransactionDashboard = () => {
 
   // Fetch payment requests on component mount
   useEffect(() => {
-    fetchPaymentRequests();
-  }, [fetchPaymentRequests]);
+    const delayDebounceFn = setTimeout(() => {
+      fetchPaymentRequests(searchValue);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [fetchPaymentRequests, searchValue]);
 
   // Transform API data to match table format
   const tableData = paymentRequests.map((request) => ({
     id: request.id,
-    type: "Payment Request", // All are payment requests from tutors
+    type: "Payment Request",
     amount: `$${request.amount || 0}`,
-    payment_method: "Bank Transfer", // Default payment method
     status: request.status,
-    tutorId: request.tutorId,
-    subscriptionId: request.subscriptionId,
+    tutorName: request.User
+      ? `${request.User.firstName} ${request.User.lastName}`
+      : "Unknown",
+    email: request.User?.email || "N/A",
+    phone: request.User?.phone || "N/A",
     date: new Date(request.createdAt).toLocaleDateString() || "N/A",
     updatedAt: new Date(request.updatedAt).toLocaleDateString() || "N/A",
   }));
+
+  const handleCopy = async (text) => {
+    if (text === undefined || text === null || text === "N/A") return;
+    const value = String(text);
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(value);
+        return;
+      }
+    } catch (err) {
+      // Fallback
+    }
+    // Fallback logic
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    } catch (err) {
+      console.warn("Copy failed:", err);
+    }
+  };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
@@ -352,11 +385,11 @@ const TransactionDashboard = () => {
                     <TableHead>
                       <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
                         {[
-                          { label: "Type", key: "type" },
+                          { label: "Tutor Name", key: "tutorName" },
+                          { label: "Email", key: "email" },
+                          { label: "Phone", key: "phone" },
                           { label: "Amount", key: "amount" },
-                          { label: "Payment Method", key: "payment_method" },
                           { label: "Status", key: "status" },
-                          { label: "Tutor ID", key: "tutorId" },
                           { label: "Date", key: "date" },
                           { label: "Actions", key: "actions" },
                         ].map(({ label, key }) => (
@@ -366,7 +399,7 @@ const TransactionDashboard = () => {
                               fontSize: "16px",
                               fontWeight: 600,
                               color: "#FFFFFF",
-                              whiteSpace: 'nowrap'
+                              whiteSpace: "nowrap",
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -394,8 +427,8 @@ const TransactionDashboard = () => {
                               key={row.id}
                               selected={isItemSelected}
                               sx={{
-                                height: '40px',
-                                backgroundColor: 'transparent',
+                                height: "40px",
+                                backgroundColor: "transparent",
                                 borderBottom: "1px solid #e0e0e0",
                               }}
                             >
@@ -404,46 +437,18 @@ const TransactionDashboard = () => {
                                   fontWeight: 400,
                                   fontSize: "14px",
                                   color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
+                                  padding: "0 8px",
+                                  height: "30px",
+                                  lineHeight: "30px",
                                   border: "1px solid #e0e0e0",
                                 }}
                               >
                                 <div className="d-flex align-items-center gap-2">
-                                  <div
-                                    style={{
-                                      width: 24,
-                                      height: 24,
-                                      borderRadius: "50%",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      backgroundColor:
-                                        row.type === "Withdraw"
-                                          ? "#FEECEC"
-                                          : "#EEFCF3",
-                                    }}
-                                  >
-                                    {row.type === "Withdraw" ? (
-                                      <ArrowDownwardIcon
-                                        style={{
-                                          color: "#F31616",
-                                          fontSize: "16px",
-                                          fontWeight: "bold",
-                                        }}
-                                      />
-                                    ) : (
-                                      <ArrowUpwardIcon
-                                        style={{
-                                          color: "#38BC5C",
-                                          fontSize: "16px",
-                                          fontWeight: "bold",
-                                        }}
-                                      />
-                                    )}
-                                  </div>
-                                  <span>{row.type}</span>
+                                  <Avatar
+                                    src="/placeholder.svg"
+                                    sx={{ width: 24, height: 24 }}
+                                  />
+                                  <span>{row.tutorName}</span>
                                 </div>
                               </TableCell>
                               <TableCell
@@ -451,29 +456,53 @@ const TransactionDashboard = () => {
                                   fontWeight: 400,
                                   fontSize: "14px",
                                   color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
+                                  padding: "0 8px",
+                                  height: "30px",
+                                  lineHeight: "30px",
+                                  border: "1px solid #e0e0e0",
+                                }}
+                              >
+                                {row.email}
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: 400,
+                                  fontSize: "14px",
+                                  color: "#000",
+                                  padding: "0 8px",
+                                  height: "30px",
+                                  lineHeight: "30px",
+                                  border: "1px solid #e0e0e0",
+                                }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <span>{row.phone}</span>
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => handleCopy(row.phone)}
+                                  >
+                                    <ContentCopyIcon
+                                      style={{
+                                        fontSize: "14px",
+                                        color: "#666",
+                                      }}
+                                    />
+                                  </IconButton>
+                                </div>
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: 400,
+                                  fontSize: "14px",
+                                  color: "#000",
+                                  padding: "0 8px",
+                                  height: "30px",
+                                  lineHeight: "30px",
                                   border: "1px solid #e0e0e0",
                                 }}
                               >
                                 <div className="d-flex align-items-center justify-content-between">
                                   {row.amount}
-                                </div>
-                              </TableCell>
-                              <TableCell
-                                style={{
-                                  fontWeight: 400,
-                                  fontSize: "14px",
-                                  color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
-                                  border: "1px solid #e0e0e0",
-                                }}
-                              >
-                                <div className="d-flex align-items-center justify-content-between">
-                                  {row.payment_method}
                                 </div>
                               </TableCell>
 
@@ -482,9 +511,9 @@ const TransactionDashboard = () => {
                                   fontWeight: 400,
                                   fontSize: "14px",
                                   color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
+                                  padding: "0 8px",
+                                  height: "30px",
+                                  lineHeight: "30px",
                                   border: "1px solid #e0e0e0",
                                 }}
                               >
@@ -504,7 +533,10 @@ const TransactionDashboard = () => {
                                       }}
                                     >
                                       <CheckCircleIcon
-                                        style={{ fontSize: "18px", marginRight: 4 }}
+                                        style={{
+                                          fontSize: "18px",
+                                          marginRight: 4,
+                                        }}
                                       />
                                       PAID
                                     </div>
@@ -523,7 +555,10 @@ const TransactionDashboard = () => {
                                       }}
                                     >
                                       <CancelIcon
-                                        style={{ fontSize: "18px", marginRight: 4 }}
+                                        style={{
+                                          fontSize: "18px",
+                                          marginRight: 4,
+                                        }}
                                       />
                                       REJECTED
                                     </div>
@@ -542,67 +577,49 @@ const TransactionDashboard = () => {
                                       }}
                                     >
                                       <PauseCircleFilledIcon
-                                        style={{ fontSize: "18px", marginRight: 4 }}
+                                        style={{
+                                          fontSize: "18px",
+                                          marginRight: 4,
+                                        }}
                                       />
                                       PENDING
                                     </div>
                                   )}
                                   {(row.status === "IN_REVIEW" ||
                                     row.status === "REQUESTED") && (
-                                      <div
+                                    <div
+                                      style={{
+                                        backgroundColor: "#EEF3FF",
+                                        color: "#235DFF",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        padding: "4px 8px",
+                                        borderRadius: "6px",
+                                        fontWeight: 500,
+                                        fontSize: "14px",
+                                        // textTransform:''
+                                      }}
+                                    >
+                                      <InfoIcon
                                         style={{
-                                          backgroundColor: "#EEF3FF",
-                                          color: "#235DFF",
-                                          display: "flex",
-                                          alignItems: "center",
-                                          padding: "4px 8px",
-                                          borderRadius: "6px",
-                                          fontWeight: 500,
-                                          fontSize: "14px",
-                                          // textTransform:''
+                                          fontSize: "18px",
+                                          marginRight: 4,
                                         }}
-                                      >
-                                        <InfoIcon
-                                          style={{
-                                            fontSize: "18px",
-                                            marginRight: 4,
-                                          }}
-                                        />
-                                        {row.status}
-                                      </div>
-                                    )}
+                                      />
+                                      {row.status}
+                                    </div>
+                                  )}
                                 </div>
                               </TableCell>
-                              <TableCell style={{
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
-                                border: "1px solid #e0e0e0",
-                              }}>
-                                <div className="d-flex align-items-center justify-content-between">
-                                  <span
-                                    style={{
-                                      fontWeight: 400,
-                                      fontSize: "14px",
-                                      color: "#000",
-                                      // fontFamily: "monospace",
-                                      // backgroundColor: "#f5f5f5",
-                                      // padding: "2px 6px",
-                                      // borderRadius: "4px",
-                                    }}
-                                  >
-                                    {row.tutorId?.substring(0, 8) || "N/A"}
-                                  </span>
-                                </div>
-                              </TableCell>
+
                               <TableCell
                                 style={{
                                   fontWeight: 400,
                                   fontSize: "14px",
                                   color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
+                                  padding: "0 8px",
+                                  height: "30px",
+                                  lineHeight: "30px",
                                   border: "1px solid #e0e0e0",
                                 }}
                               >
@@ -616,9 +633,9 @@ const TransactionDashboard = () => {
                                   fontWeight: 400,
                                   fontSize: "16px",
                                   color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
+                                  padding: "0 8px",
+                                  height: "30px",
+                                  lineHeight: "30px",
                                   border: "1px solid #e0e0e0",
                                   textAlign: "center",
                                 }}

@@ -51,8 +51,6 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
   const [updateError, setUpdateError] = useState("");
   const [updateSuccess, setUpdateSuccess] = useState("");
 
-  console.log("selectedPaymentRequest", selectedPaymentRequest);
-
   useEffect(() => {
     if (open && transactionId) {
       fetchPaymentRequestDetails(transactionId);
@@ -261,7 +259,8 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                     variant="h6"
                     sx={{ fontWeight: 600, color: "#101219" }}
                   >
-                    Payment Request: {selectedPaymentRequest.paymentRequest.id.slice(0, 4)}
+                    Payment Request:{" "}
+                    {selectedPaymentRequest.paymentRequest.id.slice(0, 4)}
                   </Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     {/* {getStatusIcon(selectedPaymentRequest.status)} */}
@@ -272,10 +271,14 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                         backgroundColor: getStatusColor(
                           selectedPaymentRequest.paymentRequest.status
                         ).bg,
-                        color: getStatusColor(selectedPaymentRequest.paymentRequest.status)
-                          .color,
-                        border: `1px solid ${getStatusColor(selectedPaymentRequest.paymentRequest.status).border
-                          }`,
+                        color: getStatusColor(
+                          selectedPaymentRequest.paymentRequest.status
+                        ).color,
+                        border: `1px solid ${
+                          getStatusColor(
+                            selectedPaymentRequest.paymentRequest.status
+                          ).border
+                        }`,
                         fontWeight: 500,
                       }}
                     />
@@ -297,16 +300,26 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                       />
                       <Typography
                         // variant="body2"
-                        sx={{ color: "#666", fontWeight: 600, fontSize: '18px' }}
+                        sx={{
+                          color: "#666",
+                          fontWeight: 600,
+                          fontSize: "18px",
+                        }}
                       >
                         Amount
                       </Typography>
                     </Box>
                     <Typography
                       // variant="h4"
-                      sx={{ fontWeight: 600, fontSize: '16px', color: "#101219" }}
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        color: "#101219",
+                      }}
                     >
-                      {formatAmount(selectedPaymentRequest.paymentRequest.amount)}
+                      {formatAmount(
+                        selectedPaymentRequest.paymentRequest.amount
+                      )}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>
@@ -323,13 +336,25 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                       />
                       <Typography
                         variant="body2"
-                        sx={{ color: "#666", fontWeight: 600, fontSize: '18px' }}
+                        sx={{
+                          color: "#666",
+                          fontWeight: 600,
+                          fontSize: "18px",
+                        }}
                       >
                         Request Date
                       </Typography>
                     </Box>
-                    <Typography sx={{ color: "#101219", fontWeight: 600, fontSize: '16px' }}>
-                      {formatDate(selectedPaymentRequest.paymentRequest.createdAt)}
+                    <Typography
+                      sx={{
+                        color: "#101219",
+                        fontWeight: 600,
+                        fontSize: "16px",
+                      }}
+                    >
+                      {formatDate(
+                        selectedPaymentRequest.paymentRequest.createdAt
+                      )}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -340,7 +365,13 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
             <Grid container spacing={3}>
               {/* Tutor Information */}
 
-              <Card sx={{ height: "100%", width: "100%", border: "1px solid #E0E3EB" }}>
+              <Card
+                sx={{
+                  height: "100%",
+                  width: "100%",
+                  border: "1px solid #E0E3EB",
+                }}
+              >
                 <CardContent>
                   <Box
                     sx={{
@@ -360,10 +391,22 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                   </Box>
                   <Divider sx={{ mb: 2 }} />
 
-                  <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+                  <Box
+                    sx={{
+                      mb: 2,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
                     <Typography
                       // variant="body2"
-                      sx={{ color: "#666", fontSize: '14px', fontWeight: '600', whiteSpace: "nowrap" }}
+                      sx={{
+                        color: "#666",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        whiteSpace: "nowrap",
+                      }}
                     >
                       Tutor ID:
                     </Typography>
@@ -373,7 +416,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                       sx={{
                         color: "#101219",
                         fontWeight: 500,
-                        fontSize: '14px',
+                        fontSize: "14px",
                         padding: "4px 8px",
                         borderRadius: "4px",
                         display: "inline-block",
@@ -383,72 +426,126 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                     </Typography>
                   </Box>
 
-
                   <>
-                    <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+                    <Box
+                      sx={{
+                        mb: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
                       <Typography
                         // variant="body2"
-                        sx={{ color: "#666", fontSize: '14px', fontWeight: '600', whiteSpace: "nowrap" }}
+                        sx={{
+                          color: "#666",
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          whiteSpace: "nowrap",
+                        }}
                       >
                         Name:
                       </Typography>
-                      <Typography sx={{
-                        color: "#101219",
-                        fontWeight: 500,
-                        fontSize: '14px',
-                      }}>
+                      <Typography
+                        sx={{
+                          color: "#101219",
+                          fontWeight: 500,
+                          fontSize: "14px",
+                        }}
+                      >
                         {selectedPaymentRequest.tutor.name || "N/A"}
                       </Typography>
                     </Box>
-                    <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+                    <Box
+                      sx={{
+                        mb: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
                       <Typography
                         // variant="body2"
-                        sx={{ color: "#666", fontSize: '14px', fontWeight: '600', whiteSpace: "nowrap" }}
+                        sx={{
+                          color: "#666",
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          whiteSpace: "nowrap",
+                        }}
                       >
                         Email:
                       </Typography>
-                      <Typography sx={{
-                        color: "#101219",
-                        fontWeight: 500,
-                        fontSize: '14px',
-                      }}>
+                      <Typography
+                        sx={{
+                          color: "#101219",
+                          fontWeight: 500,
+                          fontSize: "14px",
+                        }}
+                      >
                         {selectedPaymentRequest.tutor.email || "N/A"}
                       </Typography>
                     </Box>
-                    <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+                    <Box
+                      sx={{
+                        mb: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
                       <Typography
                         // variant="body2"
-                        sx={{ color: "#666", fontSize: '14px', fontWeight: '600', whiteSpace: "nowrap" }}
+                        sx={{
+                          color: "#666",
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          whiteSpace: "nowrap",
+                        }}
                       >
                         Bank Name:
                       </Typography>
-                      <Typography sx={{
-                        color: "#101219",
-                        fontWeight: 500,
-                        fontSize: '14px',
-                      }}>
+                      <Typography
+                        sx={{
+                          color: "#101219",
+                          fontWeight: 500,
+                          fontSize: "14px",
+                        }}
+                      >
                         {selectedPaymentRequest.tutor.bankName || "N/A"}
                       </Typography>
                     </Box>
-                    <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+                    <Box
+                      sx={{
+                        mb: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
                       <Typography
                         // variant="body2"
-                        sx={{ color: "#666", fontSize: '14px', fontWeight: '600', whiteSpace: "nowrap" }}
+                        sx={{
+                          color: "#666",
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          whiteSpace: "nowrap",
+                        }}
                       >
                         Bank Account Number
                       </Typography>
-                      <Typography sx={{
-                        color: "#101219",
-                        fontWeight: 500,
-                        fontSize: '14px',
-                      }}>
+                      <Typography
+                        sx={{
+                          color: "#101219",
+                          fontWeight: 500,
+                          fontSize: "14px",
+                        }}
+                      >
                         {selectedPaymentRequest.tutor.accountNumber || "N/A"}
                       </Typography>
                     </Box>
                   </>
                 </CardContent>
               </Card>
-
             </Grid>
 
             {/* Status Update Section */}
@@ -476,21 +573,27 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                         // label="Status"
                         displayEmpty
                         renderValue={(selected) =>
-                          selected ? selected : <span style={{ color: '#9e9e9e' }}>Select Status...</span>
+                          selected ? (
+                            selected
+                          ) : (
+                            <span style={{ color: "#9e9e9e" }}>
+                              Select Status...
+                            </span>
+                          )
                         }
                         onChange={(e) => setLocalStatus(e.target.value)}
                         disabled={isUpdating || isUpdatingPaymentRequest}
                         sx={{
-                          height: '37px',
-                          '& .MuiOutlinedInput-root': {
-                            height: '37px',
+                          height: "37px",
+                          "& .MuiOutlinedInput-root": {
+                            height: "37px",
                           },
-                          '& .MuiSelect-select': {
-                            display: 'flex',
-                            alignItems: 'center',
-                            height: '37px',
-                            paddingTop: '6px',
-                            paddingBottom: '6px',
+                          "& .MuiSelect-select": {
+                            display: "flex",
+                            alignItems: "center",
+                            height: "37px",
+                            paddingTop: "6px",
+                            paddingBottom: "6px",
                           },
                         }}
                       >

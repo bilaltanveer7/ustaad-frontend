@@ -627,11 +627,9 @@ const PendingUsersDashboard = () => {
                                     margin: 0,
                                   }}
                                 >
-                                  {
-                                    (user.firstName,
-                                    " ",
-                                    user.lastName || "N/A")
-                                  }
+                                  {user.firstName +
+                                    " " +
+                                    (user.lastName || "N/A")}
                                 </Typography>
                                 <Typography
                                   // variant="body2"

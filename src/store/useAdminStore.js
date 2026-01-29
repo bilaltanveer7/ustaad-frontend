@@ -93,11 +93,11 @@ export const useAdminStore = create((set, get) => ({
   },
 
   // Fetch all payment requests
-  fetchPaymentRequests: async () => {
+  fetchPaymentRequests: async (query = "") => {
     set({ isLoadingPaymentRequests: true, paymentRequestsError: null });
 
     try {
-      const response = await getAllPaymentRequests();
+      const response = await getAllPaymentRequests(query);
 
       if (response.data && response.data.success) {
         set({

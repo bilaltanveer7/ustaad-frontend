@@ -307,9 +307,10 @@ const TutorsProfile = () => {
           startYear: exp.startDate
             ? new Date(exp.startDate).getFullYear().toString()
             : "N/A",
-          endYear: exp.endDate
-            ? new Date(exp.endDate).getFullYear().toString()
-            : "Present",
+          endYear:
+            exp.endDate === "Present"
+              ? "Present"
+              : new Date(exp.endDate).getFullYear().toString(),
         }))
       : [];
 
@@ -318,13 +319,15 @@ const TutorsProfile = () => {
       ? education?.map((edu) => ({
           id: edu.id,
           institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-          degree: edu.description || "N/A", // API uses 'description' for degree info
-          startYear: edu.startDate
+          degree: edu.degree || "N/A", // API uses 'description' for degree info
+          description: edu.description || "N/A", // API uses 'description' for degree info
+          startDate: edu.startDate
             ? new Date(edu.startDate).getFullYear().toString()
             : "N/A",
-          endYear: edu.endDate
-            ? new Date(edu.endDate).getFullYear().toString()
-            : "Present",
+          endDate:
+            edu.endDate === "Present"
+              ? "Present"
+              : new Date(edu.endDate).getFullYear().toString(),
         }))
       : [];
 
@@ -1027,7 +1030,7 @@ const TutorsProfile = () => {
                     color: "#FFFFFF",
                   }}
                 >
-                  <TableCell onClick={() => handleSort("institution")}>
+                  <TableCell onClick={() => handleSort("Institute")}>
                     <Box
                       sx={{
                         display: "flex",
@@ -1038,8 +1041,8 @@ const TutorsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Institution
-                      {getSortIcon("institution")}
+                      Institute
+                      {getSortIcon("Institute")}
                     </Box>
                   </TableCell>
                   <TableCell onClick={() => handleSort("degree")}>
@@ -1057,7 +1060,7 @@ const TutorsProfile = () => {
                       {getSortIcon("degree")}
                     </Box>
                   </TableCell>
-                  <TableCell onClick={() => handleSort("years")}>
+                  <TableCell onClick={() => handleSort("description")}>
                     <Box
                       sx={{
                         display: "flex",
@@ -1068,8 +1071,38 @@ const TutorsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Years
-                      {getSortIcon("years")}
+                      Description
+                      {getSortIcon("description")}
+                    </Box>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("start_date")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        color: "#FFFFFF",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Start Year
+                      {getSortIcon("start_date")}
+                    </Box>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("end_date")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        color: "#FFFFFF",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      End Year
+                      {getSortIcon("end_date")}
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -1123,7 +1156,27 @@ const TutorsProfile = () => {
                           border: "1px solid #e0e0e0",
                         }}
                       >
-                        {row.startYear} - {row.endYear}
+                        {row.description}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+                        {row.startDate}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+                        {row.endDate}
                       </TableCell>
                     </TableRow>
                   ))
