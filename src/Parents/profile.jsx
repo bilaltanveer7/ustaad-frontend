@@ -520,32 +520,7 @@ const ParentsProfile = () => {
                             justifyContent: "space-between",
                           }}
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "5px",
-                            }}
-                          >
-                            {/* <img
-                              src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e2/75/5f/e2755f3b-22fc-2929-4619-2fe03c47e635/AppIcon-1x_U007emarketing-0-6-0-sRGB-85-220-0.png/256x256bb.jpg"
-                              alt="Meezan Bank"
-                              style={{
-                                width: 32,
-                                height: 32,
-                                borderRadius: "50%",
-                              }}
-                            /> */}
-                            <span
-                              style={{
-                                fontSize: "16px",
-                                fontWeight: 400,
-                                color: "#101219",
-                              }}
-                            >
-                              {row.invoiceId.slice(-7)}
-                            </span>
-                          </div>
+                          {row.invoiceId}
                           <Tooltip title="Copy Account Number">
                             <IconButton
                               size="small"

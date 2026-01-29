@@ -339,6 +339,7 @@ const TutorsProfile = () => {
             cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
           },
           parent: tx?.parent?.name || "N/A",
+          invoiceId: tx?.parentTransactions[0]?.invoiceId || "N/A",
           child: {
             name: "Student", // API doesn't provide child info, using placeholder
             avatar: "/placeholder.svg?height=32&width=32",
@@ -495,8 +496,8 @@ const TutorsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Payment Method
-                      {getSortIcon("paymentMethod")}
+                      Invoice Id
+                      {getSortIcon("invoiceId")}
                     </Box>
                   </TableCell>
                   <TableCell onClick={() => handleSort("name")}>
@@ -595,38 +596,12 @@ const TutorsProfile = () => {
                             justifyContent: "space-between",
                           }}
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "5px",
-                            }}
-                          >
-                            <img
-                              src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e2/75/5f/e2755f3b-22fc-2929-4619-2fe03c47e635/AppIcon-1x_U007emarketing-0-6-0-sRGB-85-220-0.png/256x256bb.jpg"
-                              alt="Meezan Bank"
-                              style={{
-                                width: 32,
-                                height: 32,
-                                borderRadius: "50%",
-                              }}
-                            />
-                            <span
-                              style={{
-                                fontSize: "16px",
-                                fontWeight: 400,
-                                color: "#101219",
-                              }}
-                            >
-                              ****{row.paymentMethod.accountNumber.slice(-4)}
-                            </span>
-                          </div>
+                          {row.invoiceId}
+
                           <Tooltip title="Copy Account Number">
                             <IconButton
                               size="small"
-                              onClick={() =>
-                                handleCopy(row.paymentMethod.accountNumber)
-                              }
+                              onClick={() => handleCopy(row.invoiceId)}
                               style={{ padding: "1px", width: 20, height: 20 }}
                             >
                               <ContentCopyIcon style={{ color: "#A6ADBF" }} />
