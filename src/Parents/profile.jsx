@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
+import profileImg from '../assets/profile.PNG';
 import {
   Avatar,
   Button,
@@ -380,7 +381,7 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Cost
+                      Budget
                       {getSortIcon("cost")}
                     </Box>
                   </TableCell>
@@ -395,7 +396,7 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Payment Method
+                      Bank IBAN
                       {getSortIcon("paymentMethod")}
                     </Box>
                   </TableCell>
@@ -436,35 +437,50 @@ const ParentsProfile = () => {
                       key={row.id}
                       style={{ borderBottom: "1px solid #e0e0e0" }}
                     >
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                      }}>
                         <img
-                          src="https://png.pngtree.com/png-clipart/20220821/ourmid/pngtree-male-profile-picture-icon-and-png-image-png-image_6118773.png"
+                          src={profileImg}
                           alt="Teacher"
-                          style={{ width: 32, height: 32, borderRadius: "50%" }}
+                          style={{ width: 25, height: 25, borderRadius: "50%" }}
                         />
                         <span
                           style={{
-                            fontSize: "16px",
                             fontWeight: 400,
-                            color: "#101219",
+                            fontSize: "14px",
+                            color: "#000",
                             marginLeft: "5px",
                           }}
                         >
                           {row.payment.name}
                         </span>
                       </TableCell>
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                      }}>
                         <span
                           style={{
-                            fontSize: "16px",
                             fontWeight: 400,
-                            color: "#101219",
+                            fontSize: "14px",
+                            color: "#000",
                           }}
                         >
                           {row.payment.cost}
                         </span>
                       </TableCell>
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                      }}>
                         <div
                           style={{
                             display: "flex",
@@ -483,16 +499,16 @@ const ParentsProfile = () => {
                               src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e2/75/5f/e2755f3b-22fc-2929-4619-2fe03c47e635/AppIcon-1x_U007emarketing-0-6-0-sRGB-85-220-0.png/256x256bb.jpg"
                               alt="Meezan Bank"
                               style={{
-                                width: 32,
-                                height: 32,
+                                width: 25,
+                                height: 25,
                                 borderRadius: "50%",
                               }}
                             />
                             <span
                               style={{
-                                fontSize: "16px",
                                 fontWeight: 400,
-                                color: "#101219",
+                                fontSize: "14px",
+                                color: "#000",
                               }}
                             >
                               ****{row.paymentMethod.accountNumber.slice(-4)}
@@ -506,16 +522,19 @@ const ParentsProfile = () => {
                               }
                               style={{ padding: "1px", width: 20, height: 20 }}
                             >
-                              <ContentCopyIcon style={{ color: "#A6ADBF" }} />
+                              <ContentCopyIcon style={{ color: "#A6ADBF", fontSize: '16px' }} />
                             </IconButton>
                           </Tooltip>
                         </div>
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
                           fontWeight: 400,
-                          color: "#4D5874",
+                          fontSize: "14px",
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -647,19 +666,26 @@ const ParentsProfile = () => {
                     >
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
+                          color: "#000",
                           fontWeight: 400,
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
+                          textTransform: 'capitalize'
                         }}
                       >
                         {row.childName}
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
+                          color: "#000",
                           fontWeight: 400,
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -667,9 +693,12 @@ const ParentsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
+                          color: "#000",
                           fontWeight: 400,
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -677,9 +706,12 @@ const ParentsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
+                          color: "#000",
                           fontWeight: 400,
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -699,11 +731,16 @@ const ParentsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
+                          fontSize: "14px",
+                          // color: "#000",
+                          fontWeight: 400,
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                           color:
                             row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
-                          fontWeight: "400",
+                          // fontWeight: "400",
                         }}
                       >
                         {row.tutorHired}
@@ -746,7 +783,7 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Note
+                      Tutor Name
                       {getSortIcon("note")}
                     </Box>
                   </TableCell>
@@ -761,7 +798,7 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      From Tutor
+                      Child Name
                       {getSortIcon("fromTutor")}
                     </Box>
                   </TableCell>
@@ -776,7 +813,7 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      To Child
+                      Notes
                       {getSortIcon("toChild")}
                     </Box>
                   </TableCell>
@@ -798,109 +835,159 @@ const ParentsProfile = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {notesByTutorsData.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    style={{ borderBottom: "1px solid #e0e0e0" }}
-                  >
-                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                        }}
-                      >
+                {notesByTutorsData && notesByTutorsData.length > 0 ? (
+                  notesByTutorsData.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      style={{ borderBottom: "1px solid #e0e0e0" }}
+                    >
+                      <TableCell style={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                      }}>
                         <div
                           style={{
-                            width: "24px",
-                            height: "24px",
-                            backgroundColor: "#3f51b5",
-                            borderRadius: "4px",
                             display: "flex",
                             alignItems: "center",
-                            justifyContent: "center",
+                            gap: "8px",
                           }}
                         >
+                          <Avatar
+                            src={row.fromTutor.avatar || { profileImg }}
+                            style={{ width: 24, height: 24 }}
+                          />
                           <span
                             style={{
-                              color: "white",
-                              fontSize: "12px",
-                              fontWeight: "bold",
+                              fontSize: "14px",
+                              fontWeight: 400,
+                              color: "#000",
                             }}
                           >
-                            N
+                            {row.fromTutor.name}
                           </span>
                         </div>
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: 400,
-                            color: "#101219",
-                          }}
-                        >
-                          {row.note}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                        }}
-                      >
-                        <Avatar
-                          src={row.fromTutor.avatar}
-                          style={{ width: 24, height: 24 }}
-                        />
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: 400,
-                            color: "#4D5874",
-                          }}
-                        >
-                          {row.fromTutor.name}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                        }}
-                      >
-                        <Avatar
-                          src={row.toChild.avatar}
-                          style={{ width: 24, height: 24 }}
-                        />
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: 400,
-                            color: "#4D5874",
-                          }}
-                        >
-                          {row.toChild.name}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        fontSize: "16px",
+                      </TableCell>
+                      <TableCell style={{
+                        fontSize: "14px",
+                        color: "#000",
                         fontWeight: 400,
-                        color: "#4D5874",
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
                         border: "1px solid #e0e0e0",
+                      }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <Avatar
+                            src={row.toChild.avatar || { profileImg }}
+                            style={{ width: 24, height: 24 }}
+                          />
+                          <span
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: 400,
+                              color: "#000",
+                            }}
+                          >
+                            {row.toChild.name}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell style={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                      }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: "24px",
+                              height: "24px",
+                              backgroundColor: "#1E9CBC",
+                              borderRadius: "4px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: "white",
+                                fontSize: "12px",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              N
+                            </span>
+                          </div>
+                          <Tooltip title={row.note} arrow>
+                            <span
+                              style={{
+                                fontSize: "14px",
+                                fontWeight: 400,
+                                color: "#000",
+                                maxWidth: '200px',
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {row.note}
+                            </span>
+                          </Tooltip>
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+                        {row.date}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      align="center"
+                      sx={{
+                        py: 3,
+                        fontSize: "14px",
+                        color: "#7D879C",
+                        fontWeight: 500,
                       }}
                     >
-                      {row.date}
+                      No notes by tutor yet
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -1105,102 +1192,91 @@ const ParentsProfile = () => {
               >
                 <div className="row align-items-start">
                   {/* Left Column */}
-                  <div className="col-md-8">
-                    {/* Profile Picture and Name */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "15px",
-                      }}
-                    >
-                      <div style={{ position: "relative" }}>
-                        <Avatar
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div className="col-md-8">
+                      {/* Profile Picture and Name */}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "15px",
+                          marginTop: '-15px'
+                        }}
+                      >
+                        <div style={{ position: "relative" }}>
+                          {/* <Avatar
                           src={
                             parent?.User?.image ||
                             "/placeholder.svg?height=60&width=60"
                           }
                           style={{ width: 60, height: 60 }}
-                        />
-                        <div
-                          style={{
-                            position: "absolute",
-                            bottom: "-2px",
-                            right: "-2px",
-                            width: "20px",
-                            height: "20px",
-                            backgroundColor: "#4caf50",
-                            borderRadius: "50%",
-                            border: "2px solid white",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <span style={{ color: "white", fontSize: "12px" }}>
-                            ✓
-                          </span>
+                        /> */}
+                          <Avatar
+                            src={parent?.User?.image ? parent.User.image : profileImg}
+                            sx={{ width: 60, height: 60 }}
+                          />
+                          <div
+                            style={{
+                              position: "absolute",
+                              bottom: "-2px",
+                              right: "-2px",
+                              width: "20px",
+                              height: "20px",
+                              backgroundColor: "#4caf50",
+                              borderRadius: "50%",
+                              border: "2px solid white",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <span style={{ color: "white", fontSize: "12px" }}>
+                              ✓
+                            </span>
+                          </div>
+                        </div>
+                        <div>
+                          <h5
+                            style={{
+                              paddingTop: 20,
+                              fontWeight: 500,
+                              color: "#121217",
+                              fontSize: "24px",
+                            }}
+                          >
+                            {parent?.User?.firstName +
+                              " " +
+                              parent?.User?.lastName || "N/A"}
+                          </h5>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: "#666" }}
+                          >
+                            Email:  {parent?.User?.email || "No email"}
+                          </Typography>
+                          {parent?.User?.phone && (
+
+                            <Typography variant="body2" sx={{ color: "#666" }}>
+                              Contact:  {parent?.User?.phone}
+                            </Typography>
+                          )}
                         </div>
                       </div>
-                      <div>
-                        <h5
-                          style={{
-                            margin: 0,
-                            fontWeight: 500,
-                            color: "#121217",
-                            fontSize: "24px",
-                          }}
-                        >
-                          {parent?.User?.firstName +
-                            " " +
-                            parent?.User?.lastName || "N/A"}
-                        </h5>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: "#666", mt: 1 }}
-                        >
-                          {parent?.User?.email || "No email"}
-                        </Typography>
-                        {parent?.User?.phone && (
-                          <Typography variant="body2" sx={{ color: "#666" }}>
-                            {parent?.User?.phone}
-                          </Typography>
-                        )}
-                      </div>
-                    </div>
 
-                    {/* Status Below */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "2rem",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "18px",
-                          fontWeight: 500,
-                          color: "#121217",
-                        }}
-                      >
-                        Parent Status
-                      </span>
-                      <Chip
-                        label="Verified"
-                        size="small"
-                        style={{
-                          backgroundColor: "#EEFBF4",
-                          border: "1px solid #B2EECC",
-                          color: "#17663A",
-                          fontWeight: 400,
-                          fontSize: "14px",
-                          padding: "4px 8px",
-                          borderRadius: "8px",
-                        }}
-                      />
                     </div>
+                    <Chip
+                      label="Verified"
+                      size="small"
+                      style={{
+                        backgroundColor: "#EEFBF4",
+                        border: "1px solid #17663A",
+                        color: "#17663A",
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        padding: "4px 8px",
+                        borderRadius: "8px",
+                      }}
+                    />
                   </div>
 
                   {/* Right Column - Edit Button */}
@@ -1423,7 +1499,7 @@ const ParentsProfile = () => {
                     marginBottom: "20px",
                   }}
                 >
-                  Project Details
+                  Contract Details
                 </h6>
 
                 {/* Tabs */}
@@ -1472,7 +1548,7 @@ const ParentsProfile = () => {
                 <div className="row align-items-center mb-3">
                   <div className="col-md-6">
                     <TextField
-                      placeholder="Search"
+                      placeholder="Search by Name"
                       variant="outlined"
                       size="small"
                       value={searchTerm}

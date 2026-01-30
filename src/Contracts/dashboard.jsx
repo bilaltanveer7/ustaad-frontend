@@ -172,7 +172,7 @@ const ContractDashboard = () => {
 
                     {/* Table */}
 
-                    <div className="row">
+                    <div className="row" style={{backgroundColor:'#F9F9FB'}}>
                         <div className="col-12">
                             <TableContainer style={{ marginTop: '1rem' }}>
                                 <Table style={{ boxShadow: 'none', overflowX: 'auto' }}>

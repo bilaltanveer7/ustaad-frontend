@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useTutorStore } from "../store/useTutorStore";
 import DocumentModal from "../components/DocumentModal";
+import profileImg from '../assets/profile.PNG';
 import {
   Avatar,
   Button,
@@ -464,7 +465,7 @@ const TutorsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Payment To
+                      Payment From
                       {getSortIcon("name")}
                     </Box>
                   </TableCell>
@@ -550,27 +551,43 @@ const TutorsProfile = () => {
                       key={row.id}
                       style={{ borderBottom: "1px solid #e0e0e0" }}
                     >
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        color: "#000",
+                      }}>
                         <img
-                          src="https://png.pngtree.com/png-clipart/20220821/ourmid/pngtree-male-profile-picture-icon-and-png-image-png-image_6118773.png"
+                          src={profileImg}
                           alt="Teacher"
                           style={{ width: 32, height: 32, borderRadius: "50%" }}
                         />
                         <span
                           style={{
-                            fontSize: "16px",
+                            fontSize: "14px",
                             fontWeight: 400,
-                            color: "#101219",
+                            color: "#000",
                             marginLeft: "5px",
                           }}
                         >
                           {row.payment.name}
                         </span>
                       </TableCell>
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        color: "#000",
+                      }}>
                         <span
                           style={{
-                            fontSize: "16px",
+                            fontSize: "14px",
                             fontWeight: 400,
                             color: row.id % 2 !== 0 ? "#38BC5C" : "#F31616", // Green for odd IDs, red for even
                             display: "flex",
@@ -586,7 +603,15 @@ const TutorsProfile = () => {
                           {row.pay}
                         </span>
                       </TableCell>
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        color: "#000",
+                      }}>
                         <div
                           style={{
                             display: "flex",
@@ -605,16 +630,16 @@ const TutorsProfile = () => {
                               src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e2/75/5f/e2755f3b-22fc-2929-4619-2fe03c47e635/AppIcon-1x_U007emarketing-0-6-0-sRGB-85-220-0.png/256x256bb.jpg"
                               alt="Meezan Bank"
                               style={{
-                                width: 32,
-                                height: 32,
+                                width: 25,
+                                height: 25,
                                 borderRadius: "50%",
                               }}
                             />
                             <span
                               style={{
-                                fontSize: "16px",
+                                fontSize: "14px",
                                 fontWeight: 400,
-                                color: "#101219",
+                                color: "#000",
                               }}
                             >
                               ****{row.paymentMethod.accountNumber.slice(-4)}
@@ -635,9 +660,12 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
+                          fontSize: "14px",
                           fontWeight: 400,
-                          color: "#4D5874",
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -646,9 +674,11 @@ const TutorsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "14px",
-                          fontWeight: 500,
+                          fontWeight: 400,
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
-                          padding: "8px",
                         }}
                       >
                         <Chip
@@ -679,7 +709,7 @@ const TutorsProfile = () => {
                                   : row.status === "FAILED"
                                     ? "#C62828"
                                     : "#424242",
-                            fontWeight: 500,
+                            fontWeight: 400,
                             fontSize: "12px",
                           }}
                         />
@@ -722,7 +752,7 @@ const TutorsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Received From
+                      Institute/Company
                       {getSortIcon("childName")}
                     </Box>
                   </TableCell>
@@ -737,7 +767,7 @@ const TutorsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Payment
+                      Description
                       {getSortIcon("grade")}
                     </Box>
                   </TableCell>
@@ -752,7 +782,7 @@ const TutorsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      From Year
+                      Start Date
                       {getSortIcon("tutorHired")}
                     </Box>
                   </TableCell>
@@ -767,8 +797,42 @@ const TutorsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      To Year
+                      End Date
                       {getSortIcon("currentTutors")}
+                    </Box>
+                  </TableCell>
+                  <TableCell 
+                  // onClick={() => handleSort("name")}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        color: "#FFFFFF",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Total Years
+                      {/* {getSortIcon("currentTutors")} */}
+                    </Box>
+                  </TableCell>
+                  <TableCell 
+                  // onClick={() => handleSort("name")}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        color: "#FFFFFF",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Designation
+                      {/* {getSortIcon("currentTutors")} */}
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -793,17 +857,25 @@ const TutorsProfile = () => {
                       key={row.id}
                       style={{ borderBottom: "1px solid #e0e0e0" }}
                     >
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        color: "#000",
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                      }}>
                         <img
-                          src="https://png.pngtree.com/png-clipart/20220821/ourmid/pngtree-male-profile-picture-icon-and-png-image-png-image_6118773.png"
+                          src={profileImg}
                           alt="Company"
-                          style={{ width: 32, height: 32, borderRadius: "50%" }}
+                          style={{ width: 25, height: 25, borderRadius: "50%" }}
                         />
                         <span
                           style={{
                             fontSize: "16px",
                             fontWeight: 400,
-                            color: "#101219",
+                            color: "#000",
                             marginLeft: "5px",
                           }}
                         >
@@ -812,9 +884,12 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -822,9 +897,12 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -832,9 +910,12 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -951,9 +1032,12 @@ const TutorsProfile = () => {
                     >
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -961,9 +1045,12 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -972,9 +1059,12 @@ const TutorsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "14px",
-                          fontWeight: 500,
+                          fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
-                          padding: "8px",
                         }}
                       >
                         <Chip
@@ -998,7 +1088,15 @@ const TutorsProfile = () => {
                           }}
                         />
                       </TableCell>
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        color: "#000",
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        border: "1px solid #e0e0e0",
+                      }}>
                         {row.url && (
                           // <Button
                           //   variant="outlined"
@@ -1120,9 +1218,12 @@ const TutorsProfile = () => {
                     >
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -1130,9 +1231,12 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -1141,9 +1245,12 @@ const TutorsProfile = () => {
 
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -1223,13 +1330,13 @@ const TutorsProfile = () => {
                         display: "flex",
                         alignItems: "center",
                         gap: "15px",
+                        marginTop: '-15px'
                       }}
                     >
                       <div style={{ position: "relative" }}>
                         <Avatar
                           src={
-                            tutor?.User?.image ||
-                            "/placeholder.svg?height=60&width=60"
+                            tutor?.User?.image || profileImg
                           }
                           style={{ width: 60, height: 60 }}
                         />
@@ -1256,7 +1363,7 @@ const TutorsProfile = () => {
                       <div>
                         <h5
                           style={{
-                            margin: 0,
+                            paddingTop: 20,
                             fontWeight: 500,
                             color: "#121217",
                             fontSize: "24px",
@@ -1270,13 +1377,13 @@ const TutorsProfile = () => {
                         </h5>
                         <Typography
                           variant="body2"
-                          sx={{ color: "#666", mt: 1 }}
+                          sx={{ color: "#666" }}
                         >
-                          {tutor?.User?.email || "No email"}
+                          Email: {tutor?.User?.email || "No email"}
                         </Typography>
                         {tutor?.User?.phone && (
                           <Typography variant="body2" sx={{ color: "#666" }}>
-                            {tutor?.User?.phone}
+                            Contact: {tutor?.User?.phone}
                           </Typography>
                         )}
                         {tutor?.subjects && (
@@ -1289,37 +1396,7 @@ const TutorsProfile = () => {
                         )}
                       </div>
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "2rem",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "18px",
-                          fontWeight: 500,
-                          color: "#121217",
-                        }}
-                      >
-                        Tutor Status
-                      </span>
-                      <Chip
-                        label="Verified"
-                        size="small"
-                        style={{
-                          backgroundColor: "#EEFBF4",
-                          border: "1px solid #B2EECC",
-                          color: "#17663A",
-                          fontWeight: 400,
-                          fontSize: "14px",
-                          padding: "4px 8px",
-                          borderRadius: "8px",
-                        }}
-                      />
-                    </div>
+
                   </div>
                   <div className="col-md-4 d-flex justify-content-end align-items-start">
                     {activeTab === 0 && (
@@ -1359,6 +1436,19 @@ const TutorsProfile = () => {
                     >
                       Edit Details
                     </Button> */}
+                    <Chip
+                      label="Verified"
+                      size="small"
+                      style={{
+                        backgroundColor: "#EEFBF4",
+                        border: "1px solid #17663A",
+                        color: "#17663A",
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        padding: "16px 8px",
+                        borderRadius: "8px",
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -1547,7 +1637,7 @@ const TutorsProfile = () => {
                     marginBottom: "20px",
                   }}
                 >
-                  Project Details
+                  Contract Details
                 </h6>
 
                 {/* Tabs */}
@@ -1596,7 +1686,7 @@ const TutorsProfile = () => {
                 <div className="row align-items-center mb-3">
                   <div className="col-md-6">
                     <TextField
-                      placeholder="Search"
+                      placeholder="Search by Name"
                       variant="outlined"
                       size="small"
                       value={searchTerm}

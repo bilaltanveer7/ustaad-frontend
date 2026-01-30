@@ -352,7 +352,7 @@ const TransactionDashboard = () => {
                     <TableHead>
                       <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
                         {[
-                          { label: "Type", key: "type" },
+                          { label: "Transaction ID", key: "type" },
                           { label: "Amount", key: "amount" },
                           { label: "Payment Method", key: "payment_method" },
                           { label: "Status", key: "status" },
@@ -497,10 +497,10 @@ const TransactionDashboard = () => {
                                         color: "#38BC5C",
                                         display: "flex",
                                         alignItems: "center",
-                                        padding: "4px 8px",
-                                        borderRadius: "6px",
+                                        padding: "0px 8px",
+                                        borderRadius: "12px",
                                         fontWeight: 500,
-                                        fontSize: "14px",
+                                        fontSize: "12px",
                                       }}
                                     >
                                       <CheckCircleIcon

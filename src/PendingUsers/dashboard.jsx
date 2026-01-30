@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useAdminStore } from "../store/useAdminStore";
+import profileImg from '../assets/profile.PNG';
 import {
   Button,
   Table,
@@ -212,7 +213,7 @@ const PendingUsersDashboard = () => {
       >
         <div
           className="container-fluid"
-          style={{ minHeight: "100vh", padding: "20px" }}
+          style={{ minHeight: "100vh", padding: "20px", backgroundColor:'#F9F9FB' }}
         >
           <div className="row" style={{ padding: "20px" }}>
             <div className="col-12">
@@ -592,14 +593,14 @@ const PendingUsersDashboard = () => {
                             borderBottom: "1px solid #e0e0e0",
                             // cursor: "pointer",
                           }}
-                          // sx={{
-                          //   "&:hover": {
-                          //     backgroundColor: "#f0f8ff",
-                          //     transform: "translateY(-1px)",
-                          //     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                          //   },
-                          //   transition: "all 0.2s ease-in-out",
-                          // }}
+                        // sx={{
+                        //   "&:hover": {
+                        //     backgroundColor: "#f0f8ff",
+                        //     transform: "translateY(-1px)",
+                        //     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                        //   },
+                        //   transition: "all 0.2s ease-in-out",
+                        // }}
                         >
                           <TableCell style={{ border: "1px solid #e0e0e0" }}>
                             <div
@@ -608,15 +609,17 @@ const PendingUsersDashboard = () => {
                                 alignItems: "center",
                                 gap: "6px",
                               }}
+                              onClick={() =>
+                                handleUserClick(user.profileId, user.role)
+                              }
                             >
                               <Avatar
                                 src={
-                                  user.image ||
-                                  "/placeholder.svg?height=40&width=40"
+                                  user.image || profileImg
                                 }
                                 style={{ width: 40, height: 40 }}
                               >
-                                {user.firstName?.charAt(0).toUpperCase()}
+                                {/* {user.firstName?.charAt(0).toUpperCase()} */}
                               </Avatar>
                               <div>
                                 <Typography
@@ -663,7 +666,7 @@ const PendingUsersDashboard = () => {
                                 />
                                 <Typography
                                   // variant="body2"
-                                  style={{ fontSize: "14px", color: "#000", fontWeight:400 }}
+                                  style={{ fontSize: "14px", color: "#000", fontWeight: 400 }}
                                 >
                                   {user.email}
                                 </Typography>
@@ -680,7 +683,7 @@ const PendingUsersDashboard = () => {
                                 />
                                 <Typography
                                   // variant="body2"
-                                  style={{ fontSize: "14px", color: "#000", fontWeight:400 }}
+                                  style={{ fontSize: "14px", color: "#000", fontWeight: 400 }}
                                 >
                                   +{user.phone || "N/A"}
                                 </Typography>
@@ -804,7 +807,7 @@ const PendingUsersDashboard = () => {
                               style={{
                                 fontSize: "14px",
                                 color: "#000",
-                                fontWeight:400
+                                fontWeight: 400
                               }}
                             >
                               {formatDate(user.createdAt)}
@@ -819,7 +822,7 @@ const PendingUsersDashboard = () => {
                                   user.isOnBoard || "pending"
                                 ).bg,
                                 border: `1px solid ${getStatusColor(user.isOnBoard || "pending")
-                                    .border
+                                  .border
                                   }`,
                                 color: getStatusColor(
                                   user.isOnBoard || "pending"

@@ -401,7 +401,7 @@ const UserDetail = () => {
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <PersonIcon />
+                  <PersonIcon style={{color:'#1E9CBC'}} />
                 </ListItemIcon>
                 <ListItemText
                   primary="User ID"
@@ -422,7 +422,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <EmailIcon />
+                  <EmailIcon style={{color:'#1E9CBC'}} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Email"
@@ -442,7 +442,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <PhoneIcon />
+                  <PhoneIcon style={{color:'#1E9CBC'}} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Phone"
@@ -462,7 +462,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <CalendarIcon />
+                  <CalendarIcon style={{color:'#1E9CBC'}} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Registration Date"
@@ -471,7 +471,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <CalendarIcon />
+                  <CalendarIcon style={{color:'#1E9CBC'}} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Last Updated"

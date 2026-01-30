@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTutorStore } from "../store/useTutorStore";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+import profileImg from '../assets/profile.PNG';
 import {
   Box,
   Table,
@@ -420,7 +421,7 @@ const TutorDashboard = () => {
                               fontSize: "16px",
                               fontWeight: 600,
                               color: "#FFFFFF",
-                              whiteSpace:'nowrap'
+                              whiteSpace: 'nowrap'
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -459,9 +460,6 @@ const TutorDashboard = () => {
                               lineHeight: '30px',
                               border: "1px solid #e0e0e0",
                             }}
-                              onClick={() =>
-                                navigate(`/tutor-profile/${row.id}`)
-                              }
                             >
                               <Tooltip title={row.clientId} arrow>
                                 <div
@@ -471,13 +469,13 @@ const TutorDashboard = () => {
                                     color: "#000",
                                     // border: "1px solid #e0e0e0",
                                     cursor: "pointer",
-                                    maxWidth: "60px",
+                                    maxWidth: "80px",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
                                   }}
                                 >
-                                  {row.clientId}
+                                  TU-{row.clientId}
                                 </div>
                               </Tooltip>
                             </TableCell>
@@ -489,19 +487,20 @@ const TutorDashboard = () => {
                                 lineHeight: '30px',
                                 border: "1px solid #e0e0e0",
                               }}
+                              onClick={() =>
+                                navigate(`/tutor-profile/${row.id}`)
+                              }
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center">
                                   <Avatar
                                     src={
-                                      row.image
-                                        ? row.image
-                                        : getInitials(row.name)
+                                      row.image ? row.image : profileImg
                                     }
                                     style={{
                                       width: 25,
                                       height: 25,
-                                      marginRight: "20px",
+                                      marginRight: "10px",
                                     }}
                                   />
                                   <Tooltip title={row.name} arrow>
@@ -511,7 +510,7 @@ const TutorDashboard = () => {
                                         fontSize: "14px",
                                         color: "#000",
                                         cursor: "pointer",
-                                        maxWidth: "120px",
+                                        maxWidth: "160px",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
@@ -542,6 +541,18 @@ const TutorDashboard = () => {
                                 >
                                   {row.hourlyRate}
                                 </span>
+                                <IconButton
+                                  size="small"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCopy(row.subjects);
+                                  }}
+                                  style={{ padding: "2px" }}
+                                >
+                                  <ContentCopyIcon
+                                    style={{ fontSize: "16px", color: "#666" }}
+                                  />
+                                </IconButton>
                               </div>
                             </TableCell>
                             <TableCell
