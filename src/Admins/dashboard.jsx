@@ -4,6 +4,7 @@ import SideNav from "../sidebar/sidenav";
 import { useAdminStore } from "../store/useAdminStore";
 import AddAdminModal from "./AddAdminModal";
 import DeleteAdminDialog from "./DeleteAdminDialog";
+import profileImg from "../assets/profile.PNG"
 import {
   Button,
   Table,
@@ -70,6 +71,7 @@ const AdminsDashboard = () => {
             marginLeft: `${drawerWidth}px`,
             marginTop: "4rem",
             padding: "20px",
+            backgroundColor:'#F9F9FB'
           }}
         >
           <Box
@@ -98,6 +100,7 @@ const AdminsDashboard = () => {
             marginLeft: `${drawerWidth}px`,
             marginTop: "4rem",
             padding: "20px",
+            backgroundColor:'#F9F9FB'
           }}
         >
           <Alert
@@ -185,7 +188,8 @@ const AdminsDashboard = () => {
       >
         <div
           className="container-fluid"
-          style={{ minHeight: "100vh", padding: "20px" }}
+          style={{ minHeight: "100vh", padding: "20px", 
+            backgroundColor:'#F9F9FB' }}
         >
           <div className="row" style={{ padding: "20px" }}>
             <div className="col-12">
@@ -479,8 +483,7 @@ const AdminsDashboard = () => {
                             >
                               <Avatar
                                 src={
-                                  admin.image ||
-                                  "/placeholder.svg?height=40&width=40"
+                                  admin.image ? admin.image : profileImg
                                 }
                                 style={{ width: 25, height: 25 }}
                               >
@@ -506,13 +509,14 @@ const AdminsDashboard = () => {
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
+                                      textTransform:'capitalize'
                                     }}
                                   >
                                     {admin.firstName + " " + admin.lastName ||
                                       "N/A"}
                                   </div>
                                 </Tooltip>
-                                <Typography
+                                {/* <Typography
                                   variant="body2"
                                   style={{
                                     fontSize: "14px",
@@ -521,7 +525,7 @@ const AdminsDashboard = () => {
                                   }}
                                 >
                                   Admin
-                                </Typography>
+                                </Typography> */}
                               </div>
                             </div>
                           </TableCell>

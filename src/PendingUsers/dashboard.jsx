@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useAdminStore } from "../store/useAdminStore";
+import profileImg from "../assets/profile.PNG"
 import {
   Button,
   Table,
@@ -211,7 +212,7 @@ const PendingUsersDashboard = () => {
       >
         <div
           className="container-fluid"
-          style={{ minHeight: "100vh", padding: "20px" }}
+          style={{ minHeight: "100vh", padding: "20px", backgroundColor:'#F9F9FB' }}
         >
           <div className="row" style={{ padding: "20px" }}>
             <div className="col-12">
@@ -436,7 +437,6 @@ const PendingUsersDashboard = () => {
                         <MenuItem value="ALL">All Roles</MenuItem>
                         <MenuItem value="PARENT">Parents</MenuItem>
                         <MenuItem value="TUTOR">Tutors</MenuItem>
-                        <MenuItem value="ADMIN">Admins</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
@@ -587,23 +587,23 @@ const PendingUsersDashboard = () => {
                       filteredUsers.map((user) => (
                         <TableRow
                           key={user.id}
-                          onClick={() =>
-                            handleUserClick(user.profileId, user.role)
-                          }
                           style={{
                             borderBottom: "1px solid #e0e0e0",
                             // cursor: "pointer",
                           }}
-                          // sx={{
-                          //   "&:hover": {
-                          //     backgroundColor: "#f0f8ff",
-                          //     transform: "translateY(-1px)",
-                          //     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                          //   },
-                          //   transition: "all 0.2s ease-in-out",
-                          // }}
+                        // sx={{
+                        //   "&:hover": {
+                        //     backgroundColor: "#f0f8ff",
+                        //     transform: "translateY(-1px)",
+                        //     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                        //   },
+                        //   transition: "all 0.2s ease-in-out",
+                        // }}
                         >
-                          <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                          <TableCell style={{ border: "1px solid #e0e0e0" }}
+                            onClick={() =>
+                              handleUserClick(user.profileId, user.role)
+                            }>
                             <div
                               style={{
                                 display: "flex",
@@ -612,10 +612,10 @@ const PendingUsersDashboard = () => {
                               }}
                             >
                               <Avatar
-                                src={user.image ? user.image : ""}
+                                src={user.image ? user.image : profileImg}
                                 style={{ width: 40, height: 40 }}
                               >
-                                {user.firstName?.charAt(0).toUpperCase()}
+                                {/* {user.firstName?.charAt(0).toUpperCase()} */}
                               </Avatar>
                               <div>
                                 <Typography
@@ -625,6 +625,7 @@ const PendingUsersDashboard = () => {
                                     fontWeight: 600,
                                     color: "#000",
                                     margin: 0,
+                                    cursor:'pointer'
                                   }}
                                 >
                                   {user.firstName +
@@ -656,7 +657,7 @@ const PendingUsersDashboard = () => {
                                 }}
                               >
                                 <EmailIcon
-                                  style={{ fontSize: "16px", color: "#666" }}
+                                  style={{ fontSize: "16px", color: "#1E9CBC" }}
                                 />
                                 <Typography
                                   // variant="body2"
@@ -677,7 +678,7 @@ const PendingUsersDashboard = () => {
                                 }}
                               >
                                 <PhoneIcon
-                                  style={{ fontSize: "16px", color: "#666" }}
+                                  style={{ fontSize: "16px", color: "#1E9CBC" }}
                                 />
                                 <Typography
                                   // variant="body2"
@@ -698,9 +699,8 @@ const PendingUsersDashboard = () => {
                               size="small"
                               style={{
                                 backgroundColor: getRoleColor(user.role).bg,
-                                border: `1px solid ${
-                                  getRoleColor(user.role).border
-                                }`,
+                                border: `1px solid ${getRoleColor(user.role).border
+                                  }`,
                                 color: getRoleColor(user.role).color,
                                 fontWeight: 500,
                                 fontSize: "12px",
@@ -824,10 +824,9 @@ const PendingUsersDashboard = () => {
                                 backgroundColor: getStatusColor(
                                   user.isOnBoard || "pending"
                                 ).bg,
-                                border: `1px solid ${
-                                  getStatusColor(user.isOnBoard || "pending")
+                                border: `1px solid ${getStatusColor(user.isOnBoard || "pending")
                                     .border
-                                }`,
+                                  }`,
                                 color: getStatusColor(
                                   user.isOnBoard || "pending"
                                 ).color,

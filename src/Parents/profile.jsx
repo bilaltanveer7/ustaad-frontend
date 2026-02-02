@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
+import profileImg from "../assets/profile.PNG"
 import {
   Avatar,
   Button,
@@ -318,13 +319,12 @@ const ParentsProfile = () => {
   const childrenData = children.map((child) => {
     const subscriptionSessionInfo = child.subscriptions?.length
       ? child.subscriptions
-          .map(
-            (sub) =>
-              `${sub.Offer?.sessions || 0} / ${
-                sub.tutorSessionsDetailCount || 0
-              }`
-          )
-          .join(", ")
+        .map(
+          (sub) =>
+            `${sub.Offer?.sessions || 0} / ${sub.tutorSessionsDetailCount || 0
+            }`
+        )
+        .join(", ")
       : null;
 
     return {
@@ -336,10 +336,10 @@ const ParentsProfile = () => {
       curriculum: child.curriculum || "N/A",
       subjects: child.subscriptions?.length
         ? [
-            ...new Set(
-              child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
-            ),
-          ].join(", ") || "N/A"
+          ...new Set(
+            child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
+          ),
+        ].join(", ") || "N/A"
         : child.subjects?.join(", ") || "N/A",
       tutorHired:
         subscriptionSessionInfo ||
@@ -428,7 +428,7 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Cost
+                      Budget
                       {getSortIcon("cost")}
                     </Box>
                   </TableCell>
@@ -484,11 +484,19 @@ const ParentsProfile = () => {
                       key={row.id}
                       style={{ borderBottom: "1px solid #e0e0e0" }}
                     >
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        border: "1px solid #e0e0e0",
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                      }}>
                         <img
-                          src="https://png.pngtree.com/png-clipart/20220821/ourmid/pngtree-male-profile-picture-icon-and-png-image-png-image_6118773.png"
+                          src={profileImg}
                           alt="Teacher"
-                          style={{ width: 32, height: 32, borderRadius: "50%" }}
+                          style={{ width: 25, height: 25, borderRadius: "50%" }}
                         />
                         <span
                           style={{
@@ -501,18 +509,34 @@ const ParentsProfile = () => {
                           {row.tutorName}
                         </span>
                       </TableCell>
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        border: "1px solid #e0e0e0",
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                      }}>
                         <span
                           style={{
-                            fontSize: "16px",
+                            fontSize: "14px",
                             fontWeight: 400,
-                            color: "#101219",
+                            color: "#000",
                           }}
                         >
                           {row.payment.cost}
                         </span>
                       </TableCell>
-                      <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                      <TableCell style={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        border: "1px solid #e0e0e0",
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                      }}>
                         <div
                           style={{
                             display: "flex",
@@ -527,17 +551,20 @@ const ParentsProfile = () => {
                               onClick={() => handleCopy(row.invoiceId)}
                               style={{ padding: "1px", width: 20, height: 20 }}
                             >
-                              <ContentCopyIcon style={{ color: "#A6ADBF" }} />
+                              <ContentCopyIcon style={{ color: "#A6ADBF", fontSize: '16px' }} />
                             </IconButton>
                           </Tooltip>
                         </div>
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
+                          fontSize: "14px",
+                          color: "#000",
                           fontWeight: 400,
-                          color: "#4D5874",
                           border: "1px solid #e0e0e0",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                         }}
                       >
                         {row.transactionDate}
@@ -668,51 +695,69 @@ const ParentsProfile = () => {
                     >
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
+                          color: "#000",
                           fontWeight: 400,
                           border: "1px solid #e0e0e0",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
+                          textTransform: 'capitalize'
                         }}
                       >
                         {row.childName}
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
+                          color: "#000",
                           fontWeight: 400,
                           border: "1px solid #e0e0e0",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                         }}
                       >
                         {row.age}
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
+                          color: "#000",
                           fontWeight: 400,
                           border: "1px solid #e0e0e0",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                         }}
                       >
                         {row.grade}
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
+                          color: "#000",
                           fontWeight: 400,
                           border: "1px solid #e0e0e0",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                         }}
                       >
                         {row.curriculum}
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
+                          fontSize: "14px",
+                          // color: "#000",
+                          fontWeight: 400,
                           border: "1px solid #e0e0e0",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           color:
                             row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
-                          fontWeight: "400",
+                          // fontWeight: "400",
                         }}
                       >
                         {row.gender}
@@ -770,7 +815,7 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      From Tutor
+                      Tutor Name
                       {getSortIcon("fromTutor")}
                     </Box>
                   </TableCell>
@@ -785,7 +830,7 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      To Child
+                      Child Name
                       {getSortIcon("toChild")}
                     </Box>
                   </TableCell>
@@ -804,6 +849,21 @@ const ParentsProfile = () => {
                       {getSortIcon("date")}
                     </Box>
                   </TableCell>
+                  <TableCell onClick={() => handleSort("name")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        color: "#FFFFFF",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Session Number
+                      {/* {getSortIcon("date")} */}
+                    </Box>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -812,7 +872,15 @@ const ParentsProfile = () => {
                     key={row.id}
                     style={{ borderBottom: "1px solid #e0e0e0" }}
                   >
-                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                    <TableCell style={{
+                      fontSize: "14px",
+                      color: "#000",
+                      fontWeight: 400,
+                      border: "1px solid #e0e0e0",
+                      padding: '0 8px',
+                      height: '30px',
+                      lineHeight: '30px',
+                    }}>
                       <div
                         style={{
                           display: "flex",
@@ -841,18 +909,33 @@ const ParentsProfile = () => {
                             N
                           </span>
                         </div>
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: 400,
-                            color: "#101219",
-                          }}
-                        >
-                          {row.note}
-                        </span>
+                        <Tooltip title={row.note} arrow>
+                          <span
+                            style={{
+                              fontSize: "16px",
+                              fontWeight: 400,
+                              color: "#101219",
+                              textOverflow: 'ellipsis',
+                              overflow: 'hidden',
+                              maxWidth: '300px',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            {row.note}
+                          </span>
+                        </Tooltip>
                       </div>
                     </TableCell>
-                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                    <TableCell style={{
+                      fontSize: "14px",
+                      color: "#000",
+                      fontWeight: 400,
+                      border: "1px solid #e0e0e0",
+                      padding: '0 8px',
+                      height: '30px',
+                      lineHeight: '30px',
+                      whiteSpace: 'nowrap'
+                    }}>
                       <div
                         style={{
                           display: "flex",
@@ -861,21 +944,30 @@ const ParentsProfile = () => {
                         }}
                       >
                         <Avatar
-                          src={row.fromTutor.avatar}
+                          src={row.fromTutor.avatar || profileImg}
                           style={{ width: 24, height: 24 }}
                         />
                         <span
                           style={{
-                            fontSize: "16px",
+                            fontSize: "14px",
                             fontWeight: 400,
-                            color: "#4D5874",
+                            color: "#000",
                           }}
                         >
                           {row.fromTutor.name}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                    <TableCell style={{
+                      fontSize: "14px",
+                      color: "#000",
+                      fontWeight: 400,
+                      border: "1px solid #e0e0e0",
+                      padding: '0 8px',
+                      height: '30px',
+                      lineHeight: '30px',
+                      whiteSpace: 'nowrap'
+                    }}>
                       <div
                         style={{
                           display: "flex",
@@ -884,14 +976,14 @@ const ParentsProfile = () => {
                         }}
                       >
                         <Avatar
-                          src={row.toChild.avatar}
+                          src={row.toChild.avatar || profileImg}
                           style={{ width: 24, height: 24 }}
                         />
                         <span
                           style={{
-                            fontSize: "16px",
+                            fontSize: "14px",
                             fontWeight: 400,
-                            color: "#4D5874",
+                            color: "#000",
                           }}
                         >
                           {row.toChild.name}
@@ -900,10 +992,14 @@ const ParentsProfile = () => {
                     </TableCell>
                     <TableCell
                       style={{
-                        fontSize: "16px",
+                        fontSize: "14px",
+                        color: "#000",
                         fontWeight: 400,
-                        color: "#4D5874",
                         border: "1px solid #e0e0e0",
+                        padding: '0 8px',
+                        height: '30px',
+                        lineHeight: '30px',
+                        whiteSpace: 'nowrap'
                       }}
                     >
                       {row.date}
@@ -1114,7 +1210,7 @@ const ParentsProfile = () => {
               >
                 <div className="row align-items-start">
                   {/* Left Column */}
-                  <div className="col-md-8">
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     {/* Profile Picture and Name */}
                     <div
                       style={{
@@ -1126,8 +1222,7 @@ const ParentsProfile = () => {
                       <div style={{ position: "relative" }}>
                         <Avatar
                           src={
-                            parent?.User?.image ||
-                            "/placeholder.svg?height=60&width=60"
+                            parent?.User?.image || profileImg
                           }
                           style={{ width: 60, height: 60 }}
                         />
@@ -1151,7 +1246,9 @@ const ParentsProfile = () => {
                           </span>
                         </div>
                       </div>
-                      <div>
+                      <div style={{
+                        marginTop: '1rem'
+                      }}>
                         <h5
                           style={{
                             margin: 0,
@@ -1166,50 +1263,30 @@ const ParentsProfile = () => {
                         </h5>
                         <Typography
                           variant="body2"
-                          sx={{ color: "#666", mt: 1 }}
+                          sx={{ color: "#666" }}
                         >
-                          {parent?.User?.email || "No email"}
+                          Email: {parent?.User?.email || "No email"}
                         </Typography>
                         {parent?.User?.phone && (
                           <Typography variant="body2" sx={{ color: "#666" }}>
-                            {parent?.User?.phone}
+                            Contact: {parent?.User?.phone}
                           </Typography>
                         )}
                       </div>
                     </div>
-
-                    {/* Status Below */}
-                    <div
+                    <Chip
+                      label="Verified"
+                      size="small"
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "2rem",
-                        marginTop: "10px",
+                        backgroundColor: "#EEFBF4",
+                        border: "1px solid #B2EECC",
+                        color: "#17663A",
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        padding: "4px 8px",
+                        borderRadius: "8px",
                       }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "18px",
-                          fontWeight: 500,
-                          color: "#121217",
-                        }}
-                      >
-                        Parent Status
-                      </span>
-                      <Chip
-                        label="Verified"
-                        size="small"
-                        style={{
-                          backgroundColor: "#EEFBF4",
-                          border: "1px solid #B2EECC",
-                          color: "#17663A",
-                          fontWeight: 400,
-                          fontSize: "14px",
-                          padding: "4px 8px",
-                          borderRadius: "8px",
-                        }}
-                      />
-                    </div>
+                    />
                   </div>
 
                   {/* Right Column - Edit Button */}
@@ -1432,7 +1509,7 @@ const ParentsProfile = () => {
                     marginBottom: "20px",
                   }}
                 >
-                  Project Details
+                  Contract Details
                 </h6>
 
                 {/* Tabs */}
@@ -1481,7 +1558,7 @@ const ParentsProfile = () => {
                 <div className="row align-items-center mb-3">
                   <div className="col-md-6">
                     <TextField
-                      placeholder="Search"
+                      placeholder="Search by Name"
                       variant="outlined"
                       size="small"
                       value={searchTerm}

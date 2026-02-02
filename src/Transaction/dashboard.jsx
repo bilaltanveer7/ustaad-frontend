@@ -211,7 +211,7 @@ const TransactionDashboard = () => {
                 <div style={{ width: "300px" }}>
                   <TextField
                     size="small"
-                    placeholder="Search"
+                    placeholder="Search by Name"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     InputProps={{
@@ -526,10 +526,11 @@ const TransactionDashboard = () => {
                                         color: "#38BC5C",
                                         display: "flex",
                                         alignItems: "center",
-                                        padding: "4px 8px",
+                                        padding: "0px 8px",
                                         borderRadius: "6px",
                                         fontWeight: 500,
-                                        fontSize: "14px",
+                                        fontSize: "12px",
+                                        textTransform:'capitalize'
                                       }}
                                     >
                                       <CheckCircleIcon
@@ -643,16 +644,16 @@ const TransactionDashboard = () => {
                                 <Button
                                   variant="outlined"
                                   size="small"
-                                  startIcon={<VisibilityIcon />}
+                                  startIcon={<VisibilityIcon sx={{color:'#1E9CBC'}} />}
                                   onClick={() => handleViewTransaction(row.id)}
                                   sx={{
                                     textTransform: "none",
                                     fontSize: "12px",
                                     minWidth: "80px",
-                                    borderColor: "#1976D2",
-                                    color: "#1976D2",
+                                    borderColor: "#1E9CBC",
+                                    color: "#1E9CBC2",
                                     "&:hover": {
-                                      borderColor: "#1565C0",
+                                      borderColor: "#1E9CBC",
                                       backgroundColor: "#E3F2FD",
                                     },
                                   }}

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useParentStore } from "../store/useParentStore";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+import profileImg from "../assets/profile.PNG"
 import {
   Box,
   Table,
@@ -425,7 +426,7 @@ const ParentDashboard = () => {
                       </TableCell> */}
 
                         {[
-                          { label: "Client ID", key: "clientId" },
+                          { label: "Parent ID", key: "clientId" },
                           { label: "Parent Name", key: "name" },
                           { label: "Email", key: "email" },
                           { label: "Phone", key: "phone" },
@@ -437,7 +438,7 @@ const ParentDashboard = () => {
                               fontSize: "16px",
                               fontWeight: 600,
                               color: "#FFFFFF",
-                              whiteSpace:'nowrap'
+                              whiteSpace: 'nowrap'
                               // cursor: "pointer",
                               // py: 0,
                               // height: 32,
@@ -489,9 +490,7 @@ const ParentDashboard = () => {
                               lineHeight: '30px',
                               border: "1px solid #e0e0e0",
                             }}
-                              onClick={() =>
-                                navigate(`/parent-profile/${row.id}`)
-                              }
+
                             >
                               <Tooltip title={row.clientId} arrow>
                                 <div
@@ -501,13 +500,13 @@ const ParentDashboard = () => {
                                     color: "#000",
                                     // height: 48,
                                     cursor: "pointer",
-                                    maxWidth: "60px",
+                                    maxWidth: "80px",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
                                   }}
                                 >
-                                  {row.clientId}
+                                  PA-{row.clientId}
                                 </div>
                               </Tooltip>
                             </TableCell>
@@ -521,17 +520,18 @@ const ParentDashboard = () => {
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center">
+                                <div className="d-flex align-items-center"
+                                  onClick={() =>
+                                    navigate(`/parent-profile/${row.id}`)
+                                  }>
                                   <Avatar
                                     src={
-                                      row.image
-                                        ? row.image
-                                        : getInitials(row.name)
+                                      row.image ? row.image : profileImg
                                     }
                                     style={{
                                       width: 25,
                                       height: 25,
-                                      marginRight: "20px",
+                                      marginRight: "10px",
                                     }}
                                   />
                                   <Tooltip title={row.name} arrow>
@@ -546,6 +546,7 @@ const ParentDashboard = () => {
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
                                       }}
+
                                     >
                                       {row.name}
                                     </div>

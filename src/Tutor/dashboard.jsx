@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTutorStore } from "../store/useTutorStore";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+import profileImg from "../assets/profile.PNG"
 import {
   Box,
   Table,
@@ -455,14 +456,15 @@ const TutorDashboard = () => {
                           >
                             <TableCell
                               sx={{
-                                padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                fontSize: "14px",
+                                color: "#000",
+                                fontWeight: 400,
                                 border: "1px solid #e0e0e0",
+                                padding: '0 8px',
+                                height: '30px',
+                                lineHeight: '30px',
                               }}
-                              onClick={() =>
-                                navigate(`/tutor-profile/${row.id}`)
-                              }
+
                             >
                               <Tooltip title={row.clientId} arrow>
                                 <div
@@ -472,37 +474,40 @@ const TutorDashboard = () => {
                                     color: "#000",
                                     // border: "1px solid #e0e0e0",
                                     cursor: "pointer",
-                                    maxWidth: "60px",
+                                    maxWidth: "80px",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
                                   }}
                                 >
-                                  {row.clientId}
+                                  TU-{row.clientId}
                                 </div>
                               </Tooltip>
                             </TableCell>
 
                             <TableCell
                               style={{
-                                padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                fontSize: "14px",
+                                color: "#000",
+                                fontWeight: 400,
                                 border: "1px solid #e0e0e0",
+                                padding: '0 8px',
+                                height: '30px',
+                                lineHeight: '30px',
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center">
+                                <div className="d-flex align-items-center"
+                                  onClick={() =>
+                                    navigate(`/tutor-profile/${row.id}`)
+                                  }>
                                   <Avatar
                                     src={
-                                      row.image
-                                        ? row.image
-                                        : getInitials(row.name)
-                                    }
+                                      row.image ? row.image : profileImg}
                                     style={{
                                       width: 25,
                                       height: 25,
-                                      marginRight: "20px",
+                                      marginRight: "10px",
                                     }}
                                   />
                                   <Tooltip title={row.name} arrow>
@@ -527,10 +532,13 @@ const TutorDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                fontSize: "14px",
+                                color: "#000",
+                                fontWeight: 400,
                                 border: "1px solid #e0e0e0",
+                                padding: '0 8px',
+                                height: '30px',
+                                lineHeight: '30px',
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
@@ -543,14 +551,20 @@ const TutorDashboard = () => {
                                 >
                                   {row.email}
                                 </span>
+                                <ContentCopyIcon
+                                  style={{ fontSize: "16px", color: "#666" }}
+                                />
                               </div>
                             </TableCell>
                             <TableCell
                               style={{
-                                padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                fontSize: "14px",
+                                color: "#000",
+                                fontWeight: 400,
                                 border: "1px solid #e0e0e0",
+                                padding: '0 8px',
+                                height: '30px',
+                                lineHeight: '30px',
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
@@ -583,10 +597,13 @@ const TutorDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                fontSize: "14px",
+                                color: "#000",
+                                fontWeight: 400,
                                 border: "1px solid #e0e0e0",
+                                padding: '0 8px',
+                                height: '30px',
+                                lineHeight: '30px',
                               }}
                             >
                               <div

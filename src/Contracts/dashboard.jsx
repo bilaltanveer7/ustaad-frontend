@@ -219,7 +219,8 @@ const ContractDashboard = () => {
 
           {/* Table */}
 
-          <div className="row">
+          <div className="row" style={{
+            backgroundColor:'#F9F9FB'}}>
             <div className="col-12">
               <TableContainer style={{ marginTop: "1rem" }}>
                 <Table style={{ boxShadow: "none", overflowX: "auto" }}>
@@ -228,6 +229,7 @@ const ContractDashboard = () => {
                       {[
                         { label: "Parent Name", key: "parent_name" },
                         { label: "Child Name", key: "child_name" },
+                        { label: "Tutor Name", key: "" },
                         { label: "Budget", key: "budget" },
                         { label: "Start Date", key: "start_date" },
                         { label: "Sessions", key: "sessions" },
@@ -358,8 +360,8 @@ const ContractDashboard = () => {
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
                                 padding: "0 8px",
-                                height: "40px",
-                                lineHeight: "40px",
+                                height: "30px",
+                                lineHeight: "30px",
                                 // height: 48,
                               }}
                             >
