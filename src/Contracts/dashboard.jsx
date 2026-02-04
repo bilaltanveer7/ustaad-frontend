@@ -58,6 +58,8 @@ const ContractDashboard = () => {
   } = useAdminStore();
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const statusOptions = ["ACTIVE", "DISPUTE", "CANCELLED", "COMPLETED"];
+  const [selectedStatus, setSelectedStatus] = useState("ACTIVE");
 
   // Pagination State
   const [page, setPage] = useState(0);
@@ -75,9 +77,11 @@ const ContractDashboard = () => {
 
   // Fetch with pagination
   useEffect(() => {
-    const query = `?page=${page + 1}&limit=${rowsPerPage}`;
+    const query = `?page=${
+      page + 1
+    }&limit=${rowsPerPage}&search=${searchValue}&type=${selectedStatus}`;
     fetchDisputedContracts(query);
-  }, [fetchDisputedContracts, page, rowsPerPage]);
+  }, [fetchDisputedContracts, page, rowsPerPage, searchValue, selectedStatus]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -96,9 +100,6 @@ const ContractDashboard = () => {
   const [targetStatus, setTargetStatus] = useState(""); // "active" | "cancelled" | "completed"
   const [adminNotes, setAdminNotes] = useState("");
   const [contractToResolve, setContractToResolve] = useState(null);
-  const statusOptions = ["Active", "Disputed", "Cancelled", "Refund"];
-
-  const [selectedStatus, setSelectedStatus] = useState("Active");
 
   const handleOpenResolutionModal = (contract, status) => {
     setContractToResolve(contract);
@@ -198,7 +199,6 @@ const ContractDashboard = () => {
     },
   ];
 
-
   return (
     <>
       <SideNav />
@@ -278,9 +278,12 @@ const ContractDashboard = () => {
 
           {/* Table */}
 
-          <div className="row" style={{
-            backgroundColor: '#F9F9FB'
-          }}>
+          <div
+            className="row"
+            style={{
+              backgroundColor: "#F9F9FB",
+            }}
+          >
             <div className="col-12">
               <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
                 {statusOptions.map((status) => (
@@ -294,8 +297,7 @@ const ContractDashboard = () => {
                       fontWeight: 500,
                       backgroundColor:
                         selectedStatus === status ? "#1E9CBC" : "#E0E3EB",
-                      color:
-                        selectedStatus === status ? "#fff" : "#000",
+                      color: selectedStatus === status ? "#fff" : "#000",
                       "&:hover": {
                         backgroundColor:
                           selectedStatus === status ? "#1E9CBC" : "#CFD8DC",
@@ -314,9 +316,12 @@ const ContractDashboard = () => {
                         { label: "Tutor Name", key: "" },
                         { label: "Budget", key: "budget" },
                         { label: "Start Date", key: "start_date" },
-                        { label: "Sessions", key: "sessions" },
+                        { label: "Total Sessions", key: "total_sessions" },
+                        {
+                          label: "Completed Sessions",
+                          key: "completed_sessions",
+                        },
                         { label: "Subjects", key: "sunjects" },
-                        { label: "Days", key: "days" },
                         { label: "Description", key: "description" },
                         { label: "Status", key: "status" },
                         { label: "Action", key: "action" },
@@ -436,6 +441,39 @@ const ContractDashboard = () => {
                               </div>
                             </TableCell>
                             <TableCell
+                              sx={{
+                                padding: "0 8px",
+                                height: "40px",
+                                lineHeight: "40px",
+                                border: "1px solid #e0e0e0",
+                              }}
+                            >
+                              <Tooltip
+                                title={
+                                  row.tutor?.firstName +
+                                  " " +
+                                  row.tutor?.lastName
+                                }
+                                arrow
+                              >
+                                <div
+                                  style={{
+                                    fontWeight: 600,
+                                    fontSize: "14px",
+                                    color: "#000",
+                                    // height: 48,
+                                    cursor: "pointer",
+                                    maxWidth: "120px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {row.tutor?.firstName} {row.tutor?.lastName}
+                                </div>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell
                               style={{
                                 fontSize: "14px",
                                 color: "#000",
@@ -482,8 +520,8 @@ const ContractDashboard = () => {
                                   title={
                                     row.startDate
                                       ? new Date(
-                                        row.startDate
-                                      ).toLocaleDateString()
+                                          row.startDate
+                                        ).toLocaleDateString()
                                       : "N/A"
                                   }
                                   arrow
@@ -520,7 +558,23 @@ const ContractDashboard = () => {
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                {row.completedSessions}
+                                {row?.Offer?.sessions}
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                fontSize: "14px",
+                                color: "#000",
+                                fontWeight: 400,
+                                border: "1px solid #e0e0e0",
+                                padding: "0 8px",
+                                height: "40px",
+                                lineHeight: "40px",
+                                // height: 48,
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between">
+                                {row?.completedSessions}
                               </div>
                             </TableCell>
                             <TableCell
@@ -571,12 +625,11 @@ const ContractDashboard = () => {
                                 border: "1px solid #e0e0e0",
                                 padding: "0 8px",
                                 height: "40px",
-                                lineHeight: "40px",
                                 maxWidth: "220px",
                               }}
                             >
                               <Tooltip
-                                title={row.Offer?.days?.join(", ") || ""}
+                                title={row?.Offer?.description || ""}
                                 arrow
                                 placement="top"
                                 componentsProps={{
@@ -599,46 +652,7 @@ const ContractDashboard = () => {
                                     cursor: "pointer",
                                   }}
                                 >
-                                  {row.Offer?.days?.join(", ") || "-"}
-                                </div>
-                              </Tooltip>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                padding: "0 8px",
-                                height: "40px",
-                                maxWidth: "220px",
-                              }}
-                            >
-                              <Tooltip
-                                title={row.disputeReason || ""}
-                                arrow
-                                placement="top"
-                                componentsProps={{
-                                  tooltip: {
-                                    sx: {
-                                      fontSize: "13px",
-                                      maxWidth: "300px",
-                                      backgroundColor: "#333",
-                                      padding: "8px 12px",
-                                      lineHeight: 1.4,
-                                    },
-                                  },
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  {row.disputeReason || "-"}
+                                  {row?.Offer?.description || "-"}
                                 </div>
                               </Tooltip>
                             </TableCell>
@@ -965,6 +979,14 @@ const ContractDashboard = () => {
                     </Typography>
                   </Grid>
 
+                  <Grid item xs={6} sm={3}>
+                    <Typography variant="body2" color="textSecondary">
+                      Total Sessions
+                    </Typography>
+                    <Typography variant="body1">
+                      {selectedContract?.Offer?.sessions}
+                    </Typography>
+                  </Grid>
                   <Grid item xs={6} sm={3}>
                     <Typography variant="body2" color="textSecondary">
                       Completed Sessions
