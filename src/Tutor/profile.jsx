@@ -689,7 +689,7 @@ const TutorsProfile = () => {
                                   : row.status === "FAILED"
                                     ? "#C62828"
                                     : "#424242",
-                            fontWeight: 500,
+                            fontWeight: 400,
                             fontSize: "12px",
                           }}
                         />
@@ -857,7 +857,7 @@ const TutorsProfile = () => {
                           style={{
                             fontSize: "16px",
                             fontWeight: 400,
-                            color: "#101219",
+                            color: "#000",
                             marginLeft: "5px",
                           }}
                         >
@@ -869,6 +869,10 @@ const TutorsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -894,6 +898,10 @@ const TutorsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -907,6 +915,10 @@ const TutorsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1029,6 +1041,10 @@ const TutorsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1042,6 +1058,10 @@ const TutorsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1250,6 +1270,10 @@ const TutorsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1272,6 +1296,10 @@ const TutorsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1286,6 +1314,10 @@ const TutorsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
+                          color: "#000",
+                          padding: '0 8px',
+                          height: '30px',
+                          lineHeight: '30px',
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1403,6 +1435,7 @@ const TutorsProfile = () => {
                         display: "flex",
                         alignItems: "center",
                         gap: "15px",
+                        marginTop: '-15px'
                       }}
                     >
                       <div style={{ position: "relative" }}>
@@ -1435,7 +1468,7 @@ const TutorsProfile = () => {
                       <div style={{ marginTop: '1rem' }}>
                         <h5
                           style={{
-                            margin: 0,
+                            paddingTop: 20,
                             fontWeight: 500,
                             color: "#121217",
                             fontSize: "24px",

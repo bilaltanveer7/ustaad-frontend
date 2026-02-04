@@ -495,6 +495,9 @@ const TutorDashboard = () => {
                                 height: '30px',
                                 lineHeight: '30px',
                               }}
+                              onClick={() =>
+                                navigate(`/tutor-profile/${row.id}`)
+                              }
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center"
@@ -517,7 +520,7 @@ const TutorDashboard = () => {
                                         fontSize: "14px",
                                         color: "#000",
                                         cursor: "pointer",
-                                        maxWidth: "120px",
+                                        maxWidth: "160px",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
@@ -551,9 +554,18 @@ const TutorDashboard = () => {
                                 >
                                   {row.email}
                                 </span>
-                                <ContentCopyIcon
-                                  style={{ fontSize: "16px", color: "#666" }}
-                                />
+                                <IconButton
+                                  size="small"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCopy(row.subjects);
+                                  }}
+                                  style={{ padding: "2px" }}
+                                >
+                                  <ContentCopyIcon
+                                    style={{ fontSize: "16px", color: "#666" }}
+                                  />
+                                </IconButton>
                               </div>
                             </TableCell>
                             <TableCell

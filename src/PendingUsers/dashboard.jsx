@@ -610,6 +610,9 @@ const PendingUsersDashboard = () => {
                                 alignItems: "center",
                                 gap: "6px",
                               }}
+                              onClick={() =>
+                                handleUserClick(user.profileId, user.role)
+                              }
                             >
                               <Avatar
                                 src={user.image ? user.image : profileImg}
@@ -825,7 +828,7 @@ const PendingUsersDashboard = () => {
                                   user.isOnBoard || "pending"
                                 ).bg,
                                 border: `1px solid ${getStatusColor(user.isOnBoard || "pending")
-                                    .border
+                                  .border
                                   }`,
                                 color: getStatusColor(
                                   user.isOnBoard || "pending"

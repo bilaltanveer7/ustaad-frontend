@@ -490,7 +490,6 @@ const ParentDashboard = () => {
                               lineHeight: '30px',
                               border: "1px solid #e0e0e0",
                             }}
-
                             >
                               <Tooltip title={row.clientId} arrow>
                                 <div
@@ -518,6 +517,9 @@ const ParentDashboard = () => {
                                 lineHeight: '30px',
                                 border: "1px solid #e0e0e0",
                               }}
+                              onClick={() =>
+                                navigate(`/parent-profile/${row.id}`)
+                              }
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <div className="d-flex align-items-center"

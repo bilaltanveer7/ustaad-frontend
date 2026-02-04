@@ -481,14 +481,14 @@ const AdminsDashboard = () => {
                                 gap: "6px",
                               }}
                             >
-                              <Avatar
+                              {/* <Avatar
                                 src={
                                   admin.image ? admin.image : profileImg
                                 }
                                 style={{ width: 25, height: 25 }}
                               >
                                 {admin.firstName?.charAt(0).toUpperCase()}
-                              </Avatar>
+                              </Avatar> */}
                               <div>
                                 <Tooltip
                                   title={
