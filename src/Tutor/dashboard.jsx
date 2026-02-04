@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTutorStore } from "../store/useTutorStore";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import profileImg from "../assets/profile.PNG"
+import profileImg from "../assets/profile.PNG";
 import {
   Box,
   Table,
@@ -21,6 +21,7 @@ import {
   InputAdornment,
   IconButton,
   Chip,
+  TablePagination,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -45,13 +46,14 @@ const TutorDashboard = () => {
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(0); // 0-indexed for MUI
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const isFirstRender = useRef(true);
 
   // Fetch tutors on component mount and when page changes
   useEffect(() => {
-    fetchTutors(currentPage, 20, searchValue);
-  }, [fetchTutors, currentPage]);
+    fetchTutors(page + 1, rowsPerPage, searchValue);
+  }, [fetchTutors, page, rowsPerPage]);
 
   // Debounced search effect
   useEffect(() => {
@@ -60,15 +62,21 @@ const TutorDashboard = () => {
       return;
     }
     const timer = setTimeout(() => {
-      if (currentPage !== 1) {
-        setCurrentPage(1);
-      } else {
-        fetchTutors(1, 20, searchValue);
-      }
+      setPage(0);
+      fetchTutors(1, rowsPerPage, searchValue);
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchValue, fetchTutors]);
+  }, [searchValue, fetchTutors, rowsPerPage]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   // Transform API data to match table format
   const tableData = tutors.map((tutor) => ({
@@ -460,11 +468,10 @@ const TutorDashboard = () => {
                                 color: "#000",
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
                               }}
-
                             >
                               <Tooltip title={row.clientId} arrow>
                                 <div
@@ -491,22 +498,23 @@ const TutorDashboard = () => {
                                 color: "#000",
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
                               }}
                               onClick={() =>
                                 navigate(`/tutor-profile/${row.id}`)
                               }
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center"
+                                <div
+                                  className="d-flex align-items-center"
                                   onClick={() =>
                                     navigate(`/tutor-profile/${row.id}`)
-                                  }>
+                                  }
+                                >
                                   <Avatar
-                                    src={
-                                      row.image ? row.image : profileImg}
+                                    src={row.image ? row.image : profileImg}
                                     style={{
                                       width: 25,
                                       height: 25,
@@ -539,9 +547,9 @@ const TutorDashboard = () => {
                                 color: "#000",
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
@@ -574,9 +582,9 @@ const TutorDashboard = () => {
                                 color: "#000",
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
@@ -613,9 +621,9 @@ const TutorDashboard = () => {
                                 color: "#000",
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
                               }}
                             >
                               <div
@@ -635,6 +643,17 @@ const TutorDashboard = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
+                {pagination && (
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 20]}
+                    component="div"
+                    count={pagination.total || 0}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                )}
               </div>
             </div>
           )}

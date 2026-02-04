@@ -21,6 +21,7 @@ export const useAdminStore = create((set, get) => ({
 
   // Payment requests data
   paymentRequests: [],
+  paymentRequestsPagination: null,
   selectedPaymentRequest: null,
 
   // Admins data
@@ -93,18 +94,27 @@ export const useAdminStore = create((set, get) => ({
   },
 
   // Fetch all payment requests
-  fetchPaymentRequests: async (query = "") => {
+  fetchPaymentRequests: async (
+    search = "",
+    status = "",
+    page = 1,
+    limit = 10
+  ) => {
     set({ isLoadingPaymentRequests: true, paymentRequestsError: null });
 
     try {
-      const response = await getAllPaymentRequests(query);
+      const response = await getAllPaymentRequests(search, status, page, limit);
 
       if (response.data && response.data.success) {
+        // Handle pagination structure (data.items) or direct array (data)
+        const requests = response.data.data?.items || response.data.data || [];
+
         set({
-          paymentRequests: response.data.data || [],
+          paymentRequests: Array.isArray(requests) ? requests : [],
+          paymentRequestsPagination: response.data.data?.pagination || null,
           isLoadingPaymentRequests: false,
         });
-        return { success: true, data: response.data.data };
+        return { success: true, data: requests };
       } else {
         const errorMessage =
           response.data?.message || "Failed to fetch payment requests";

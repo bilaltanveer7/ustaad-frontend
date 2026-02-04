@@ -26,6 +26,7 @@ import {
   InputAdornment,
   IconButton,
   Chip,
+  TablePagination,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -56,10 +57,13 @@ const TransactionDashboard = () => {
     paymentRequests,
     fetchPaymentRequests,
     updatePaymentStatus,
+    paymentRequestsPagination,
     isLoadingPaymentRequests,
     paymentRequestsError,
     isUpdatingPaymentRequest,
   } = useAdminStore();
+
+  console.log("paymentRequestsPagination", paymentRequestsPagination);
 
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -67,14 +71,39 @@ const TransactionDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransactionId, setSelectedTransactionId] = useState(null);
 
-  // Fetch payment requests on component mount
+  const statusOptions = [
+    "ALL",
+    "PENDING",
+    "REQUESTED",
+    "PAID",
+    "IN_REVIEW",
+    "REJECTED",
+  ];
+  const [selectedStatus, setSelectedStatus] = useState("ALL");
+
+  // Pagination state
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Fetch payment requests on component mount or when filters change
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      fetchPaymentRequests(searchValue);
+      const statusParam = selectedStatus === "ALL" ? "" : selectedStatus;
+      // API expects 1-based index for page
+      fetchPaymentRequests(searchValue, statusParam, page + 1, rowsPerPage);
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [fetchPaymentRequests, searchValue]);
+  }, [fetchPaymentRequests, searchValue, selectedStatus, page, rowsPerPage]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   // Transform API data to match table format
   const tableData = paymentRequests.map((request) => ({
@@ -213,7 +242,10 @@ const TransactionDashboard = () => {
                     size="small"
                     placeholder="Search by Name"
                     value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={(e) => {
+                      setSearchValue(e.target.value);
+                      setPage(0);
+                    }}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -226,7 +258,10 @@ const TransactionDashboard = () => {
                         <InputAdornment position="end">
                           <IconButton
                             size="small"
-                            onClick={() => setSearchValue("")}
+                            onClick={() => {
+                              setSearchValue("");
+                              setPage(0);
+                            }}
                           >
                             <CloseIcon style={{ fontSize: "18px" }} />
                           </IconButton>
@@ -249,6 +284,31 @@ const TransactionDashboard = () => {
             style={{ backgroundColor: "#F9F9FB", padding: "1rem" }}
           >
             <div className="col-12">
+              <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+                {statusOptions.map((status) => (
+                  <Chip
+                    key={status}
+                    label={status}
+                    clickable
+                    onClick={() => {
+                      setSelectedStatus(status);
+                      setPage(0);
+                    }}
+                    sx={{
+                      borderRadius: "16px",
+                      fontWeight: 500,
+                      backgroundColor:
+                        selectedStatus === status ? "#1E9CBC" : "#FFFFFF",
+                      color: selectedStatus === status ? "#fff" : "#000",
+                      border: "1px solid #E0E3EB",
+                      "&:hover": {
+                        backgroundColor:
+                          selectedStatus === status ? "#1E9CBC" : "#F5F5F5",
+                      },
+                    }}
+                  />
+                ))}
+              </Box>
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
                   <span
@@ -264,31 +324,7 @@ const TransactionDashboard = () => {
                   >
                     {selected.length} Selected
                   </span>
-                  {/* <Button
-                    variant="outlined"
-                    startIcon={<FilterIcon />}
-                    style={{
-                      textTransform: "none",
-                      fontSize: "14px",
-                      color: "#4D5874",
-                      border: "1px solid #E0E3EB",
-                      backgroundColor: "#FFFFFF",
-                      marginRight: "20px",
-                    }}
-                  >
-                    Filter
-                    <Chip
-                      label="4"
-                      size="small"
-                      style={{
-                        marginLeft: "8px",
-                        backgroundColor: "#FEECEC",
-                        color: "#F31616",
-                        fontSize: "12px",
-                        height: "20px",
-                      }}
-                    />
-                  </Button> */}
+
                   <span
                     style={{
                       fontWeight: 400,
@@ -298,31 +334,7 @@ const TransactionDashboard = () => {
                   >
                     {tableData.length} Results
                   </span>
-                  {/* <span
-                     style={{
-                       fontWeight: 400,
-                       fontSize: "12px",
-                       color: "#999",
-                       marginLeft: "10px",
-                     }}
-                   >
-                     Click "View" to see transaction details
-                   </span> */}
                 </div>
-                {/* <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  style={{
-                    backgroundColor: "#1E9CBC",
-                    color: "white",
-                    textTransform: "none",
-                    fontSize: "14px",
-                    borderRadius: "6px",
-                    padding: "8px 16px",
-                  }}
-                >
-                  Add New
-                </Button> */}
               </div>
             </div>
           </div>
@@ -530,7 +542,7 @@ const TransactionDashboard = () => {
                                         borderRadius: "6px",
                                         fontWeight: 500,
                                         fontSize: "12px",
-                                        textTransform:'capitalize'
+                                        textTransform: "capitalize",
                                       }}
                                     >
                                       <CheckCircleIcon
@@ -644,7 +656,9 @@ const TransactionDashboard = () => {
                                 <Button
                                   variant="outlined"
                                   size="small"
-                                  startIcon={<VisibilityIcon sx={{color:'#1E9CBC'}} />}
+                                  startIcon={
+                                    <VisibilityIcon sx={{ color: "#1E9CBC" }} />
+                                  }
                                   onClick={() => handleViewTransaction(row.id)}
                                   sx={{
                                     textTransform: "none",
@@ -680,6 +694,17 @@ const TransactionDashboard = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
+                {paymentRequestsPagination && (
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={paymentRequestsPagination.total || 0}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                )}
               </div>
             </div>
           )}

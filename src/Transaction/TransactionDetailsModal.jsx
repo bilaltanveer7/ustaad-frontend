@@ -38,6 +38,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
   const {
     selectedPaymentRequest,
     fetchPaymentRequestDetails,
+    paymentRequestsPagination,
     updatePaymentStatus,
     isLoadingPaymentRequests,
     isUpdatingPaymentRequest,
@@ -150,21 +151,21 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
 
   const statusOptions = getPaymentStatusOptions();
 
-  if (!selectedPaymentRequest) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "400px",
-        }}
-      >
-        <CircularProgress />
-        <Typography sx={{ ml: 2 }}>Loading transaction details...</Typography>
-      </Box>
-    );
-  }
+  // if (!selectedPaymentRequest) {
+  //   return (
+  //     <Box
+  //       sx={{
+  //         display: "flex",
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         minHeight: "400px",
+  //       }}
+  //     >
+  //       <CircularProgress />
+  //       <Typography sx={{ ml: 2 }}>Loading transaction details...</Typography>
+  //     </Box>
+  //   );
+  // }
 
   return (
     <Dialog

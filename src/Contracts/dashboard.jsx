@@ -247,7 +247,10 @@ const ContractDashboard = () => {
                     size="small"
                     placeholder="Search..."
                     value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={(e) => {
+                      setSearchValue(e.target.value);
+                      setPage(0);
+                    }}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -260,7 +263,10 @@ const ContractDashboard = () => {
                         <InputAdornment position="end">
                           <IconButton
                             size="small"
-                            onClick={() => setSearchValue("")}
+                            onClick={() => {
+                              setSearchValue("");
+                              setPage(0);
+                            }}
                           >
                             <CloseIcon style={{ fontSize: "18px" }} />
                           </IconButton>
@@ -294,7 +300,10 @@ const ContractDashboard = () => {
                     key={status}
                     label={status}
                     clickable
-                    onClick={() => setSelectedStatus(status)}
+                    onClick={() => {
+                      setSelectedStatus(status);
+                      setPage(0);
+                    }}
                     sx={{
                       borderRadius: "16px",
                       fontWeight: 500,

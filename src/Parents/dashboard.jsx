@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useParentStore } from "../store/useParentStore";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import profileImg from "../assets/profile.PNG"
+import profileImg from "../assets/profile.PNG";
 import {
   Box,
   Table,
@@ -21,6 +21,7 @@ import {
   InputAdornment,
   IconButton,
   Chip,
+  TablePagination,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -46,13 +47,15 @@ const ParentDashboard = () => {
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(0); // 0-indexed for MUI
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const isFirstRender = useRef(true);
 
   // Fetch parents on component mount and when page changes
   useEffect(() => {
-    fetchParents(currentPage, 20, searchValue);
-  }, [fetchParents, currentPage]);
+    // API expects 1-based index
+    fetchParents(page + 1, rowsPerPage, searchValue);
+  }, [fetchParents, page, rowsPerPage]);
 
   // Debounced search effect
   useEffect(() => {
@@ -61,15 +64,21 @@ const ParentDashboard = () => {
       return;
     }
     const timer = setTimeout(() => {
-      if (currentPage !== 1) {
-        setCurrentPage(1);
-      } else {
-        fetchParents(1, 20, searchValue);
-      }
+      setPage(0);
+      fetchParents(1, rowsPerPage, searchValue);
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchValue, fetchParents]);
+  }, [searchValue, fetchParents, rowsPerPage]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   // Transform API data to match table format
   const tableData = parents.map((parent) => ({
@@ -438,7 +447,7 @@ const ParentDashboard = () => {
                               fontSize: "16px",
                               fontWeight: 600,
                               color: "#FFFFFF",
-                              whiteSpace: 'nowrap'
+                              whiteSpace: "nowrap",
                               // cursor: "pointer",
                               // py: 0,
                               // height: 32,
@@ -470,8 +479,8 @@ const ParentDashboard = () => {
                             onClick={() => handleSelectRow(row.id)}
                             selected={isItemSelected}
                             sx={{
-                              height: '30px',
-                              backgroundColor: 'transparent'
+                              height: "30px",
+                              backgroundColor: "transparent",
                             }}
                           >
                             {/* <TableCell
@@ -484,12 +493,13 @@ const ParentDashboard = () => {
                           >
                             <Checkbox checked={isItemSelected} size="small" />
                           </TableCell> */}
-                            <TableCell sx={{
-                              padding: '0 8px',
-                              height: '30px',
-                              lineHeight: '30px',
-                              border: "1px solid #e0e0e0",
-                            }}
+                            <TableCell
+                              sx={{
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
+                                border: "1px solid #e0e0e0",
+                              }}
                             >
                               <Tooltip title={row.clientId} arrow>
                                 <div
@@ -512,9 +522,9 @@ const ParentDashboard = () => {
 
                             <TableCell
                               style={{
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
                                 border: "1px solid #e0e0e0",
                               }}
                               onClick={() =>
@@ -522,14 +532,14 @@ const ParentDashboard = () => {
                               }
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center"
+                                <div
+                                  className="d-flex align-items-center"
                                   onClick={() =>
                                     navigate(`/parent-profile/${row.id}`)
-                                  }>
+                                  }
+                                >
                                   <Avatar
-                                    src={
-                                      row.image ? row.image : profileImg
-                                    }
+                                    src={row.image ? row.image : profileImg}
                                     style={{
                                       width: 25,
                                       height: 25,
@@ -548,7 +558,6 @@ const ParentDashboard = () => {
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
                                       }}
-
                                     >
                                       {row.name}
                                     </div>
@@ -563,9 +572,9 @@ const ParentDashboard = () => {
                                 color: "#000",
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
                                 // height: 48,
                               }}
                             >
@@ -605,9 +614,9 @@ const ParentDashboard = () => {
                                 fontSize: "14px",
                                 color: "#000",
                                 fontWeight: 400,
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
                                 border: "1px solid #e0e0e0",
                               }}
                             >
@@ -653,9 +662,9 @@ const ParentDashboard = () => {
                                 color: "#000",
                                 fontWeight: 400,
                                 border: "1px solid #e0e0e0",
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                padding: "0 8px",
+                                height: "30px",
+                                lineHeight: "30px",
                                 // height: 48,
                               }}
                             >
@@ -669,11 +678,22 @@ const ParentDashboard = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
+                {pagination && (
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 20]}
+                    component="div"
+                    count={pagination.total || 0}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                )}
               </div>
             </div>
           )}
         </div>
-      </div >
+      </div>
     </>
   );
 };
