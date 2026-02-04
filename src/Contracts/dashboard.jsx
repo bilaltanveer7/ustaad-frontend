@@ -96,6 +96,9 @@ const ContractDashboard = () => {
   const [targetStatus, setTargetStatus] = useState(""); // "active" | "cancelled" | "completed"
   const [adminNotes, setAdminNotes] = useState("");
   const [contractToResolve, setContractToResolve] = useState(null);
+  const statusOptions = ["Active", "Disputed", "Cancelled", "Refund"];
+
+  const [selectedStatus, setSelectedStatus] = useState("Active");
 
   const handleOpenResolutionModal = (contract, status) => {
     setContractToResolve(contract);
@@ -139,6 +142,62 @@ const ContractDashboard = () => {
   };
 
   const tableData = disputedContracts || [];
+
+  const dummyTableData = [
+    {
+      id: 1,
+      parent_name: "Ali Khan",
+      child_name: "Ayaan Khan",
+      tutor_name: "Sara Ahmed",
+      budget: "25,000 PKR",
+      start_date: "01-02-2025",
+      sessions: 20,
+      subjects: "Math, Science",
+      days: "Mon, Wed, Fri",
+      description: "Evening tuition sessions",
+      status: "Active",
+    },
+    {
+      id: 2,
+      parent_name: "Usman Raza",
+      child_name: "Hiba Raza",
+      tutor_name: "Adeel Hassan",
+      budget: "30,000 PKR",
+      start_date: "05-02-2025",
+      sessions: 24,
+      subjects: "English, History",
+      days: "Tue, Thu",
+      description: "Weekend focus classes",
+      status: "Disputed",
+    },
+    {
+      id: 3,
+      parent_name: "Fatima Noor",
+      child_name: "Zain Noor",
+      tutor_name: "Maryam Iqbal",
+      budget: "20,000 PKR",
+      start_date: "10-02-2025",
+      sessions: 16,
+      subjects: "Physics",
+      days: "Mon, Thu",
+      description: "Concept clearing sessions",
+      status: "Cancelled",
+    },
+    {
+      id: 4,
+      parent_name: "Ahmed Ali",
+      child_name: "Hassan Ali",
+      tutor_name: "Bilal Khan",
+      budget: "28,000 PKR",
+      start_date: "15-02-2025",
+      sessions: 18,
+      subjects: "Chemistry, Biology",
+      days: "Wed, Sat",
+      description: "Exam preparation",
+      status: "Refund",
+    },
+  ];
+
 
   return (
     <>
@@ -220,8 +279,31 @@ const ContractDashboard = () => {
           {/* Table */}
 
           <div className="row" style={{
-            backgroundColor:'#F9F9FB'}}>
+            backgroundColor: '#F9F9FB'
+          }}>
             <div className="col-12">
+              <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+                {statusOptions.map((status) => (
+                  <Chip
+                    key={status}
+                    label={status}
+                    clickable
+                    onClick={() => setSelectedStatus(status)}
+                    sx={{
+                      borderRadius: "16px",
+                      fontWeight: 500,
+                      backgroundColor:
+                        selectedStatus === status ? "#1E9CBC" : "#E0E3EB",
+                      color:
+                        selectedStatus === status ? "#fff" : "#000",
+                      "&:hover": {
+                        backgroundColor:
+                          selectedStatus === status ? "#1E9CBC" : "#CFD8DC",
+                      },
+                    }}
+                  />
+                ))}
+              </Box>
               <TableContainer style={{ marginTop: "1rem" }}>
                 <Table style={{ boxShadow: "none", overflowX: "auto" }}>
                   <TableHead>
@@ -400,8 +482,8 @@ const ContractDashboard = () => {
                                   title={
                                     row.startDate
                                       ? new Date(
-                                          row.startDate
-                                        ).toLocaleDateString()
+                                        row.startDate
+                                      ).toLocaleDateString()
                                       : "N/A"
                                   }
                                   arrow
