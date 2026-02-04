@@ -58,8 +58,8 @@ const ContractDashboard = () => {
   } = useAdminStore();
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const statusOptions = ["ACTIVE", "DISPUTE", "CANCELLED", "COMPLETED"];
-  const [selectedStatus, setSelectedStatus] = useState("ACTIVE");
+  const statusOptions = ["ALL", "ACTIVE", "DISPUTE", "CANCELLED", "COMPLETED"];
+  const [selectedStatus, setSelectedStatus] = useState("ALL");
 
   // Pagination State
   const [page, setPage] = useState(0);
@@ -77,9 +77,10 @@ const ContractDashboard = () => {
 
   // Fetch with pagination
   useEffect(() => {
+    const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
     const query = `?page=${
       page + 1
-    }&limit=${rowsPerPage}&search=${searchValue}&type=${selectedStatus}`;
+    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
     fetchDisputedContracts(query);
   }, [fetchDisputedContracts, page, rowsPerPage, searchValue, selectedStatus]);
 
@@ -91,6 +92,8 @@ const ContractDashboard = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  console.log("disputedContractsPagination", disputedContractsPagination);
 
   const [selectedContract, setSelectedContract] = useState(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
