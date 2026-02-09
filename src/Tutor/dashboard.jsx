@@ -42,12 +42,12 @@ const drawerWidth = 260;
 const TutorDashboard = () => {
   const navigate = useNavigate();
   const { tutors, fetchTutors, isLoading, error, pagination } = useTutorStore();
-
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [page, setPage] = useState(0); // 0-indexed for MUI
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedDate, setSelectedDate] = useState("");
   const isFirstRender = useRef(true);
 
   // Fetch tutors on component mount and when page changes
@@ -198,6 +198,31 @@ const TutorDashboard = () => {
       console.warn("Copy failed:", err);
     }
   };
+
+  const paginatedData = tableData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const convertMMDDYYYYtoISO = (dateStr) => {
+    if (!dateStr || typeof dateStr !== "string") return "";
+
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) return "";
+
+    const [month, day, year] = parts;
+
+    if (!month || !day || !year) return "";
+
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  };
+
+  const filteredTableData = selectedDate
+    ? tableData.filter((row) => {
+      const normalizedRowDate = convertMMDDYYYYtoISO(row.date);
+      return normalizedRowDate && normalizedRowDate === selectedDate;
+    })
+    : tableData;
 
   return (
     <>
@@ -361,6 +386,22 @@ const TutorDashboard = () => {
                                 >
                                     Add New
                                 </Button> */}
+                <div style={{ marginBottom: "12px" }}>
+                  
+                  <input
+                    type="date"
+                    // placeholder="MM/DD/YYYY"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    style={{
+                      padding: "8px 12px",
+                      fontSize: "14px",
+                      borderRadius: "16px",
+                      border: "1px solid #ccc",
+                      // width:'90%'
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -449,7 +490,7 @@ const TutorDashboard = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {tableData.map((row, index) => {
+                      {filteredTableData.map((row, index) => {
                         const isItemSelected = isSelected(row.id);
                         return (
                           <TableRow
@@ -652,6 +693,43 @@ const TutorDashboard = () => {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                    sx={{
+                      width: "100%",
+
+                      "& .MuiTablePagination-toolbar": {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        position: "relative",
+                      },
+
+                      /* LEFT: Rows per page (label + select) */
+                      "& .MuiTablePagination-selectLabel": {
+                        margin: 0,
+                      },
+
+                      "& .MuiTablePagination-select": {
+                        marginLeft: 1,
+                      },
+
+                      /* CENTER: 1–2 of 2 */
+                      "& .MuiTablePagination-displayedRows": {
+                        position: "absolute",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        margin: 0,
+                        whiteSpace: "nowrap",
+                      },
+
+                      /* RIGHT: arrows */
+                      "& .MuiTablePagination-actions": {
+                        marginLeft: "auto",
+                      },
+
+                      "& .MuiTablePagination-spacer": {
+                        display: "none",
+                      },
+                    }}
                   />
                 )}
               </div>

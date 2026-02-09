@@ -23,6 +23,7 @@ export const useAdminStore = create((set, get) => ({
   paymentRequests: [],
   paymentRequestsPagination: null,
   selectedPaymentRequest: null,
+  pagination: null,
 
   // Admins data
   admins: [],

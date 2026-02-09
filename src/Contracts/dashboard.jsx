@@ -78,9 +78,8 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${
-      page + 1
-    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+    const query = `?page=${page + 1
+      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
     fetchDisputedContracts(query);
   }, [fetchDisputedContracts, page, rowsPerPage, searchValue, selectedStatus]);
 
@@ -532,8 +531,8 @@ const ContractDashboard = () => {
                                   title={
                                     row.startDate
                                       ? new Date(
-                                          row.startDate
-                                        ).toLocaleDateString()
+                                        row.startDate
+                                      ).toLocaleDateString()
                                       : "N/A"
                                   }
                                   arrow
@@ -826,6 +825,39 @@ const ContractDashboard = () => {
                   page={page}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
+                  sx={{
+                    width: "100%",
+
+                    "& .MuiTablePagination-toolbar": {
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      position: "relative",
+                    },
+
+                    /* LEFT: Rows per page (label + select) */
+                    "& .MuiTablePagination-selectLabel": {
+                      margin: 0,
+                    },
+
+                    /* CENTER: 1–2 of 2 */
+                    "& .MuiTablePagination-displayedRows": {
+                      position: "absolute",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      margin: 0,
+                      whiteSpace: "nowrap",
+                    },
+
+                    /* RIGHT: arrows */
+                    "& .MuiTablePagination-actions": {
+                      marginLeft: "auto",
+                    },
+
+                    "& .MuiTablePagination-spacer": {
+                      display: "none",
+                    },
+                  }}
                 />
               )}
             </div>

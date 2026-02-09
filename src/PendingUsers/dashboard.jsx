@@ -214,7 +214,6 @@ const PendingUsersDashboard = () => {
           className="container-fluid"
           style={{ minHeight: "100vh", padding: "20px", backgroundColor:'#F9F9FB' }}
         >
-          <div className="row" style={{ padding: "20px" }}>
             <div className="col-12">
               {/* Header */}
               <div
@@ -885,7 +884,6 @@ const PendingUsersDashboard = () => {
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 };

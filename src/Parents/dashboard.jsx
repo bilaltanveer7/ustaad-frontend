@@ -47,8 +47,9 @@ const ParentDashboard = () => {
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  const [page, setPage] = useState(0); // 0-indexed for MUI
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedDate, setSelectedDate] = useState(null);
   const isFirstRender = useRef(true);
 
   // Fetch parents on component mount and when page changes
@@ -202,6 +203,36 @@ const ParentDashboard = () => {
       console.warn("Copy failed:", err);
     }
   };
+
+  // const rowsPerPage = 10;
+
+  // const [page, setPage] = useState(0);
+
+  const paginatedData = tableData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const convertMMDDYYYYtoISO = (dateStr) => {
+    if (!dateStr || typeof dateStr !== "string") return "";
+
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) return "";
+
+    const [month, day, year] = parts;
+
+    if (!month || !day || !year) return "";
+
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  };
+
+  const filteredTableData = selectedDate
+    ? tableData.filter((row) => {
+      const normalizedRowDate = convertMMDDYYYYtoISO(row.date);
+      return normalizedRowDate && normalizedRowDate === selectedDate;
+    })
+    : tableData;
+
   return (
     <>
       <SideNav />
@@ -241,7 +272,7 @@ const ParentDashboard = () => {
                   >
                     Parents
                   </h4>
-                  <div
+                  {/* <div
                     className="d-flex align-items-center text-muted"
                     style={{
                       fontSize: "14px",
@@ -255,7 +286,7 @@ const ParentDashboard = () => {
                       style={{ fontSize: "16px", marginRight: "5px" }}
                     />
                     Updated Now
-                  </div>
+                  </div> */}
                 </div>
                 <div style={{ width: "300px" }}>
                   <TextField
@@ -364,6 +395,22 @@ const ParentDashboard = () => {
                 >
                   Add New
                 </Button> */}
+                <div style={{ marginBottom: "12px" }}>
+
+                  <input
+                    type="date"
+                    // placeholder="MM/DD/YYYY"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    style={{
+                      padding: "8px 12px",
+                      fontSize: "14px",
+                      borderRadius: "16px",
+                      border: "1px solid #ccc",
+                      // width:'90%'
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -414,6 +461,7 @@ const ParentDashboard = () => {
           {!isLoading && !error && tableData && tableData.length > 0 && (
             <div className="row">
               <div className="col-12">
+
                 <TableContainer component={Paper}>
                   <Table>
                     <TableHead>
@@ -470,7 +518,7 @@ const ParentDashboard = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {tableData.map((row, index) => {
+                      {filteredTableData.map((row, index) => {
                         const isItemSelected = isSelected(row.id);
                         return (
                           <TableRow
@@ -687,6 +735,39 @@ const ParentDashboard = () => {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                    sx={{
+                      width: "100%",
+
+                      "& .MuiTablePagination-toolbar": {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        position: "relative",
+                      },
+
+                      /* LEFT: Rows per page (label + select) */
+                      "& .MuiTablePagination-selectLabel": {
+                        margin: 0,
+                      },
+
+                      /* CENTER: 1–2 of 2 */
+                      "& .MuiTablePagination-displayedRows": {
+                        position: "absolute",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        margin: 0,
+                        whiteSpace: "nowrap",
+                      },
+
+                      /* RIGHT: arrows */
+                      "& .MuiTablePagination-actions": {
+                        marginLeft: "auto",
+                      },
+
+                      "& .MuiTablePagination-spacer": {
+                        display: "none",
+                      },
+                    }}
                   />
                 )}
               </div>
