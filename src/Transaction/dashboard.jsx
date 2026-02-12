@@ -109,7 +109,7 @@ const TransactionDashboard = () => {
   const tableData = paymentRequests.map((request) => ({
     id: request.id,
     type: "Payment Request",
-    amount: `$${request.amount || 0}`,
+    amount: `${request.amount || 0}`,
     status: request.status,
     tutorName: request.User
       ? `${request.User.firstName} ${request.User.lastName}`

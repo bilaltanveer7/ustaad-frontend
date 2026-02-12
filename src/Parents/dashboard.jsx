@@ -55,8 +55,8 @@ const ParentDashboard = () => {
   // Fetch parents on component mount and when page changes
   useEffect(() => {
     // API expects 1-based index
-    fetchParents(page + 1, rowsPerPage, searchValue);
-  }, [fetchParents, page, rowsPerPage]);
+    fetchParents(page + 1, rowsPerPage, searchValue, selectedDate);
+  }, [fetchParents, page, rowsPerPage, selectedDate]);
 
   // Debounced search effect
   useEffect(() => {
@@ -66,7 +66,7 @@ const ParentDashboard = () => {
     }
     const timer = setTimeout(() => {
       setPage(0);
-      fetchParents(1, rowsPerPage, searchValue);
+      fetchParents(1, rowsPerPage, searchValue, selectedDate);
     }, 500);
 
     return () => clearTimeout(timer);
@@ -226,12 +226,7 @@ const ParentDashboard = () => {
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   };
 
-  const filteredTableData = selectedDate
-    ? tableData.filter((row) => {
-      const normalizedRowDate = convertMMDDYYYYtoISO(row.date);
-      return normalizedRowDate && normalizedRowDate === selectedDate;
-    })
-    : tableData;
+  const filteredTableData = tableData;
 
   return (
     <>
@@ -396,7 +391,6 @@ const ParentDashboard = () => {
                   Add New
                 </Button> */}
                 <div style={{ marginBottom: "12px" }}>
-
                   <input
                     type="date"
                     // placeholder="MM/DD/YYYY"
@@ -461,7 +455,6 @@ const ParentDashboard = () => {
           {!isLoading && !error && tableData && tableData.length > 0 && (
             <div className="row">
               <div className="col-12">
-
                 <TableContainer component={Paper}>
                   <Table>
                     <TableHead>

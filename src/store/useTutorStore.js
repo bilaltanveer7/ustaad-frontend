@@ -16,11 +16,11 @@ export const useTutorStore = create((set, get) => ({
   error: null,
 
   // Fetch all tutors with API
-  fetchTutors: async (page = 1, limit = 20, search = "") => {
+  fetchTutors: async (page = 1, limit = 20, search = "", date = "") => {
     set({ isLoading: true, error: null });
 
     try {
-      const response = await getAllTutors(page, limit, search);
+      const response = await getAllTutors(page, limit, search, date);
 
       if (response.data && response.data.success) {
         set({

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
-import profileImg from "../assets/profile.PNG"
+import profileImg from "../assets/profile.PNG";
 import {
   Avatar,
   Button,
@@ -319,12 +319,13 @@ const ParentsProfile = () => {
   const childrenData = children.map((child) => {
     const subscriptionSessionInfo = child.subscriptions?.length
       ? child.subscriptions
-        .map(
-          (sub) =>
-            `${sub.Offer?.sessions || 0} / ${sub.tutorSessionsDetailCount || 0
-            }`
-        )
-        .join(", ")
+          .map(
+            (sub) =>
+              `${sub.Offer?.sessions || 0} / ${
+                sub.tutorSessionsDetailCount || 0
+              }`
+          )
+          .join(", ")
       : null;
 
     return {
@@ -336,10 +337,10 @@ const ParentsProfile = () => {
       curriculum: child.curriculum || "N/A",
       subjects: child.subscriptions?.length
         ? [
-          ...new Set(
-            child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
-          ),
-        ].join(", ") || "N/A"
+            ...new Set(
+              child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
+            ),
+          ].join(", ") || "N/A"
         : child.subjects?.join(", ") || "N/A",
       tutorHired:
         subscriptionSessionInfo ||
@@ -443,7 +444,7 @@ const ParentsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Invoice Id
+                      Invoice ID
                       {getSortIcon("invoiceId")}
                     </Box>
                   </TableCell>
@@ -484,15 +485,17 @@ const ParentsProfile = () => {
                       key={row.id}
                       style={{ borderBottom: "1px solid #e0e0e0" }}
                     >
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
                         <img
                           src={profileImg}
                           alt="Teacher"
@@ -509,15 +512,17 @@ const ParentsProfile = () => {
                           {row.tutorName}
                         </span>
                       </TableCell>
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
                         <span
                           style={{
                             fontSize: "14px",
@@ -528,15 +533,17 @@ const ParentsProfile = () => {
                           {row.payment.cost}
                         </span>
                       </TableCell>
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -551,7 +558,9 @@ const ParentsProfile = () => {
                               onClick={() => handleCopy(row.invoiceId)}
                               style={{ padding: "1px", width: 20, height: 20 }}
                             >
-                              <ContentCopyIcon style={{ color: "#A6ADBF", fontSize: '16px' }} />
+                              <ContentCopyIcon
+                                style={{ color: "#A6ADBF", fontSize: "16px" }}
+                              />
                             </IconButton>
                           </Tooltip>
                         </div>
@@ -561,13 +570,13 @@ const ParentsProfile = () => {
                           fontWeight: 400,
                           fontSize: "14px",
                           color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                         }}
                       >
                         {row.transactionDate}
@@ -701,14 +710,14 @@ const ParentsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
-                          textTransform: 'capitalize'
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                          textTransform: "capitalize",
                         }}
                       >
                         {row.childName}
@@ -718,13 +727,13 @@ const ParentsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                         }}
                       >
                         {row.age}
@@ -734,13 +743,13 @@ const ParentsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                         }}
                       >
                         {row.grade}
@@ -750,13 +759,13 @@ const ParentsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                         }}
                       >
                         {row.curriculum}
@@ -767,9 +776,9 @@ const ParentsProfile = () => {
                           // color: "#000",
                           fontWeight: 400,
                           border: "1px solid #e0e0e0",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           color:
                             row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
                           // fontWeight: "400",
@@ -888,15 +897,17 @@ const ParentsProfile = () => {
                       key={row.id}
                       style={{ borderBottom: "1px solid #e0e0e0" }}
                     >
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                        border: "1px solid #e0e0e0",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -919,15 +930,17 @@ const ParentsProfile = () => {
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                        border: "1px solid #e0e0e0",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -950,15 +963,17 @@ const ParentsProfile = () => {
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                        border: "1px solid #e0e0e0",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -993,10 +1008,10 @@ const ParentsProfile = () => {
                                 fontSize: "14px",
                                 fontWeight: 400,
                                 color: "#000",
-                                maxWidth: '200px',
-                                textOverflow: 'ellipsis',
-                                overflow: 'hidden',
-                                whiteSpace: 'nowrap',
+                                maxWidth: "200px",
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
                               }}
                             >
                               {row.note}
@@ -1009,9 +1024,9 @@ const ParentsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
                         }}
                       >
@@ -1239,7 +1254,9 @@ const ParentsProfile = () => {
               >
                 <div className="row align-items-start">
                   {/* Left Column */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
                     <div className="col-md-8">
                       {/* Profile Picture and Name */}
                       <div
@@ -1247,7 +1264,7 @@ const ParentsProfile = () => {
                           display: "flex",
                           alignItems: "center",
                           gap: "15px",
-                          marginTop: '-15px'
+                          marginTop: "-15px",
                         }}
                       >
                         <div style={{ position: "relative" }}>
@@ -1258,7 +1275,11 @@ const ParentsProfile = () => {
                           style={{ width: 60, height: 60 }}
                         /> */}
                           <Avatar
-                            src={parent?.User?.image ? parent.User.image : profileImg}
+                            src={
+                              parent?.User?.image
+                                ? parent.User.image
+                                : profileImg
+                            }
                             sx={{ width: 60, height: 60 }}
                           />
                           <div
@@ -1294,16 +1315,12 @@ const ParentsProfile = () => {
                               " " +
                               parent?.User?.lastName || "N/A"}
                           </h5>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: "#666" }}
-                          >
-                            Email:  {parent?.User?.email || "No email"}
+                          <Typography variant="body2" sx={{ color: "#666" }}>
+                            Email: {parent?.User?.email || "No email"}
                           </Typography>
                           {parent?.User?.phone && (
-
                             <Typography variant="body2" sx={{ color: "#666" }}>
-                              Contact:  {parent?.User?.phone}
+                              Contact: {parent?.User?.phone}
                             </Typography>
                           )}
                         </div>

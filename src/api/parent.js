@@ -1,9 +1,14 @@
 import invoke from "../utils/invoke";
 
 // Get all parents with pagination
-export const getAllParents = async (page = 1, limit = 20, search = "") => {
+export const getAllParents = async (
+  page = 1,
+  limit = 20,
+  search = "",
+  date = ""
+) => {
   const data = await invoke({
-    url: `/admin/parents?page=${page}&limit=${limit}&search=${search}`,
+    url: `/admin/parents?page=${page}&limit=${limit}&search=${search}&date=${date}`,
     method: "GET",
   });
   return data;

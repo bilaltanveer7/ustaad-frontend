@@ -245,11 +245,22 @@ const Dashboard = () => {
       ? stats.cancelledSubscriptions
       : null;
 
+  const createdSubscriptionsValue =
+    typeof stats?.createdSubscriptions === "number"
+      ? stats.createdSubscriptions
+      : null;
+  const disputeSubscriptionsValue =
+    typeof stats?.disputeSubscriptions === "number"
+      ? stats.disputeSubscriptions
+      : null;
+
   const computedJobData =
     hasSubscriptionsData &&
     typeof activeSubscriptionsValue === "number" &&
     typeof completedSubscriptionsValue === "number" &&
-    typeof cancelledSubscriptionsValue === "number"
+    typeof cancelledSubscriptionsValue === "number" &&
+    typeof createdSubscriptionsValue === "number" &&
+    typeof disputeSubscriptionsValue === "number"
       ? [
           { name: "Active", value: activeSubscriptionsValue, color: "#00bcd4" },
           {
@@ -261,6 +272,16 @@ const Dashboard = () => {
             name: "Cancelled",
             value: cancelledSubscriptionsValue,
             color: "#ff0505ff",
+          },
+          {
+            name: "Disputed",
+            value: disputeSubscriptionsValue,
+            color: "#ff9800", // Orange for disputed
+          },
+          {
+            name: "Created",
+            value: createdSubscriptionsValue,
+            color: "#9c27b0", // Purple for created
           },
         ]
       : jobData;
@@ -1309,6 +1330,70 @@ const Dashboard = () => {
                               {cancelledSubscriptionsValue != null
                                 ? cancelledSubscriptionsValue.toLocaleString()
                                 : "20"}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Box
+                              sx={{
+                                width: 8,
+                                height: 8,
+                                bgcolor: "#ff9800",
+                                borderRadius: "50%",
+                                mr: 1,
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontWeight: 400,
+                                fontSize: 12,
+                                color: "#4D5874",
+                              }}
+                            >
+                              Disputed
+                            </Typography>
+                            <Typography
+                              sx={{
+                                ml: 2,
+                                fontWeight: 500,
+                                fontSize: 12,
+                                color: "#101219",
+                              }}
+                            >
+                              {disputeSubscriptionsValue != null
+                                ? disputeSubscriptionsValue.toLocaleString()
+                                : "0"}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Box
+                              sx={{
+                                width: 8,
+                                height: 8,
+                                bgcolor: "#9c27b0",
+                                borderRadius: "50%",
+                                mr: 1,
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontWeight: 400,
+                                fontSize: 12,
+                                color: "#4D5874",
+                              }}
+                            >
+                              Created
+                            </Typography>
+                            <Typography
+                              sx={{
+                                ml: 2,
+                                fontWeight: 500,
+                                fontSize: 12,
+                                color: "#101219",
+                              }}
+                            >
+                              {createdSubscriptionsValue != null
+                                ? createdSubscriptionsValue.toLocaleString()
+                                : "0"}
                             </Typography>
                           </Box>
                         </Box>

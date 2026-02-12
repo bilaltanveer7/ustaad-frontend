@@ -4,7 +4,7 @@ import SideNav from "../sidebar/sidenav";
 import DocumentModal from "../components/DocumentModal";
 import { useAdminStore } from "../store/useAdminStore";
 import config from "../utils/config";
-import profileImg from "../assets/profile.PNG"
+import profileImg from "../assets/profile.PNG";
 import { MdOutlineSubject } from "react-icons/md";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
@@ -269,9 +269,7 @@ const UserDetail = () => {
   const capitalize = (value) => {
     if (value === null || value === undefined) return "N/A";
 
-    return String(value)
-      .charAt(0)
-      .toUpperCase() + String(value).slice(1);
+    return String(value).charAt(0).toUpperCase() + String(value).slice(1);
   };
 
   const user = userData?.user;
@@ -360,14 +358,22 @@ const UserDetail = () => {
   console.log("documents", documents);
 
   const renderBasicInfo = () => (
-    <Card sx={{ mb: 2, bgcolor: "#EEFBFD", border: "1px solid #D1D1DB", display: 'flex', justifyContent: 'space-between' }}>
+    <Card
+      sx={{
+        mb: 2,
+        bgcolor: "#EEFBFD",
+        border: "1px solid #D1D1DB",
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
       <CardContent>
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
           Basic Information
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
-            <Box sx={{ alignItems: 'center' }}>
+            <Box sx={{ alignItems: "center" }}>
               <Avatar
                 src={user?.image || profileImg}
                 sx={{ width: 80, height: 80, mx: "auto", mb: 2 }}
@@ -392,14 +398,13 @@ const UserDetail = () => {
                 }}
               />
               <br />
-
             </Box>
           </Grid>
           <Grid item xs={12} md={8}>
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <PersonIcon style={{color:'#1E9CBC'}} />
+                  <PersonIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="User ID"
@@ -420,7 +425,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <EmailIcon style={{color:'#1E9CBC'}} />
+                  <EmailIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Email"
@@ -440,7 +445,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <PhoneIcon style={{color:'#1E9CBC'}} />
+                  <PhoneIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Phone"
@@ -460,16 +465,16 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <CalendarIcon style={{color:'#1E9CBC'}} />
+                  <CalendarIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Registration Date"
+                  primary="Joining Date"
                   secondary={formatDate(user?.createdAt)}
                 />
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <CalendarIcon style={{color:'#1E9CBC'}} />
+                  <CalendarIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Last Updated"
@@ -484,15 +489,15 @@ const UserDetail = () => {
         label={user?.isOnBoard?.toUpperCase() || "PENDING"}
         size="medium"
         sx={{
-          backgroundColor: getStatusColor(user?.isOnBoard || "pending")
-            .bg,
-          border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border
-            }`,
+          backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
+          border: `1px solid ${
+            getStatusColor(user?.isOnBoard || "pending").border
+          }`,
           color: getStatusColor(user?.isOnBoard || "pending").color,
           fontWeight: 500,
           fontSize: "14px",
-          marginTop: '1rem',
-          marginRight: '1rem'
+          marginTop: "1rem",
+          marginRight: "1rem",
         }}
       />
     </Card>
@@ -592,12 +597,14 @@ const UserDetail = () => {
     const totalExperience = tutor.totalExperience || 0;
 
     return (
-      <Card sx={{
-        mb: 3,
-        bgcolor: "#EEFBFD",
-        border: "1px solid #D1D1DB",
-        p: 2
-      }}>
+      <Card
+        sx={{
+          mb: 3,
+          bgcolor: "#EEFBFD",
+          border: "1px solid #D1D1DB",
+          p: 2,
+        }}
+      >
         {/* <CardContent> */}
         <Typography variant="h6" sx={{ fontWeight: 600 }}>
           Tutor Information
@@ -637,8 +644,9 @@ const UserDetail = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Bank Details"
-                  secondary={`${tutor.bankName || "N/A"} - ${tutor.accountNumber || "N/A"
-                    }`}
+                  secondary={`${tutor.bankName || "N/A"} - ${
+                    tutor.accountNumber || "N/A"
+                  }`}
                 />
               </ListItem>
               <ListItem>
@@ -647,11 +655,7 @@ const UserDetail = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Grade"
-                  secondary={
-                    tutor.grade
-                      ? capitalize(tutor.grade)
-                      : "N/A"
-                  }
+                  secondary={tutor.grade ? capitalize(tutor.grade) : "N/A"}
                 />
               </ListItem>
             </List>
@@ -668,8 +672,8 @@ const UserDetail = () => {
                   secondary={
                     experience.length > 0
                       ? experience
-                        .map((exp) => `${exp.description} at ${exp.company}`)
-                        .join(", ")
+                          .map((exp) => `${exp.description} at ${exp.company}`)
+                          .join(", ")
                       : "N/A"
                   }
                 />
@@ -694,7 +698,9 @@ const UserDetail = () => {
                 <ListItemText
                   primary="Subjects"
                   secondary={
-                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 1 }}>
+                    <Box
+                      sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 1 }}
+                    >
                       {(tutor.subjects || ["N/A"]).map((subject, index) => (
                         <Chip
                           key={index}
@@ -815,7 +821,7 @@ const UserDetail = () => {
     return (
       <>
         {/* Education Section */}
-        <Card sx={{ mb: 3, bgcolor: "#EEFBFD", border: "1px solid #D1D1DB", }}>
+        <Card sx={{ mb: 3, bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Education History
@@ -863,10 +869,11 @@ const UserDetail = () => {
                             </Typography>
                           </Box>
                           <Chip
-                            label={`${formatDate(edu.startDate)} - ${edu.endDate === "Present"
-                              ? "Present"
-                              : formatDate(edu.endDate)
-                              }`}
+                            label={`${formatDate(edu.startDate)} - ${
+                              edu.endDate === "Present"
+                                ? "Present"
+                                : formatDate(edu.endDate)
+                            }`}
                             size="small"
                             sx={{
                               backgroundColor: "#EEF3FF",
@@ -890,7 +897,7 @@ const UserDetail = () => {
         </Card>
 
         {/* Experience Section */}
-        <Card sx={{ bgcolor: "#EEFBFD", border: "1px solid #D1D1DB", }}>
+        <Card sx={{ bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Work Experience
@@ -938,10 +945,11 @@ const UserDetail = () => {
                             </Typography>
                           </Box>
                           <Chip
-                            label={`${formatDate(exp.startDate)} - ${exp.endDate === "Present"
-                              ? "Present"
-                              : formatDate(exp.endDate)
-                              }`}
+                            label={`${formatDate(exp.startDate)} - ${
+                              exp.endDate === "Present"
+                                ? "Present"
+                                : formatDate(exp.endDate)
+                            }`}
                             size="small"
                             sx={{
                               backgroundColor: "#F3E5F5",
@@ -968,7 +976,7 @@ const UserDetail = () => {
   };
 
   const renderDocuments = () => (
-    <Card sx={{ bgcolor: "#EEFBFD", border: "1px solid #D1D1DB", }}>
+    <Card sx={{ bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
       <CardContent>
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
           Documents ({documents.length})
@@ -992,47 +1000,73 @@ const UserDetail = () => {
             <Table>
               <TableHead sx={{ backgroundColor: "#1E9CBC" }}>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 600, color: '#fff', fontSize: '16px' }}>Document Name</TableCell>
-                  <TableCell sx={{ fontWeight: 600, color: '#fff', fontSize: '16px' }}>Category</TableCell>
-                  <TableCell sx={{ fontWeight: 600, color: '#fff', fontSize: '16px' }}>Type</TableCell>
-                  <TableCell sx={{ fontWeight: 600, color: '#fff', fontSize: '16px' }}>Uploaded</TableCell>
-                  <TableCell sx={{ fontWeight: 600, color: '#fff', fontSize: '16px' }}>Actions</TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                  >
+                    Document Name
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                  >
+                    Category
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                  >
+                    Type
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                  >
+                    Uploaded
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                  >
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {documents.map((doc) => (
                   <TableRow key={doc.id}>
-                    <TableCell sx={{
-                      fontSize: "14px",
-                      color: "#000",
-                      fontWeight: 400,
-                      border: "1px solid #e0e0e0",
-                      padding: '0 8px',
-                      height: '30px',
-                      lineHeight: '30px',
-                    }}>
+                    <TableCell
+                      sx={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        border: "1px solid #e0e0e0",
+                        padding: "0 8px",
+                        height: "30px",
+                        lineHeight: "30px",
+                      }}
+                    >
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
                         <DocumentIcon sx={{ color: "#666", fontSize: 20 }} />
-                        <Typography sx={{
-                          fontSize: "14px",
-                          color: "#000",
-                          fontWeight: 400,
-                        }}>
+                        <Typography
+                          sx={{
+                            fontSize: "14px",
+                            color: "#000",
+                            fontWeight: 400,
+                          }}
+                        >
                           {doc.name}
                         </Typography>
                       </Box>
                     </TableCell>
-                    <TableCell sx={{
-                      fontSize: "14px",
-                      color: "#000",
-                      fontWeight: 400,
-                      border: "1px solid #e0e0e0",
-                      padding: '0 8px',
-                      height: '30px',
-                      lineHeight: '30px',
-                    }}>
+                    <TableCell
+                      sx={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        border: "1px solid #e0e0e0",
+                        padding: "0 8px",
+                        height: "30px",
+                        lineHeight: "30px",
+                      }}
+                    >
                       <Chip
                         label={doc.category}
                         size="small"
@@ -1043,41 +1077,43 @@ const UserDetail = () => {
                         }}
                       />
                     </TableCell>
-                    <TableCell sx={{
-                      fontSize: "14px",
-                      color: "#000",
-                      fontWeight: 400,
-                      border: "1px solid #e0e0e0",
-                      padding: '0 8px',
-                      height: '30px',
-                      lineHeight: '30px',
-                    }}>
-                      <Typography>
-                        {doc.type}
-                      </Typography>
+                    <TableCell
+                      sx={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        border: "1px solid #e0e0e0",
+                        padding: "0 8px",
+                        height: "30px",
+                        lineHeight: "30px",
+                      }}
+                    >
+                      <Typography>{doc.type}</Typography>
                     </TableCell>
-                    <TableCell sx={{
-                      fontSize: "14px",
-                      color: "#000",
-                      fontWeight: 400,
-                      border: "1px solid #e0e0e0",
-                      padding: '0 8px',
-                      height: '30px',
-                      lineHeight: '30px',
-                    }}>
-                      <Typography>
-                        {formatDate(doc.uploadedAt)}
-                      </Typography>
+                    <TableCell
+                      sx={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        border: "1px solid #e0e0e0",
+                        padding: "0 8px",
+                        height: "30px",
+                        lineHeight: "30px",
+                      }}
+                    >
+                      <Typography>{formatDate(doc.uploadedAt)}</Typography>
                     </TableCell>
-                    <TableCell sx={{
-                      fontSize: "14px",
-                      color: "#000",
-                      fontWeight: 400,
-                      border: "1px solid #e0e0e0",
-                      padding: '0 8px',
-                      height: '30px',
-                      lineHeight: '30px',
-                    }}>
+                    <TableCell
+                      sx={{
+                        fontSize: "14px",
+                        color: "#000",
+                        fontWeight: 400,
+                        border: "1px solid #e0e0e0",
+                        padding: "0 8px",
+                        height: "30px",
+                        lineHeight: "30px",
+                      }}
+                    >
                       <Box sx={{ display: "flex", gap: 1 }}>
                         <Tooltip title="View Document">
                           <IconButton
@@ -1203,8 +1239,8 @@ const UserDetail = () => {
                 {user?.isOnBoard === "approved"
                   ? "Approved"
                   : isApprovingUser
-                    ? "Approving..."
-                    : "Approve User"}
+                  ? "Approving..."
+                  : "Approve User"}
               </Button>
             </Box>
           </Box>
@@ -1212,12 +1248,18 @@ const UserDetail = () => {
           {/* Tabs */}
           <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
             <Tabs value={activeTab} onChange={handleTabChange}>
-              <Tab label="Overview" sx={{ textTransform: 'capitalize' }} />
-              <Tab label="Documents" sx={{ textTransform: 'capitalize' }} />
+              <Tab label="Overview" sx={{ textTransform: "capitalize" }} />
+              <Tab label="Documents" sx={{ textTransform: "capitalize" }} />
               <Tab
                 label={`${user?.role === "TUTOR" ? "Tutor" : "Parent"} Profile`}
-                sx={{ textTransform: 'capitalize' }} />
-              {user?.role === "TUTOR" && <Tab label="Education & Experience" sx={{ textTransform: 'capitalize' }} />}
+                sx={{ textTransform: "capitalize" }}
+              />
+              {user?.role === "TUTOR" && (
+                <Tab
+                  label="Education & Experience"
+                  sx={{ textTransform: "capitalize" }}
+                />
+              )}
             </Tabs>
           </Box>
 

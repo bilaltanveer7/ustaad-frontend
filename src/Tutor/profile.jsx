@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useTutorStore } from "../store/useTutorStore";
 import DocumentModal from "../components/DocumentModal";
-import profileImg from "../assets/profile.PNG"
+import profileImg from "../assets/profile.PNG";
 import {
   Avatar,
   Button,
@@ -302,105 +302,105 @@ const TutorsProfile = () => {
   const experienceData =
     experience?.length > 0
       ? experience?.map((exp) => ({
-        id: exp.id,
-        company: exp.company || "N/A",
-        title: exp.description || "N/A", // API uses 'description' for job title/role
-        startYear: exp.startDate
-          ? new Date(exp.startDate).getFullYear().toString()
-          : "N/A",
-        endYear:
-          exp.endDate === "Present"
-            ? "Present"
-            : new Date(exp.endDate).getFullYear().toString(),
-      }))
+          id: exp.id,
+          company: exp.company || "N/A",
+          title: exp.description || "N/A", // API uses 'description' for job title/role
+          startYear: exp.startDate
+            ? new Date(exp.startDate).getFullYear().toString()
+            : "N/A",
+          endYear:
+            exp.endDate === "Present"
+              ? "Present"
+              : new Date(exp.endDate).getFullYear().toString(),
+        }))
       : [];
 
   const educationData =
     education?.length > 0
       ? education?.map((edu) => ({
-        id: edu.id,
-        institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-        degree: edu.degree || "N/A", // API uses 'description' for degree info
-        description: edu.description || "N/A", // API uses 'description' for degree info
-        startDate: edu.startDate
-          ? new Date(edu.startDate).getFullYear().toString()
-          : "N/A",
-        endDate:
-          edu.endDate === "Present"
-            ? "Present"
-            : new Date(edu.endDate).getFullYear().toString(),
-      }))
+          id: edu.id,
+          institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
+          degree: edu.degree || "N/A", // API uses 'description' for degree info
+          description: edu.description || "N/A", // API uses 'description' for degree info
+          startDate: edu.startDate
+            ? new Date(edu.startDate).getFullYear().toString()
+            : "N/A",
+          endDate:
+            edu.endDate === "Present"
+              ? "Present"
+              : new Date(edu.endDate).getFullYear().toString(),
+        }))
       : [];
 
   // Transform API transactions data for display
   const transactionsData = transactions
     ? // Handle both single object and array cases
-    (Array.isArray(transactions) ? transactions : [transactions]).map(
-      (tx) => ({
-        id: tx.id,
-        payment: {
-          name: tutor?.User?.fullName || "Unknown",
-          cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
-        },
-        parent: tx?.parent?.name || "N/A",
-        invoiceId: tx?.parentTransactions[0]?.invoiceId || "N/A",
-        child: {
-          name: "Student", // API doesn't provide child info, using placeholder
-          avatar: "/placeholder.svg?height=32&width=32",
-        },
-        pay: tx.amount || 0,
-        paymentMethod: {
-          type: "bank",
-          accountNumber: tutor?.accountNumber || "N/A",
-        },
-        transactionDate: tx.createdAt
-          ? new Date(tx.createdAt).toLocaleDateString()
-          : "N/A",
-        status: tx.status || "UNKNOWN",
-      })
-    )
+      (Array.isArray(transactions) ? transactions : [transactions]).map(
+        (tx) => ({
+          id: tx.id,
+          payment: {
+            name: tutor?.User?.fullName || "Unknown",
+            cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
+          },
+          parent: tx?.parent?.name || "N/A",
+          invoiceId: tx?.parentTransactions[0]?.invoiceId || "N/A",
+          child: {
+            name: "Student", // API doesn't provide child info, using placeholder
+            avatar: "/placeholder.svg?height=32&width=32",
+          },
+          pay: tx.amount || 0,
+          paymentMethod: {
+            type: "bank",
+            accountNumber: tutor?.accountNumber || "N/A",
+          },
+          transactionDate: tx.createdAt
+            ? new Date(tx.createdAt).toLocaleDateString()
+            : "N/A",
+          status: tx.status || "UNKNOWN",
+        })
+      )
     : [];
 
   // Transform API documents data for display
   const documentsData = documents
     ? [
-      {
-        id: 1,
-        name: "Resume",
-        type: documents.resume
-          ? documents.resume.toLowerCase().endsWith(".pdf")
-            ? "PDF"
-            : "Image"
-          : "N/A",
-        url: `${config.tutorDocumentUrl}${documents.resume}`,
-        uploadDate: "N/A", // Upload date not available in API
-        status: documents.resume ? "Available" : "Missing",
-      },
-      {
-        id: 2,
-        name: "ID Front",
-        type: documents.idFront
-          ? documents.idFront.toLowerCase().endsWith(".pdf")
-            ? "PDF"
-            : "Image"
-          : "N/A",
-        url: `${config.tutorDocumentUrl}${documents.idFront}`,
-        uploadDate: "N/A", // Upload date not available in API
-        status: documents.idFront ? "Available" : "Missing",
-      },
-      {
-        id: 3,
-        name: "ID Back",
-        type: documents.idBack
-          ? documents.idBack.toLowerCase().endsWith(".pdf")
-            ? "PDF"
-            : "Image"
-          : "N/A",
-        url: `${config.tutorDocumentUrl}${documents.idBack}`,
-        uploadDate: "N/A", // Upload date not available in API
-        status: documents.idBack ? "Available" : "Missing",
-      },
-    ].filter((doc) => doc.url)
+        {
+          id: 1,
+          name: "Resume",
+          type: documents.resume
+            ? documents.resume.toLowerCase().endsWith(".pdf")
+              ? "PDF"
+              : "Image"
+            : "N/A",
+          url: `${config.tutorDocumentUrl}${documents.resume}`,
+          uploadDate: "N/A", // Upload date not available in API
+          status: documents.resume ? "Available" : "Missing",
+        },
+        {
+          id: 2,
+          name: "ID Front",
+          type: documents.idFront
+            ? documents.idFront.toLowerCase().endsWith(".pdf")
+              ? "PDF"
+              : "Image"
+            : "N/A",
+          url: `${config.tutorDocumentUrl}${documents.idFront}`,
+          uploadDate: "N/A", // Upload date not available in API
+          status: documents.idFront ? "Available" : "Missing",
+        },
+        {
+          id: 3,
+          name: "ID Back",
+          type: documents.idBack
+            ? documents.idBack.toLowerCase().endsWith(".pdf")
+              ? "PDF"
+              : "Image"
+            : "N/A",
+          url: `${config.tutorDocumentUrl}${documents.idBack}`,
+          uploadDate: "N/A", // Upload date not available in API
+          status: documents.idBack ? "Available" : "Missing",
+        },
+      ].filter((doc) => doc.url)
     : [];
 
   const childrenData = [
@@ -500,7 +500,7 @@ const TutorsProfile = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      Invoice Id
+                      Invoice ID
                       {getSortIcon("invoiceId")}
                     </Box>
                   </TableCell>
@@ -556,15 +556,17 @@ const TutorsProfile = () => {
                       key={row.id}
                       style={{ borderBottom: "1px solid #e0e0e0" }}
                     >
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                        padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
                         <img
                           src={profileImg}
                           alt="Teacher"
@@ -581,15 +583,17 @@ const TutorsProfile = () => {
                           {row.parent}
                         </span>
                       </TableCell>
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                        padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
                         <span
                           style={{
                             fontSize: "14px",
@@ -608,15 +612,17 @@ const TutorsProfile = () => {
                           {row.pay}
                         </span>
                       </TableCell>
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                        padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -632,7 +638,9 @@ const TutorsProfile = () => {
                               onClick={() => handleCopy(row.invoiceId)}
                               style={{ padding: "1px", width: 20, height: 20 }}
                             >
-                              <ContentCopyIcon style={{ color: "#A6ADBF", fontSize: '16px' }} />
+                              <ContentCopyIcon
+                                style={{ color: "#A6ADBF", fontSize: "16px" }}
+                              />
                             </IconButton>
                           </Tooltip>
                         </div>
@@ -669,26 +677,26 @@ const TutorsProfile = () => {
                               row.status === "COMPLETED"
                                 ? "#EEFBF4"
                                 : row.status === "IN_REVIEW"
-                                  ? "#FFF4E6"
-                                  : row.status === "FAILED"
-                                    ? "#FFEBEE"
-                                    : "#F5F5F5",
+                                ? "#FFF4E6"
+                                : row.status === "FAILED"
+                                ? "#FFEBEE"
+                                : "#F5F5F5",
                             border:
                               row.status === "COMPLETED"
                                 ? "1px solid #B2EECC"
                                 : row.status === "IN_REVIEW"
-                                  ? "1px solid #FFD54F"
-                                  : row.status === "FAILED"
-                                    ? "1px solid #FFCDD2"
-                                    : "1px solid #E0E0E0",
+                                ? "1px solid #FFD54F"
+                                : row.status === "FAILED"
+                                ? "1px solid #FFCDD2"
+                                : "1px solid #E0E0E0",
                             color:
                               row.status === "COMPLETED"
                                 ? "#17663A"
                                 : row.status === "IN_REVIEW"
-                                  ? "#E65100"
-                                  : row.status === "FAILED"
-                                    ? "#C62828"
-                                    : "#424242",
+                                ? "#E65100"
+                                : row.status === "FAILED"
+                                ? "#C62828"
+                                : "#424242",
                             fontWeight: 400,
                             fontSize: "12px",
                           }}
@@ -730,7 +738,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: 'nowrap'
+                        whiteSpace: "nowrap",
                       }}
                     >
                       Institute Name
@@ -746,10 +754,10 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: 'nowrap'
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      Discription
+                      Description
                       {getSortIcon("grade")}
                     </Box>
                   </TableCell>
@@ -762,7 +770,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: 'nowrap'
+                        whiteSpace: "nowrap",
                       }}
                     >
                       Start Date
@@ -778,7 +786,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: 'nowrap'
+                        whiteSpace: "nowrap",
                       }}
                     >
                       End Date
@@ -794,7 +802,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: 'nowrap'
+                        whiteSpace: "nowrap",
                       }}
                     >
                       Total Years
@@ -810,7 +818,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: 'nowrap'
+                        whiteSpace: "nowrap",
                       }}
                     >
                       Designation
@@ -839,15 +847,17 @@ const TutorsProfile = () => {
                       key={row.id}
                       style={{ borderBottom: "1px solid #e0e0e0" }}
                     >
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                        padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
                         <img
                           src={profileImg}
                           alt="Company"
@@ -870,9 +880,9 @@ const TutorsProfile = () => {
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -880,15 +890,17 @@ const TutorsProfile = () => {
                         }}
                       >
                         <Tooltip title={row.title} arrow>
-                          <span style={{
-                            fontSize: "14px",
-                            color: "#000",
-                            fontWeight: 400,
-                            maxWidth: '250px',
-                            textOverflow: 'ellipsis',
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap'
-                          }}>
+                          <span
+                            style={{
+                              fontSize: "14px",
+                              color: "#000",
+                              fontWeight: 400,
+                              maxWidth: "250px",
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
                             {row.title}
                           </span>
                         </Tooltip>
@@ -899,9 +911,9 @@ const TutorsProfile = () => {
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -916,9 +928,9 @@ const TutorsProfile = () => {
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1042,9 +1054,9 @@ const TutorsProfile = () => {
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1059,9 +1071,9 @@ const TutorsProfile = () => {
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1102,15 +1114,17 @@ const TutorsProfile = () => {
                           }}
                         />
                       </TableCell>
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        border: "1px solid #e0e0e0",
-                        padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
                         {row.url && (
                           // <Button
                           //   variant="outlined"
@@ -1172,7 +1186,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: "nowrap"
+                        whiteSpace: "nowrap",
                       }}
                     >
                       Institute
@@ -1188,7 +1202,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: "nowrap"
+                        whiteSpace: "nowrap",
                       }}
                     >
                       Degree
@@ -1204,7 +1218,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: "nowrap"
+                        whiteSpace: "nowrap",
                       }}
                     >
                       Description
@@ -1220,7 +1234,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: "nowrap"
+                        whiteSpace: "nowrap",
                       }}
                     >
                       Start Year
@@ -1236,7 +1250,7 @@ const TutorsProfile = () => {
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        whiteSpace: "nowrap"
+                        whiteSpace: "nowrap",
                       }}
                     >
                       End Year
@@ -1271,9 +1285,9 @@ const TutorsProfile = () => {
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1281,12 +1295,14 @@ const TutorsProfile = () => {
                         }}
                       >
                         <Tooltip title={row.institution} arrow>
-                          <span style={{
-                            maxWidth: '150px',
-                            textOverflow: 'ellipsis',
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap'
-                          }}>
+                          <span
+                            style={{
+                              maxWidth: "150px",
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
                             {row.institution}
                           </span>
                         </Tooltip>
@@ -1297,9 +1313,9 @@ const TutorsProfile = () => {
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
@@ -1315,21 +1331,23 @@ const TutorsProfile = () => {
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
                           lineHeight: "30px",
                         }}
                       >
-                        <span style={{
-                          maxWidth: '150px',
-                          textOverflow: 'ellipsis',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap'
-                        }}>
+                        <span
+                          style={{
+                            maxWidth: "150px",
+                            textOverflow: "ellipsis",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
                           <Tooltip title={row.description} arrow>
                             {row.description}
                           </Tooltip>
@@ -1435,14 +1453,12 @@ const TutorsProfile = () => {
                         display: "flex",
                         alignItems: "center",
                         gap: "15px",
-                        marginTop: '-15px'
+                        marginTop: "-15px",
                       }}
                     >
                       <div style={{ position: "relative" }}>
                         <Avatar
-                          src={
-                            tutor?.User?.image || profileImg
-                          }
+                          src={tutor?.User?.image || profileImg}
                           style={{ width: 60, height: 60 }}
                         />
                         <div
@@ -1465,7 +1481,7 @@ const TutorsProfile = () => {
                           </span>
                         </div>
                       </div>
-                      <div style={{ marginTop: '1rem' }}>
+                      <div style={{ marginTop: "1rem" }}>
                         <h5
                           style={{
                             paddingTop: 20,
@@ -1477,13 +1493,10 @@ const TutorsProfile = () => {
                           {tutor?.User?.firstName && tutor?.User?.lastName
                             ? `${tutor.User.firstName} ${tutor.User.lastName}`
                             : tutor?.User?.firstName ||
-                            tutor?.User?.lastName ||
-                            "N/A"}
+                              tutor?.User?.lastName ||
+                              "N/A"}
                         </h5>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: "#666" }}
-                        >
+                        <Typography variant="body2" sx={{ color: "#666" }}>
                           Email: {tutor?.User?.email || "No email"}
                         </Typography>
                         {tutor?.User?.phone && (
@@ -1501,7 +1514,6 @@ const TutorsProfile = () => {
                         )}
                       </div>
                     </div>
-
                   </div>
                   <div className="col-md-4 d-flex justify-content-end align-items-start">
                     {activeTab === 0 && (

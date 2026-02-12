@@ -52,8 +52,8 @@ const TutorDashboard = () => {
 
   // Fetch tutors on component mount and when page changes
   useEffect(() => {
-    fetchTutors(page + 1, rowsPerPage, searchValue);
-  }, [fetchTutors, page, rowsPerPage]);
+    fetchTutors(page + 1, rowsPerPage, searchValue, selectedDate);
+  }, [fetchTutors, page, rowsPerPage, selectedDate]);
 
   // Debounced search effect
   useEffect(() => {
@@ -63,7 +63,7 @@ const TutorDashboard = () => {
     }
     const timer = setTimeout(() => {
       setPage(0);
-      fetchTutors(1, rowsPerPage, searchValue);
+      fetchTutors(1, rowsPerPage, searchValue, selectedDate);
     }, 500);
 
     return () => clearTimeout(timer);
@@ -217,12 +217,7 @@ const TutorDashboard = () => {
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   };
 
-  const filteredTableData = selectedDate
-    ? tableData.filter((row) => {
-      const normalizedRowDate = convertMMDDYYYYtoISO(row.date);
-      return normalizedRowDate && normalizedRowDate === selectedDate;
-    })
-    : tableData;
+  const filteredTableData = tableData;
 
   return (
     <>
@@ -387,7 +382,6 @@ const TutorDashboard = () => {
                                     Add New
                                 </Button> */}
                 <div style={{ marginBottom: "12px" }}>
-                  
                   <input
                     type="date"
                     // placeholder="MM/DD/YYYY"
