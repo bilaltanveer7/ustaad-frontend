@@ -49,7 +49,7 @@ const ParentDashboard = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState("");
   const isFirstRender = useRef(true);
 
   // Fetch parents on component mount and when page changes
