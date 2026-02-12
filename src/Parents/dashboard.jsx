@@ -85,6 +85,7 @@ const ParentDashboard = () => {
   const tableData = parents.map((parent) => ({
     id: parent.id,
     image: parent.User?.image,
+    userId: parent?.User?.userId,
     clientId: parent.userId.substring(0, 8).toUpperCase(),
     name:
       parent.User?.firstName && parent.User?.lastName
@@ -542,7 +543,7 @@ const ParentDashboard = () => {
                                 border: "1px solid #e0e0e0",
                               }}
                             >
-                              <Tooltip title={row.clientId} arrow>
+                              <Tooltip title={row.userId} arrow>
                                 <div
                                   style={{
                                     fontWeight: 600,
@@ -556,7 +557,7 @@ const ParentDashboard = () => {
                                     whiteSpace: "nowrap",
                                   }}
                                 >
-                                  PA-{row.clientId}
+                                  {row.userId}
                                 </div>
                               </Tooltip>
                             </TableCell>

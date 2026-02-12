@@ -81,6 +81,7 @@ const TutorDashboard = () => {
   // Transform API data to match table format
   const tableData = tutors.map((tutor) => ({
     id: tutor.id,
+    userId: tutor?.User?.userId,
     image: tutor.User?.image,
     clientId: tutor.userId.substring(0, 8).toUpperCase(),
     name:
@@ -508,7 +509,7 @@ const TutorDashboard = () => {
                                 lineHeight: "30px",
                               }}
                             >
-                              <Tooltip title={row.clientId} arrow>
+                              <Tooltip title={row.userId} arrow>
                                 <div
                                   style={{
                                     fontWeight: 600,
@@ -522,7 +523,7 @@ const TutorDashboard = () => {
                                     whiteSpace: "nowrap",
                                   }}
                                 >
-                                  TU-{row.clientId}
+                                  {row.userId}
                                 </div>
                               </Tooltip>
                             </TableCell>

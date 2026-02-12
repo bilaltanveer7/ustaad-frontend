@@ -1238,7 +1238,7 @@ const ParentsProfile = () => {
                     color: "#101219",
                   }}
                 >
-                  {(parent?.id || parentId)?.slice(0, 4).toUpperCase()}
+                  {parent?.User?.userId}
                 </h4>
               </div>
 

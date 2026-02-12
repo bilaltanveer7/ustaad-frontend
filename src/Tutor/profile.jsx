@@ -1433,7 +1433,7 @@ const TutorsProfile = () => {
                     color: "#101219",
                   }}
                 >
-                  {(tutor?.id || tutorId)?.slice(0, 4).toUpperCase()}
+                  {tutor?.User?.userId}
                 </h4>
               </div>
 
