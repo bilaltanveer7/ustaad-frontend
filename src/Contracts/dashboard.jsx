@@ -60,6 +60,13 @@ const ContractDashboard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const statusOptions = ["ALL", "ACTIVE", "DISPUTE", "CANCELLED", "COMPLETED"];
   const [selectedStatus, setSelectedStatus] = useState("ALL");
+  const [selectedContract, setSelectedContract] = useState(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+
+  const [resolutionModalOpen, setResolutionModalOpen] = useState(false);
+  const [targetStatus, setTargetStatus] = useState(""); // "active" | "cancelled" | "completed"
+  const [adminNotes, setAdminNotes] = useState("");
+  const [contractToResolve, setContractToResolve] = useState(null);
 
   // Pagination State
   const [page, setPage] = useState(0);
@@ -67,7 +74,10 @@ const ContractDashboard = () => {
 
   const open = Boolean(anchorEl);
 
-  const handleMenuOpen = (event) => {
+  const handleMenuOpen = (event, row) => {
+    console.log("event", event);
+    console.log("row", row);
+    setSelectedContract(row);
     setAnchorEl(event.currentTarget);
   };
 
@@ -78,8 +88,9 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${page + 1
-      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+    const query = `?page=${
+      page + 1
+    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
     fetchDisputedContracts(query);
   }, [fetchDisputedContracts, page, rowsPerPage, searchValue, selectedStatus]);
 
@@ -93,15 +104,6 @@ const ContractDashboard = () => {
   };
 
   console.log("disputedContractsPagination", disputedContractsPagination);
-
-  const [selectedContract, setSelectedContract] = useState(null);
-  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
-
-  // Resolution Modal State
-  const [resolutionModalOpen, setResolutionModalOpen] = useState(false);
-  const [targetStatus, setTargetStatus] = useState(""); // "active" | "cancelled" | "completed"
-  const [adminNotes, setAdminNotes] = useState("");
-  const [contractToResolve, setContractToResolve] = useState(null);
 
   const handleOpenResolutionModal = (contract, status) => {
     setContractToResolve(contract);
@@ -135,7 +137,8 @@ const ContractDashboard = () => {
   };
 
   const handleViewDetails = (contract) => {
-    setSelectedContract(contract);
+    // console.log("contract", contract);
+    // setSelectedContract(contract);
     setDetailsModalOpen(true);
   };
 
@@ -531,8 +534,8 @@ const ContractDashboard = () => {
                                   title={
                                     row.startDate
                                       ? new Date(
-                                        row.startDate
-                                      ).toLocaleDateString()
+                                          row.startDate
+                                        ).toLocaleDateString()
                                       : "N/A"
                                   }
                                   arrow
@@ -700,7 +703,7 @@ const ContractDashboard = () => {
                               <Box display="flex" justifyContent="flex-end">
                                 <IconButton
                                   size="small"
-                                  onClick={handleMenuOpen}
+                                  onClick={(e) => handleMenuOpen(e, row)}
                                 >
                                   <MoreVertIcon />
                                 </IconButton>
