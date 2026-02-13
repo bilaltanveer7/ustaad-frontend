@@ -21,7 +21,7 @@ import {
   InputAdornment,
   IconButton,
   Chip,
-  TablePagination,
+  TablePagination
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -213,21 +213,6 @@ const ParentDashboard = () => {
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
-
-  const convertMMDDYYYYtoISO = (dateStr) => {
-    if (!dateStr || typeof dateStr !== "string") return "";
-
-    const parts = dateStr.split("-");
-    if (parts.length !== 3) return "";
-
-    const [month, day, year] = parts;
-
-    if (!month || !day || !year) return "";
-
-    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-  };
-
-  const filteredTableData = tableData;
 
   return (
     <>
@@ -512,7 +497,7 @@ const ParentDashboard = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {filteredTableData.map((row, index) => {
+                      {paginatedData.map((row, index) => {
                         const isItemSelected = isSelected(row.id);
                         return (
                           <TableRow
@@ -719,6 +704,44 @@ const ParentDashboard = () => {
                       })}
                     </TableBody>
                   </Table>
+                  {/* <TablePagination
+                    component="div"
+                    count={tableData.length}
+                    page={page}
+                    onPageChange={(event, newPage) => setPage(newPage)}
+                    rowsPerPage={rowsPerPage}
+                    rowsPerPageOptions={[10]}
+                    sx={{
+                      width: "100%",
+                      position: "relative",
+
+                      "& .MuiTablePagination-toolbar": {
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        minHeight: "48px",
+                      },
+
+                      /* CENTER THE TEXT
+                      "& .MuiTablePagination-displayedRows": {
+                        position: "absolute",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        margin: 0,
+                      },
+
+                      
+                      "& .MuiTablePagination-actions": {
+                        position: "absolute",
+                        right: 16,
+                      },
+
+                      
+                      "& .MuiTablePagination-spacer": {
+                        display: "none",
+                      },
+                    }}
+                  /> */}
                 </TableContainer>
                 {pagination && (
                   <TablePagination
