@@ -38,6 +38,7 @@ import {
   ArrowUpward as ArrowUpwardIcon,
   ArrowDownward as ArrowDownwardIcon,
   Visibility as ViewIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -59,6 +60,7 @@ const TutorsProfile = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   // Form state for editable fields
   const [profileData, setProfileData] = useState({
@@ -302,105 +304,105 @@ const TutorsProfile = () => {
   const experienceData =
     experience?.length > 0
       ? experience?.map((exp) => ({
-          id: exp.id,
-          company: exp.company || "N/A",
-          title: exp.description || "N/A", // API uses 'description' for job title/role
-          startYear: exp.startDate
-            ? new Date(exp.startDate).getFullYear().toString()
-            : "N/A",
-          endYear:
-            exp.endDate === "Present"
-              ? "Present"
-              : new Date(exp.endDate).getFullYear().toString(),
-        }))
+        id: exp.id,
+        company: exp.company || "N/A",
+        title: exp.description || "N/A", // API uses 'description' for job title/role
+        startYear: exp.startDate
+          ? new Date(exp.startDate).getFullYear().toString()
+          : "N/A",
+        endYear:
+          exp.endDate === "Present"
+            ? "Present"
+            : new Date(exp.endDate).getFullYear().toString(),
+      }))
       : [];
 
   const educationData =
     education?.length > 0
       ? education?.map((edu) => ({
-          id: edu.id,
-          institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-          degree: edu.degree || "N/A", // API uses 'description' for degree info
-          description: edu.description || "N/A", // API uses 'description' for degree info
-          startDate: edu.startDate
-            ? new Date(edu.startDate).getFullYear().toString()
-            : "N/A",
-          endDate:
-            edu.endDate === "Present"
-              ? "Present"
-              : new Date(edu.endDate).getFullYear().toString(),
-        }))
+        id: edu.id,
+        institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
+        degree: edu.degree || "N/A", // API uses 'description' for degree info
+        description: edu.description || "N/A", // API uses 'description' for degree info
+        startDate: edu.startDate
+          ? new Date(edu.startDate).getFullYear().toString()
+          : "N/A",
+        endDate:
+          edu.endDate === "Present"
+            ? "Present"
+            : new Date(edu.endDate).getFullYear().toString(),
+      }))
       : [];
 
   // Transform API transactions data for display
   const transactionsData = transactions
     ? // Handle both single object and array cases
-      (Array.isArray(transactions) ? transactions : [transactions]).map(
-        (tx) => ({
-          id: tx.id,
-          payment: {
-            name: tutor?.User?.fullName || "Unknown",
-            cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
-          },
-          parent: tx?.parent?.name || "N/A",
-          invoiceId: tx?.parentTransactions[0]?.invoiceId || "N/A",
-          child: {
-            name: "Student", // API doesn't provide child info, using placeholder
-            avatar: "/placeholder.svg?height=32&width=32",
-          },
-          pay: tx.amount || 0,
-          paymentMethod: {
-            type: "bank",
-            accountNumber: tutor?.accountNumber || "N/A",
-          },
-          transactionDate: tx.createdAt
-            ? new Date(tx.createdAt).toLocaleDateString()
-            : "N/A",
-          status: tx.status || "UNKNOWN",
-        })
-      )
+    (Array.isArray(transactions) ? transactions : [transactions]).map(
+      (tx) => ({
+        id: tx.id,
+        payment: {
+          name: tutor?.User?.fullName || "Unknown",
+          cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
+        },
+        parent: tx?.parent?.name || "N/A",
+        invoiceId: tx?.parentTransactions[0]?.invoiceId || "N/A",
+        child: {
+          name: "Student", // API doesn't provide child info, using placeholder
+          avatar: "/placeholder.svg?height=32&width=32",
+        },
+        pay: tx.amount || 0,
+        paymentMethod: {
+          type: "bank",
+          accountNumber: tutor?.accountNumber || "N/A",
+        },
+        transactionDate: tx.createdAt
+          ? new Date(tx.createdAt).toLocaleDateString()
+          : "N/A",
+        status: tx.status || "UNKNOWN",
+      })
+    )
     : [];
 
   // Transform API documents data for display
   const documentsData = documents
     ? [
-        {
-          id: 1,
-          name: "Resume",
-          type: documents.resume
-            ? documents.resume.toLowerCase().endsWith(".pdf")
-              ? "PDF"
-              : "Image"
-            : "N/A",
-          url: `${config.tutorDocumentUrl}${documents.resume}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.resume ? "Available" : "Missing",
-        },
-        {
-          id: 2,
-          name: "ID Front",
-          type: documents.idFront
-            ? documents.idFront.toLowerCase().endsWith(".pdf")
-              ? "PDF"
-              : "Image"
-            : "N/A",
-          url: `${config.tutorDocumentUrl}${documents.idFront}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.idFront ? "Available" : "Missing",
-        },
-        {
-          id: 3,
-          name: "ID Back",
-          type: documents.idBack
-            ? documents.idBack.toLowerCase().endsWith(".pdf")
-              ? "PDF"
-              : "Image"
-            : "N/A",
-          url: `${config.tutorDocumentUrl}${documents.idBack}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.idBack ? "Available" : "Missing",
-        },
-      ].filter((doc) => doc.url)
+      {
+        id: 1,
+        name: "Resume",
+        type: documents.resume
+          ? documents.resume.toLowerCase().endsWith(".pdf")
+            ? "PDF"
+            : "Image"
+          : "N/A",
+        url: `${config.tutorDocumentUrl}${documents.resume}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.resume ? "Available" : "Missing",
+      },
+      {
+        id: 2,
+        name: "ID Front",
+        type: documents.idFront
+          ? documents.idFront.toLowerCase().endsWith(".pdf")
+            ? "PDF"
+            : "Image"
+          : "N/A",
+        url: `${config.tutorDocumentUrl}${documents.idFront}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.idFront ? "Available" : "Missing",
+      },
+      {
+        id: 3,
+        name: "ID Back",
+        type: documents.idBack
+          ? documents.idBack.toLowerCase().endsWith(".pdf")
+            ? "PDF"
+            : "Image"
+          : "N/A",
+        url: `${config.tutorDocumentUrl}${documents.idBack}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.idBack ? "Available" : "Missing",
+      },
+    ].filter((doc) => doc.url)
     : [];
 
   const childrenData = [
@@ -677,26 +679,26 @@ const TutorsProfile = () => {
                               row.status === "COMPLETED"
                                 ? "#EEFBF4"
                                 : row.status === "IN_REVIEW"
-                                ? "#FFF4E6"
-                                : row.status === "FAILED"
-                                ? "#FFEBEE"
-                                : "#F5F5F5",
+                                  ? "#FFF4E6"
+                                  : row.status === "FAILED"
+                                    ? "#FFEBEE"
+                                    : "#F5F5F5",
                             border:
                               row.status === "COMPLETED"
                                 ? "1px solid #B2EECC"
                                 : row.status === "IN_REVIEW"
-                                ? "1px solid #FFD54F"
-                                : row.status === "FAILED"
-                                ? "1px solid #FFCDD2"
-                                : "1px solid #E0E0E0",
+                                  ? "1px solid #FFD54F"
+                                  : row.status === "FAILED"
+                                    ? "1px solid #FFCDD2"
+                                    : "1px solid #E0E0E0",
                             color:
                               row.status === "COMPLETED"
                                 ? "#17663A"
                                 : row.status === "IN_REVIEW"
-                                ? "#E65100"
-                                : row.status === "FAILED"
-                                ? "#C62828"
-                                : "#424242",
+                                  ? "#E65100"
+                                  : row.status === "FAILED"
+                                    ? "#C62828"
+                                    : "#424242",
                             fontWeight: 400,
                             fontSize: "12px",
                           }}
@@ -1493,21 +1495,21 @@ const TutorsProfile = () => {
                           {tutor?.User?.firstName && tutor?.User?.lastName
                             ? `${tutor.User.firstName} ${tutor.User.lastName}`
                             : tutor?.User?.firstName ||
-                              tutor?.User?.lastName ||
-                              "N/A"}
+                            tutor?.User?.lastName ||
+                            "N/A"}
                         </h5>
                         <Typography variant="body2" sx={{ color: "#666" }}>
                           Email: {tutor?.User?.email || "No email"}
                         </Typography>
                         {tutor?.User?.phone && (
                           <Typography variant="body2" sx={{ color: "#666" }}>
-                            Contact: {tutor?.User?.phone}
+                            Contact: +{tutor?.User?.phone}
                           </Typography>
                         )}
                         {tutor?.subjects && (
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", mt: 0.5 }}
+                            sx={{ color: "#666", mt: 0.5, textTransform:'capitalize' }}
                           >
                             Subjects: {tutor.subjects.join(", ")}
                           </Typography>
@@ -1701,6 +1703,7 @@ const TutorsProfile = () => {
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
                             cursor: "default",
+                            textTransform:'capitalize'
                           },
                         }}
                       />
@@ -1802,7 +1805,7 @@ const TutorsProfile = () => {
                 {/* Search and Filter Row */}
                 <div className="row align-items-center mb-3">
                   <div className="col-md-6">
-                    <TextField
+                    {/* <TextField
                       placeholder="Search by Name"
                       variant="outlined"
                       size="small"
@@ -1816,6 +1819,37 @@ const TutorsProfile = () => {
                         ),
                       }}
                       style={{ width: "230px" }}
+                    /> */}
+                    <TextField
+                      size="small"
+                      placeholder="Search by name"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon
+                              style={{ color: "#666", fontSize: "20px" }}
+                            />
+                          </InputAdornment>
+                        ),
+                        endAdornment: searchValue && (
+                          <InputAdornment position="end">
+                            <IconButton
+                              size="small"
+                              onClick={() => setSearchValue("")}
+                            >
+                              <CloseIcon style={{ fontSize: "18px" }} />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                        style: {
+                          backgroundColor: "white",
+                          borderRadius: "25px",
+                          fontSize: "14px",
+                        },
+                      }}
+                      medium
                     />
                   </div>
                   <div className="col-md-6 text-end">

@@ -385,7 +385,7 @@ const TutorDashboard = () => {
                 <div style={{ marginBottom: "12px" }}>
                   <input
                     type="date"
-                    // placeholder="MM/DD/YYYY"
+                    placeholder="dd/mm/yyyy"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
                     style={{
@@ -393,7 +393,8 @@ const TutorDashboard = () => {
                       fontSize: "14px",
                       borderRadius: "16px",
                       border: "1px solid #ccc",
-                      // width:'90%'
+                      outline: "none",
+                      color: "#000",
                     }}
                   />
                 </div>
@@ -494,7 +495,7 @@ const TutorDashboard = () => {
                             onClick={() => handleSelectRow(row.id)}
                             selected={isItemSelected}
                             style={{
-                              height: "40px",
+                              height: "30px",
                               backgroundColor: "transparent",
                             }}
                           >
