@@ -55,6 +55,9 @@ const ContractDashboard = () => {
     isResolvingDispute,
     resolveDisputeContract,
     resolveDisputeError,
+    isRefundingContract,
+    refundContractError,
+    refundContract,
   } = useAdminStore();
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
@@ -93,6 +96,24 @@ const ContractDashboard = () => {
     }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
     fetchDisputedContracts(query);
   }, [fetchDisputedContracts, page, rowsPerPage, searchValue, selectedStatus]);
+
+  const handleRefund = async () => {
+    if (!selectedContract) return;
+
+    if (window.confirm("Are you sure you want to refund this contract?")) {
+      const result = await refundContract(selectedContract.id);
+      if (result.success) {
+        alert("Refund processed successfully");
+        handleCloseDetailsModal();
+        // Refresh the list
+        const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
+        const query = `?page=${
+          page + 1
+        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        fetchDisputedContracts(query);
+      }
+    }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -907,6 +928,11 @@ const ContractDashboard = () => {
                 >
                   Dispute Information
                 </Typography>
+                {refundContractError && (
+                  <Alert severity="error" sx={{ mb: 2 }}>
+                    {refundContractError}
+                  </Alert>
+                )}
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="body2" color="textSecondary">
@@ -1044,6 +1070,14 @@ const ContractDashboard = () => {
                   </Grid>
                   <Grid item xs={6} sm={3}>
                     <Typography variant="body2" color="textSecondary">
+                      Cost Per Session
+                    </Typography>
+                    <Typography variant="body1">
+                      {selectedContract?.oneSessionCost}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={3}>
+                    <Typography variant="body2" color="textSecondary">
                       Subjects
                     </Typography>
                     <Typography variant="body1">
@@ -1073,7 +1107,25 @@ const ContractDashboard = () => {
             </Grid>
           )}
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
+        <DialogActions sx={{ p: 2, justifyContent: "space-between" }}>
+          <Box>
+            {(selectedContract?.status === "CANCELLED" ||
+              selectedContract?.status === "COMPLETED") && (
+              <Button
+                onClick={handleRefund}
+                variant="outlined"
+                color="error"
+                disabled={isRefundingContract}
+                startIcon={
+                  isRefundingContract ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : null
+                }
+              >
+                {isRefundingContract ? "Refunding..." : "Refund"}
+              </Button>
+            )}
+          </Box>
           <Button
             onClick={handleCloseDetailsModal}
             variant="contained"

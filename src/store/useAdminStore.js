@@ -13,6 +13,7 @@ import {
   approveUserOnboarding,
   getDisputedContracts,
   resolveDispute,
+  refundContract,
 } from "../api/admin";
 
 export const useAdminStore = create((set, get) => ({
@@ -59,6 +60,10 @@ export const useAdminStore = create((set, get) => ({
   userDataError: null,
   approveUserError: null,
   disputedContractsError: null,
+  isRefundingContract: false,
+  refundContractError: null,
+  isRefundingContract: false,
+  refundContractError: null,
 
   // Fetch platform statistics
   fetchStats: async (days = null) => {
@@ -540,6 +545,28 @@ export const useAdminStore = create((set, get) => ({
         isResolvingDispute: false,
       });
       throw error;
+    }
+  },
+
+  isRefundingContract: false,
+  refundContractError: null,
+  refundContract: async (contractId) => {
+    set({ isRefundingContract: true, refundContractError: null });
+    try {
+      const response = await refundContract(contractId);
+      set({ isRefundingContract: false });
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error("Refund contract error:", error);
+      let errorMessage = "Failed to refund contract";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      set({
+        refundContractError: errorMessage,
+        isRefundingContract: false,
+      });
+      return { success: false, error: errorMessage };
     }
   },
 

@@ -130,3 +130,12 @@ export const resolveDispute = async (contractId, data) => {
   });
   return response;
 };
+
+export const refundContract = async (id) => {
+  const data = await invoke({
+    url: `/admin/contracts/refund`,
+    method: "POST",
+    data: { contractId: id },
+  });
+  return data;
+};
