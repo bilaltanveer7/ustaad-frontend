@@ -35,6 +35,7 @@ import {
   CalendarToday as CalendarTodayIcon,
   ArrowUpward as ArrowUpwardIcon,
   ArrowDownward as ArrowDownwardIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 import { useParentStore } from "../store/useParentStore";
 import DocumentModal from "../components/DocumentModal";
@@ -54,6 +55,7 @@ const ParentsProfile = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   // Form state for editable fields - will be populated from API
   const [profileData, setProfileData] = useState({
@@ -319,13 +321,12 @@ const ParentsProfile = () => {
   const childrenData = children.map((child) => {
     const subscriptionSessionInfo = child.subscriptions?.length
       ? child.subscriptions
-          .map(
-            (sub) =>
-              `${sub.Offer?.sessions || 0} / ${
-                sub.tutorSessionsDetailCount || 0
-              }`
-          )
-          .join(", ")
+        .map(
+          (sub) =>
+            `${sub.Offer?.sessions || 0} / ${sub.tutorSessionsDetailCount || 0
+            }`
+        )
+        .join(", ")
       : null;
 
     return {
@@ -337,10 +338,10 @@ const ParentsProfile = () => {
       curriculum: child.curriculum || "N/A",
       subjects: child.subscriptions?.length
         ? [
-            ...new Set(
-              child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
-            ),
-          ].join(", ") || "N/A"
+          ...new Set(
+            child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
+          ),
+        ].join(", ") || "N/A"
         : child.subjects?.join(", ") || "N/A",
       tutorHired:
         subscriptionSessionInfo ||
@@ -828,7 +829,7 @@ const ParentsProfile = () => {
                       {getSortIcon("note")}
                     </Box>
                   </TableCell>
-                  <TableCell onClick={() => handleSort("name")}>
+                  {/* <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
@@ -842,7 +843,7 @@ const ParentsProfile = () => {
                       Tutor Name
                       {getSortIcon("fromTutor")}
                     </Box>
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
@@ -885,7 +886,22 @@ const ParentsProfile = () => {
                       }}
                     >
                       Session Number
-                      {/* {getSortIcon("date")} */}
+                      {getSortIcon("session-number")}
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        color: "#FFFFFF",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Notes
+                      {getSortIcon("notes")}
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -1320,7 +1336,7 @@ const ParentsProfile = () => {
                           </Typography>
                           {parent?.User?.phone && (
                             <Typography variant="body2" sx={{ color: "#666" }}>
-                              Contact: {parent?.User?.phone}
+                              Contact: +{parent?.User?.phone}
                             </Typography>
                           )}
                         </div>
@@ -1609,7 +1625,7 @@ const ParentsProfile = () => {
                 {/* Search and Filter Row */}
                 <div className="row align-items-center mb-3">
                   <div className="col-md-6">
-                    <TextField
+                    {/* <TextField
                       placeholder="Search by Name"
                       variant="outlined"
                       size="small"
@@ -1623,6 +1639,37 @@ const ParentsProfile = () => {
                         ),
                       }}
                       style={{ width: "230px" }}
+                    /> */}
+                    <TextField
+                      size="small"
+                      placeholder="Search by name"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon
+                              style={{ color: "#666", fontSize: "20px" }}
+                            />
+                          </InputAdornment>
+                        ),
+                        endAdornment: searchValue && (
+                          <InputAdornment position="end">
+                            <IconButton
+                              size="small"
+                              onClick={() => setSearchValue("")}
+                            >
+                              <CloseIcon style={{ fontSize: "18px" }} />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                        style: {
+                          backgroundColor: "white",
+                          borderRadius: "25px",
+                          fontSize: "14px",
+                        },
+                      }}
+                      medium
                     />
                   </div>
                   <div className="col-md-6 text-end">

@@ -7,6 +7,8 @@ import config from "../utils/config";
 import profileImg from "../assets/profile.PNG";
 import { MdOutlineSubject } from "react-icons/md";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { SiLinuxprofessionalinstitute } from "react-icons/si";
+import { SiAltiumdesigner } from "react-icons/si";
 import {
   Button,
   Card,
@@ -394,7 +396,7 @@ const UserDetail = () => {
                   color: getRoleColor(user?.role).color,
                   fontWeight: 500,
                   fontSize: "14px",
-                  ml: 4,
+                  ml: 1,
                 }}
               />
               <br />
@@ -451,7 +453,7 @@ const UserDetail = () => {
                   primary="Phone"
                   secondary={
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {user?.phone || "N/A"}
+                      +{user?.phone || "N/A"}
                       {user?.isPhoneVerified ? (
                         <CheckCircleIcon
                           sx={{ color: "#38BC5C", fontSize: 16 }}
@@ -490,9 +492,8 @@ const UserDetail = () => {
         size="medium"
         sx={{
           backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
-          border: `1px solid ${
-            getStatusColor(user?.isOnBoard || "pending").border
-          }`,
+          border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border
+            }`,
           color: getStatusColor(user?.isOnBoard || "pending").color,
           fontWeight: 500,
           fontSize: "14px",
@@ -614,7 +615,7 @@ const UserDetail = () => {
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <SchoolIcon />
+                  <SchoolIcon sx={{ color: '#1E9CBC' }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Education"
@@ -627,10 +628,10 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <WorkIcon />
+                  <WorkIcon sx={{ color: '#1E9CBC' }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Experience"
+                  primary="Work Experience"
                   secondary={
                     totalExperience > 0
                       ? `${Math.round(totalExperience)} years`
@@ -640,18 +641,33 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <BankIcon />
+                  <SiLinuxprofessionalinstitute style={{ color: '#1E9CBC', height:20, width:20 }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Bank Details"
-                  secondary={`${tutor.bankName || "N/A"} - ${
-                    tutor.accountNumber || "N/A"
-                  }`}
+                  primary="Institute"
+                  secondary={
+                    totalExperience > 0
+                      ? `${Math.round(totalExperience)} years`
+                      : "N/A"
+                  }
                 />
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <SchoolIcon />
+                  <SiAltiumdesigner style={{ color: '#1E9CBC', height:20, width:20 }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Designation"
+                  secondary={
+                    totalExperience > 0
+                      ? `${Math.round(totalExperience)} years`
+                      : "N/A"
+                  }
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <SchoolIcon sx={{ color: '#1E9CBC' }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Grade"
@@ -663,9 +679,9 @@ const UserDetail = () => {
           <Grid item xs={12} md={6}>
             <List>
               {/* Work Experience */}
-              <ListItem alignItems="flex-start">
+              {/* <ListItem alignItems="flex-start">
                 <ListItemIcon>
-                  <PersonIcon />
+                  <PersonIcon sx={{color:'#1E9CBC'}} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Work Experience"
@@ -677,23 +693,33 @@ const UserDetail = () => {
                       : "N/A"
                   }
                 />
-              </ListItem>
+              </ListItem> */}
 
               {/* Profile Created */}
               <ListItem>
                 <ListItemIcon>
-                  <CalendarIcon />
+                  <CalendarIcon sx={{ color: '#1E9CBC' }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Profile Created"
                   secondary={formatDate(tutor.createdAt)}
                 />
               </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <BankIcon sx={{ color: '#1E9CBC' }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Bank Details"
+                  secondary={`${tutor.bankName || "N/A"} - ${tutor.accountNumber || "N/A"
+                    }`}
+                />
+              </ListItem>
 
               {/* Subjects */}
               <ListItem alignItems="flex-start">
                 <ListItemIcon>
-                  <MdOutlineSubject size={22} />
+                  <MdOutlineSubject size={22} style={{ color: '#1E9CBC' }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Subjects"
@@ -721,7 +747,7 @@ const UserDetail = () => {
               {/* About */}
               <ListItem alignItems="flex-start">
                 <ListItemIcon>
-                  <InfoOutlinedIcon />
+                  <InfoOutlinedIcon sx={{ color: '#1E9CBC' }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="About"
@@ -747,7 +773,7 @@ const UserDetail = () => {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Parent Information
           </Typography>
-          <Grid container spacing={3}>
+          <Grid container spacing={1} sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Grid item xs={12} md={6}>
               <List>
                 <ListItem>
@@ -869,11 +895,10 @@ const UserDetail = () => {
                             </Typography>
                           </Box>
                           <Chip
-                            label={`${formatDate(edu.startDate)} - ${
-                              edu.endDate === "Present"
-                                ? "Present"
-                                : formatDate(edu.endDate)
-                            }`}
+                            label={`${formatDate(edu.startDate)} - ${edu.endDate === "Present"
+                              ? "Present"
+                              : formatDate(edu.endDate)
+                              }`}
                             size="small"
                             sx={{
                               backgroundColor: "#EEF3FF",
@@ -945,11 +970,10 @@ const UserDetail = () => {
                             </Typography>
                           </Box>
                           <Chip
-                            label={`${formatDate(exp.startDate)} - ${
-                              exp.endDate === "Present"
-                                ? "Present"
-                                : formatDate(exp.endDate)
-                            }`}
+                            label={`${formatDate(exp.startDate)} - ${exp.endDate === "Present"
+                              ? "Present"
+                              : formatDate(exp.endDate)
+                              }`}
                             size="small"
                             sx={{
                               backgroundColor: "#F3E5F5",
@@ -994,7 +1018,6 @@ const UserDetail = () => {
           </Box>
         ) : (
           <TableContainer
-            component={Paper}
             sx={{ border: "1px solid #E0E3EB" }}
           >
             <Table>
@@ -1071,8 +1094,8 @@ const UserDetail = () => {
                         label={doc.category}
                         size="small"
                         sx={{
-                          backgroundColor: "#F0F2F5",
-                          color: "#7D879C",
+                          border: "1px solid #F0F2F5",
+                          color: "#000",
                           fontSize: "12px",
                         }}
                       />
@@ -1088,7 +1111,7 @@ const UserDetail = () => {
                         lineHeight: "30px",
                       }}
                     >
-                      <Typography>{doc.type}</Typography>
+                      {doc.type}
                     </TableCell>
                     <TableCell
                       sx={{
@@ -1101,7 +1124,7 @@ const UserDetail = () => {
                         lineHeight: "30px",
                       }}
                     >
-                      <Typography>{formatDate(doc.uploadedAt)}</Typography>
+                      {formatDate(doc.uploadedAt)}
                     </TableCell>
                     <TableCell
                       sx={{
@@ -1239,8 +1262,8 @@ const UserDetail = () => {
                 {user?.isOnBoard === "approved"
                   ? "Approved"
                   : isApprovingUser
-                  ? "Approving..."
-                  : "Approve User"}
+                    ? "Approving..."
+                    : "Approve User"}
               </Button>
             </Box>
           </Box>
