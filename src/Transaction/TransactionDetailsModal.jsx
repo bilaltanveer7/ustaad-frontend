@@ -232,7 +232,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
             </Alert>
           </Box>
         ) : selectedPaymentRequest ? (
-          <Box sx={{ p: 3 }}>
+          <Box sx={{ p: 3, width:'100%' }}>
             {/* Status Update Messages */}
             {updateSuccess && (
               <Alert severity="success" sx={{ mb: 2 }}>
@@ -246,121 +246,226 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
             )}
 
             {/* Transaction Overview Card */}
-            <Card sx={{ mb: 3, border: "1px solid #E0E3EB" }}>
-              <CardContent>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 2,
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: "#101219" }}
-                  >
-                    Payment Request:{" "}
-                    {selectedPaymentRequest.paymentRequest.id.slice(0, 4)}
-                  </Typography>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    {/* {getStatusIcon(selectedPaymentRequest.status)} */}
-                    <Chip
-                      label={selectedPaymentRequest.paymentRequest.status}
-                      size="medium"
+            <Grid container spacing={2} sx={{mb:2, width:'100%'}}>
+              <Grid item xs={12} md={9}>
+                <Card sx={{ border: "1px solid #E0E3EB", height: "100%", width:'100%' }}>
+                  <CardContent>
+                    <Box
                       sx={{
-                        backgroundColor: getStatusColor(
-                          selectedPaymentRequest.paymentRequest.status
-                        ).bg,
-                        color: getStatusColor(
-                          selectedPaymentRequest.paymentRequest.status
-                        ).color,
-                        border: `1px solid ${
-                          getStatusColor(
-                            selectedPaymentRequest.paymentRequest.status
-                          ).border
-                        }`,
-                        fontWeight: 500,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 2,
                       }}
-                    />
-                  </Box>
-                </Box>
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600, color: "#101219" }}
+                      >
+                        Payment Request:{" "}
+                        {selectedPaymentRequest.paymentRequest.id.slice(0, 4)}
+                      </Typography>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        {/* {getStatusIcon(selectedPaymentRequest.status)} */}
+                        <Chip
+                          label={selectedPaymentRequest.paymentRequest.status}
+                          size="medium"
+                          sx={{
+                            backgroundColor: getStatusColor(
+                              selectedPaymentRequest.paymentRequest.status
+                            ).bg,
+                            color: getStatusColor(
+                              selectedPaymentRequest.paymentRequest.status
+                            ).color,
+                            border: `1px solid ${getStatusColor(
+                              selectedPaymentRequest.paymentRequest.status
+                            ).border
+                              }`,
+                            fontWeight: 500,
+                          }}
+                        />
+                      </Box>
+                    </Box>
 
-                <Grid container spacing={6}>
-                  <Grid item xs={12} md={6}>
+                    <Grid container spacing={6}>
+                      <Grid item xs={12} md={6}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            mb: 2,
+                          }}
+                        >
+                          <AccountBalanceIcon
+                            sx={{ color: "#1E9CBC", fontSize: "20px" }}
+                          />
+                          <Typography
+                            // variant="body2"
+                            sx={{
+                              color: "#666",
+                              fontWeight: 600,
+                              fontSize: "18px",
+                            }}
+                          >
+                            Amount
+                          </Typography>
+                        </Box>
+                        <Typography
+                          // variant="h4"
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: "16px",
+                            color: "#101219",
+                          }}
+                        >
+                          {formatAmount(
+                            selectedPaymentRequest.paymentRequest.amount
+                          )}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            mb: 2,
+                          }}
+                        >
+                          <CalendarIcon
+                            sx={{ color: "#1E9CBC", fontSize: "20px" }}
+                          />
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: "#666",
+                              fontWeight: 600,
+                              fontSize: "18px",
+                            }}
+                          >
+                            Request Date
+                          </Typography>
+                        </Box>
+                        <Typography
+                          sx={{
+                            color: "#101219",
+                            fontWeight: 600,
+                            fontSize: "16px",
+                          }}
+                        >
+                          {formatDate(
+                            selectedPaymentRequest.paymentRequest.createdAt
+                          )}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <Card sx={{ border: "1px solid #E0E3EB", height: "100%", width:'100%' }}>
+                  <CardContent>
                     <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                        mb: 2,
-                      }}
+                      sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
                     >
-                      <AccountBalanceIcon
-                        sx={{ color: "#1E9CBC", fontSize: "20px" }}
-                      />
+                      <UpdateIcon sx={{ color: "#1E9CBC" }} />
                       <Typography
-                        // variant="body2"
-                        sx={{
-                          color: "#666",
-                          fontWeight: 600,
-                          fontSize: "18px",
-                        }}
+                        variant="h6"
+                        sx={{ fontWeight: 600, color: "#101219" }}
                       >
-                        Amount
+                        Update Status
                       </Typography>
                     </Box>
-                    <Typography
-                      // variant="h4"
-                      sx={{
-                        fontWeight: 600,
-                        fontSize: "16px",
-                        color: "#101219",
-                      }}
-                    >
-                      {formatAmount(
-                        selectedPaymentRequest.paymentRequest.amount
-                      )}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                        mb: 2,
-                      }}
-                    >
-                      <CalendarIcon
-                        sx={{ color: "#1E9CBC", fontSize: "20px" }}
-                      />
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: "#666",
-                          fontWeight: 600,
-                          fontSize: "18px",
-                        }}
-                      >
-                        Request Date
-                      </Typography>
-                    </Box>
-                    <Typography
-                      sx={{
-                        color: "#101219",
-                        fontWeight: 600,
-                        fontSize: "16px",
-                      }}
-                    >
-                      {formatDate(
-                        selectedPaymentRequest.paymentRequest.createdAt
-                      )}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+                    <Divider sx={{ mb: 3 }} />
+
+                    <Grid container spacing={3} alignItems="center">
+                      <Grid item xs={12} md={12}>
+                        <FormControl fullWidth>
+                          {/* <InputLabel id="status-label">Status</InputLabel> */}
+                          <Select
+                            value={localStatus}
+                            // label="Status"
+                            displayEmpty
+                            renderValue={(selected) =>
+                              selected ? (
+                                selected
+                              ) : (
+                                <span style={{ color: "#9e9e9e" }}>
+                                  Select Status...
+                                </span>
+                              )
+                            }
+                            onChange={(e) => setLocalStatus(e.target.value)}
+                            disabled={isUpdating || isUpdatingPaymentRequest}
+                            sx={{
+                              height: "37px",
+                              "& .MuiOutlinedInput-root": {
+                                height: "37px",
+                              },
+                              "& .MuiSelect-select": {
+                                display: "flex",
+                                alignItems: "center",
+                                height: "37px",
+                                paddingTop: "6px",
+                                paddingBottom: "6px",
+                              },
+                            }}
+                          >
+                            {statusOptions.map((option) => (
+                              <MenuItem key={option.value} value={option.value}>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    // gap: 1,
+                                  }}
+                                >
+                                  {getStatusIcon(option.value)}
+                                  {option.label}
+                                </Box>
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} md={4}>
+                        <Button
+                          variant="contained"
+                          onClick={handleStatusUpdate}
+                          disabled={
+                            isUpdating ||
+                            isUpdatingPaymentRequest ||
+                            !localStatus ||
+                            localStatus === selectedPaymentRequest.status
+                          }
+                          sx={{
+                            backgroundColor: "#1E9CBC",
+                            "&:hover": {
+                              backgroundColor: "#1a8aa8",
+                            },
+                            textTransform: "none",
+                            px: 3,
+                          }}
+                        >
+                          {isUpdating || isUpdatingPaymentRequest ? (
+                            <>
+                              <CircularProgress
+                                size={20}
+                                sx={{ mr: 1, color: "white" }}
+                              />
+                              Updating...
+                            </>
+                          ) : (
+                            "Update Status"
+                          )}
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
 
             {/* Details Grid */}
             <Grid container spacing={3}>
@@ -549,107 +654,6 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
               </Card>
             </Grid>
 
-            {/* Status Update Section */}
-            <Card sx={{ mt: 3, border: "1px solid #E0E3EB" }}>
-              <CardContent>
-                <Box
-                  sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
-                >
-                  <UpdateIcon sx={{ color: "#1E9CBC" }} />
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: "#101219" }}
-                  >
-                    Update Status
-                  </Typography>
-                </Box>
-                <Divider sx={{ mb: 3 }} />
-
-                <Grid container spacing={3} alignItems="center">
-                  <Grid item xs={12} md={12}>
-                    <FormControl fullWidth>
-                      {/* <InputLabel id="status-label">Status</InputLabel> */}
-                      <Select
-                        value={localStatus}
-                        // label="Status"
-                        displayEmpty
-                        renderValue={(selected) =>
-                          selected ? (
-                            selected
-                          ) : (
-                            <span style={{ color: "#9e9e9e" }}>
-                              Select Status...
-                            </span>
-                          )
-                        }
-                        onChange={(e) => setLocalStatus(e.target.value)}
-                        disabled={isUpdating || isUpdatingPaymentRequest}
-                        sx={{
-                          height: "37px",
-                          "& .MuiOutlinedInput-root": {
-                            height: "37px",
-                          },
-                          "& .MuiSelect-select": {
-                            display: "flex",
-                            alignItems: "center",
-                            height: "37px",
-                            paddingTop: "6px",
-                            paddingBottom: "6px",
-                          },
-                        }}
-                      >
-                        {statusOptions.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                // gap: 1,
-                              }}
-                            >
-                              {getStatusIcon(option.value)}
-                              {option.label}
-                            </Box>
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <Button
-                      variant="contained"
-                      onClick={handleStatusUpdate}
-                      disabled={
-                        isUpdating ||
-                        isUpdatingPaymentRequest ||
-                        !localStatus ||
-                        localStatus === selectedPaymentRequest.status
-                      }
-                      sx={{
-                        backgroundColor: "#1E9CBC",
-                        "&:hover": {
-                          backgroundColor: "#1a8aa8",
-                        },
-                        textTransform: "none",
-                        px: 3,
-                      }}
-                    >
-                      {isUpdating || isUpdatingPaymentRequest ? (
-                        <>
-                          <CircularProgress
-                            size={20}
-                            sx={{ mr: 1, color: "white" }}
-                          />
-                          Updating...
-                        </>
-                      ) : (
-                        "Update Status"
-                      )}
-                    </Button>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
           </Box>
         ) : (
           <Box sx={{ p: 3, textAlign: "center" }}>

@@ -3,6 +3,7 @@ import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useAdminStore } from "../store/useAdminStore";
 import TransactionDetailsModal from "./TransactionDetailsModal";
+import profileImg from "../assets/profile.PNG"
 import {
   CircularProgress,
   Alert,
@@ -456,8 +457,12 @@ const TransactionDashboard = () => {
                                 }}
                               >
                                 <div className="d-flex align-items-center gap-2">
-                                  <Avatar
+                                  {/* <Avatar
                                     src="/placeholder.svg"
+                                    sx={{ width: 24, height: 24 }}
+                                  /> */}
+                                  <Avatar
+                                    src={profileImg || "/placeholder.svg"}
                                     sx={{ width: 24, height: 24 }}
                                   />
                                   <span>{row.tutorName}</span>
@@ -534,15 +539,16 @@ const TransactionDashboard = () => {
                                   {row.status === "PAID" && (
                                     <div
                                       style={{
-                                        backgroundColor: "#EEFCF3",
+                                        // backgroundColor: "#EEFCF3",
                                         color: "#38BC5C",
+                                        // border:'1px solid #38BC5C',
                                         display: "flex",
                                         alignItems: "center",
-                                        padding: "0px 8px",
+                                        padding: "0px 4px",
                                         borderRadius: "6px",
                                         fontWeight: 500,
                                         fontSize: "12px",
-                                        textTransform: "capitalize",
+                                        // textTransform: "capitalize",
                                       }}
                                     >
                                       <CheckCircleIcon
@@ -557,11 +563,12 @@ const TransactionDashboard = () => {
                                   {row.status === "REJECTED" && (
                                     <div
                                       style={{
-                                        backgroundColor: "#FEECEC",
+                                        // backgroundColor: "#FEECEC",
                                         color: "#F31616",
+                                        // border:'1px solid #F31616',
                                         display: "flex",
                                         alignItems: "center",
-                                        padding: "4px 8px",
+                                        padding: "0px 4px",
                                         borderRadius: "6px",
                                         fontWeight: 500,
                                         fontSize: "14px",
@@ -579,11 +586,12 @@ const TransactionDashboard = () => {
                                   {row.status === "PENDING" && (
                                     <div
                                       style={{
-                                        backgroundColor: "#F0F2F5",
+                                        // backgroundColor: "#F0F2F5",
                                         color: "#7D879C",
+                                        // border:'1px solid #7D879C',
                                         display: "flex",
                                         alignItems: "center",
-                                        padding: "4px 8px",
+                                        padding: "0px 4px",
                                         borderRadius: "6px",
                                         fontWeight: 500,
                                         fontSize: "14px",
@@ -600,28 +608,29 @@ const TransactionDashboard = () => {
                                   )}
                                   {(row.status === "IN_REVIEW" ||
                                     row.status === "REQUESTED") && (
-                                    <div
-                                      style={{
-                                        backgroundColor: "#EEF3FF",
-                                        color: "#235DFF",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        padding: "4px 8px",
-                                        borderRadius: "6px",
-                                        fontWeight: 500,
-                                        fontSize: "14px",
-                                        // textTransform:''
-                                      }}
-                                    >
-                                      <InfoIcon
+                                      <div
                                         style={{
-                                          fontSize: "18px",
-                                          marginRight: 4,
+                                          // backgroundColor: "#EEF3FF",
+                                          color: "#235DFF",
+                                          // border:'1px solid #235DFF',
+                                          display: "flex",
+                                          alignItems: "center",
+                                          padding: "0px 4px",
+                                          borderRadius: "6px",
+                                          fontWeight: 500,
+                                          fontSize: "14px",
+                                          // textTransform:''
                                         }}
-                                      />
-                                      {row.status}
-                                    </div>
-                                  )}
+                                      >
+                                        <InfoIcon
+                                          style={{
+                                            fontSize: "18px",
+                                            marginRight: 4,
+                                          }}
+                                        />
+                                        {row.status}
+                                      </div>
+                                    )}
                                 </div>
                               </TableCell>
 
