@@ -245,8 +245,8 @@ const AdminsDashboard = () => {
               </Button>
             </div>
 
-              {/* Stats Card */}
-              {/* <div
+            {/* Stats Card */}
+            {/* <div
                 style={{
                   backgroundColor: "#EEFBFD",
                   borderRadius: "8px",
@@ -300,7 +300,7 @@ const AdminsDashboard = () => {
             {/* Search and Filter Row */}
             <div className="row align-items-center mb-3">
               <div className="col-md-6">
-                <TextField
+                {/* <TextField
                   placeholder="Search by name, email, or phone"
                   variant="outlined"
                   size="small"
@@ -314,7 +314,31 @@ const AdminsDashboard = () => {
                     ),
                   }}
                   style={{ width: "300px" }}
+                /> */}
+                <TextField
+                  placeholder="Search by name, email, or phone"
+                  variant="outlined"
+                  size="small"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  sx={{
+                    width: "300px",
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "16px",
+                      "& fieldset": {
+                        borderRadius: "16px",
+                      },
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon sx={{ color: "#8A8AA3" }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
+
               </div>
               {/* <div className="col-md-6 text-end">
                   <FormControl size="small" style={{ minWidth: "80px" }}>
