@@ -74,6 +74,7 @@ const ContractDashboard = () => {
   // Pagination State
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedDate, setSelectedDate] = useState("");
 
   const open = Boolean(anchorEl);
 
@@ -91,11 +92,10 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${
-      page + 1
-    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+    const query = `?page=${page + 1
+      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
     fetchDisputedContracts(query);
-  }, [fetchDisputedContracts, page, rowsPerPage, searchValue, selectedStatus]);
+  }, [fetchDisputedContracts, page, rowsPerPage, searchValue, selectedStatus, selectedDate]);
 
   const handleRefund = async () => {
     if (!selectedContract) return;
@@ -107,9 +107,8 @@ const ContractDashboard = () => {
         handleCloseDetailsModal();
         // Refresh the list
         const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-        const query = `?page=${
-          page + 1
-        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        const query = `?page=${page + 1
+          }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
         fetchDisputedContracts(query);
       }
     }
@@ -316,7 +315,7 @@ const ContractDashboard = () => {
               backgroundColor: "#F9F9FB",
             }}
           >
-            <div className="col-12">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
                 {statusOptions.map((status) => (
                   <Chip
@@ -341,224 +340,137 @@ const ContractDashboard = () => {
                   />
                 ))}
               </Box>
-              <TableContainer style={{ marginTop: "1rem" }}>
-                <Table style={{ boxShadow: "none", overflowX: "auto" }}>
-                  <TableHead>
-                    <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
-                      {[
-                        { label: "Parent Name", key: "parent_name" },
-                        { label: "Child Name", key: "child_name" },
-                        { label: "Tutor Name", key: "" },
-                        { label: "Budget", key: "budget" },
-                        { label: "Start Date", key: "start_date" },
-                        { label: "Total Sessions", key: "total_sessions" },
-                        {
-                          label: "Completed Sessions",
-                          key: "completed_sessions",
-                        },
-                        { label: "Subjects", key: "sunjects" },
-                        { label: "Description", key: "description" },
-                        { label: "Status", key: "status" },
-                        { label: "Action", key: "action" },
-                      ].map(({ label, key }) => (
-                        <TableCell
-                          key={key}
+              <div>
+                <input
+                  type="date"
+                  // placeholder="MM/DD/YYYY"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  style={{
+                    padding: "8px 12px",
+                    fontSize: "14px",
+                    borderRadius: "16px",
+                    border: "1px solid #ccc",
+                    backgroundColor: 'transparent'
+                    // width:'90%'
+                  }}
+                />
+              </div>
+            </div>
+            <TableContainer style={{ marginTop: "1rem" }}>
+              <Table style={{ boxShadow: "none", overflowX: "auto" }}>
+                <TableHead>
+                  <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
+                    {[
+                      { label: "Parent Name", key: "parent_name" },
+                      { label: "Child Name", key: "child_name" },
+                      { label: "Tutor Name", key: "" },
+                      { label: "Budget", key: "budget" },
+                      { label: "Start Date", key: "start_date" },
+                      { label: "Total Sessions", key: "total_sessions" },
+                      {
+                        label: "Completed Sessions",
+                        key: "completed_sessions",
+                      },
+                      { label: "Subjects", key: "sunjects" },
+                      { label: "Description", key: "description" },
+                      { label: "Status", key: "status" },
+                      { label: "Action", key: "action" },
+                    ].map(({ label, key }) => (
+                      <TableCell
+                        key={key}
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: 600,
+                          color: "#FFFFFF",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {label}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {isLoadingDisputedContracts ? (
+                    <TableRow>
+                      <TableCell colSpan={10} align="center">
+                        <CircularProgress size={30} />
+                      </TableCell>
+                    </TableRow>
+                  ) : disputedContractsError ? (
+                    <TableRow>
+                      <TableCell colSpan={10} align="center">
+                        <Alert severity="error">
+                          {disputedContractsError}
+                        </Alert>
+                      </TableCell>
+                    </TableRow>
+                  ) : tableData.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={10} align="center">
+                        No disputed contracts found.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    tableData.map((row) => {
+                      return (
+                        <TableRow
+                          key={row.id}
+                          hover
+                          // onClick={() => handleViewDetails(row)}
                           sx={{
-                            fontSize: "16px",
-                            fontWeight: 600,
-                            color: "#FFFFFF",
-                            whiteSpace: "nowrap",
+                            cursor: "pointer",
+                            height: "40px",
+                            backgroundColor: "transparent",
                           }}
                         >
-                          {label}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {isLoadingDisputedContracts ? (
-                      <TableRow>
-                        <TableCell colSpan={10} align="center">
-                          <CircularProgress size={30} />
-                        </TableCell>
-                      </TableRow>
-                    ) : disputedContractsError ? (
-                      <TableRow>
-                        <TableCell colSpan={10} align="center">
-                          <Alert severity="error">
-                            {disputedContractsError}
-                          </Alert>
-                        </TableCell>
-                      </TableRow>
-                    ) : tableData.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={10} align="center">
-                          No disputed contracts found.
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      tableData.map((row) => {
-                        return (
-                          <TableRow
-                            key={row.id}
-                            hover
-                            // onClick={() => handleViewDetails(row)}
+                          <TableCell
                             sx={{
-                              cursor: "pointer",
+                              padding: "0 8px",
                               height: "40px",
-                              backgroundColor: "transparent",
+                              lineHeight: "40px",
+                              border: "1px solid #e0e0e0",
                             }}
                           >
-                            <TableCell
-                              sx={{
-                                padding: "0 8px",
-                                height: "40px",
-                                lineHeight: "40px",
-                                border: "1px solid #e0e0e0",
-                              }}
+                            <Tooltip
+                              title={
+                                row.parent?.firstName +
+                                " " +
+                                row.parent?.lastName
+                              }
+                              arrow
                             >
-                              <Tooltip
-                                title={
-                                  row.parent?.firstName +
-                                  " " +
-                                  row.parent?.lastName
-                                }
-                                arrow
+                              <div
+                                style={{
+                                  fontWeight: 600,
+                                  fontSize: "14px",
+                                  color: "#000",
+                                  // height: 48,
+                                  cursor: "pointer",
+                                  maxWidth: "120px",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
                               >
-                                <div
-                                  style={{
-                                    fontWeight: 600,
-                                    fontSize: "14px",
-                                    color: "#000",
-                                    // height: 48,
-                                    cursor: "pointer",
-                                    maxWidth: "120px",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {row.parent?.firstName} {row.parent?.lastName}
-                                </div>
-                              </Tooltip>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                border: "1px solid #e0e0e0",
-                                padding: "0 8px",
-                                height: "40px",
-                                lineHeight: "40px",
-                                // height: 48,
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center">
-                                  <Tooltip
-                                    title={row.Offer?.childName || ""}
-                                    arrow
-                                  >
-                                    <div
-                                      style={{
-                                        fontWeight: 400,
-                                        fontSize: "14px",
-                                        color: "#000",
-                                        cursor: "pointer",
-                                        maxWidth: "100px",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                      }}
-                                    >
-                                      {row.Offer?.childName}
-                                    </div>
-                                  </Tooltip>
-                                </div>
+                                {row.parent?.firstName} {row.parent?.lastName}
                               </div>
-                            </TableCell>
-                            <TableCell
-                              sx={{
-                                padding: "0 8px",
-                                height: "40px",
-                                lineHeight: "40px",
-                                border: "1px solid #e0e0e0",
-                              }}
-                            >
-                              <Tooltip
-                                title={
-                                  row.tutor?.firstName +
-                                  " " +
-                                  row.tutor?.lastName
-                                }
-                                arrow
-                              >
-                                <div
-                                  style={{
-                                    fontWeight: 600,
-                                    fontSize: "14px",
-                                    color: "#000",
-                                    // height: 48,
-                                    cursor: "pointer",
-                                    maxWidth: "120px",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {row.tutor?.firstName} {row.tutor?.lastName}
-                                </div>
-                              </Tooltip>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
-                                // height: 48,
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                <Tooltip title={row.amount} arrow>
-                                  <div
-                                    style={{
-                                      fontWeight: 400,
-                                      fontSize: "14px",
-                                      color: "#000",
-                                      cursor: "pointer",
-                                      maxWidth: "140px",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    {row.amount}
-                                  </div>
-                                </Tooltip>
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                padding: "0 8px",
-                                height: "40px",
-                                lineHeight: "40px",
-                                border: "1px solid #e0e0e0",
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell
+                            style={{
+                              border: "1px solid #e0e0e0",
+                              padding: "0 8px",
+                              height: "40px",
+                              lineHeight: "40px",
+                              // height: 48,
+                            }}
+                          >
+                            <div className="d-flex align-items-center justify-content-between">
+                              <div className="d-flex align-items-center">
                                 <Tooltip
-                                  title={
-                                    row.startDate
-                                      ? new Date(
-                                          row.startDate
-                                        ).toLocaleDateString()
-                                      : "N/A"
-                                  }
+                                  title={row.Offer?.childName || ""}
                                   arrow
                                 >
                                   <div
@@ -567,337 +479,442 @@ const ContractDashboard = () => {
                                       fontSize: "14px",
                                       color: "#000",
                                       cursor: "pointer",
-                                      maxWidth: "120px",
+                                      maxWidth: "100px",
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
                                     }}
                                   >
-                                    {new Date(
-                                      row.startDate
-                                    ).toLocaleDateString() || "N/A"}
+                                    {row.Offer?.childName}
                                   </div>
                                 </Tooltip>
                               </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                padding: "0 8px",
-                                height: "40px",
-                                lineHeight: "40px",
-                                // height: 48,
-                              }}
+                            </div>
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              padding: "0 8px",
+                              height: "40px",
+                              lineHeight: "40px",
+                              border: "1px solid #e0e0e0",
+                            }}
+                          >
+                            <Tooltip
+                              title={
+                                row.tutor?.firstName +
+                                " " +
+                                row.tutor?.lastName
+                              }
+                              arrow
                             >
-                              <div className="d-flex align-items-center justify-content-between">
-                                {row?.Offer?.sessions}
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                padding: "0 8px",
-                                height: "40px",
-                                lineHeight: "40px",
-                                // height: 48,
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                {row?.completedSessions}
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                padding: "0 8px",
-                                height: "40px",
-                                lineHeight: "40px",
-                                maxWidth: "220px",
-                              }}
-                            >
-                              <Tooltip
-                                title={row.Offer?.subject?.join(", ") || ""}
-                                arrow
-                                placement="top"
-                                componentsProps={{
-                                  tooltip: {
-                                    sx: {
-                                      fontSize: "13px",
-                                      maxWidth: "300px",
-                                      backgroundColor: "#333",
-                                      padding: "8px 12px",
-                                      lineHeight: 1.4,
-                                    },
-                                  },
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  {row.Offer?.subject?.join(", ") || "-"}
-                                </div>
-                              </Tooltip>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                padding: "0 8px",
-                                height: "40px",
-                                maxWidth: "220px",
-                              }}
-                            >
-                              <Tooltip
-                                title={row?.Offer?.description || ""}
-                                arrow
-                                placement="top"
-                                componentsProps={{
-                                  tooltip: {
-                                    sx: {
-                                      fontSize: "13px",
-                                      maxWidth: "300px",
-                                      backgroundColor: "#333",
-                                      padding: "8px 12px",
-                                      lineHeight: 1.4,
-                                    },
-                                  },
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  {row?.Offer?.description || "-"}
-                                </div>
-                              </Tooltip>
-                            </TableCell>
-
-                            <TableCell
-                              style={{
-                                fontSize: "14px",
-                                fontWeight: 600,
-                                height: "40px",
-                                textAlign: "center",
-                              }}
-                            >
-                              <span
+                              <div
                                 style={{
-                                  color: "#2e7d32",
-                                  border: "1px solid #2e7d32",
-                                  padding: "2px 8px",
+                                  fontWeight: 600,
+                                  fontSize: "14px",
+                                  color: "#000",
+                                  // height: 48,
+                                  cursor: "pointer",
+                                  maxWidth: "120px",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                 }}
                               >
-                                {row.status}
-                              </span>
-                            </TableCell>
-
-                            <TableCell
-                              style={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                padding: "0 24px",
-                                // height: "40px",
+                                {row.tutor?.firstName} {row.tutor?.lastName}
+                              </div>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell
+                            style={{
+                              fontSize: "14px",
+                              color: "#000",
+                              fontWeight: 400,
+                              border: "1px solid #e0e0e0",
+                              padding: "0 8px",
+                              height: "30px",
+                              lineHeight: "30px",
+                              // height: 48,
+                            }}
+                          >
+                            <div className="d-flex align-items-center justify-content-between">
+                              <Tooltip title={row.amount} arrow>
+                                <div
+                                  style={{
+                                    fontWeight: 400,
+                                    fontSize: "14px",
+                                    color: "#000",
+                                    cursor: "pointer",
+                                    maxWidth: "140px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {row.amount}
+                                </div>
+                              </Tooltip>
+                            </div>
+                          </TableCell>
+                          <TableCell
+                            style={{
+                              fontSize: "14px",
+                              color: "#000",
+                              fontWeight: 400,
+                              padding: "0 8px",
+                              height: "40px",
+                              lineHeight: "40px",
+                              border: "1px solid #e0e0e0",
+                            }}
+                          >
+                            <div className="d-flex align-items-center justify-content-between">
+                              <Tooltip
+                                title={
+                                  row.startDate
+                                    ? new Date(
+                                      row.startDate
+                                    ).toLocaleDateString()
+                                    : "N/A"
+                                }
+                                arrow
+                              >
+                                <div
+                                  style={{
+                                    fontWeight: 400,
+                                    fontSize: "14px",
+                                    color: "#000",
+                                    cursor: "pointer",
+                                    maxWidth: "120px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {new Date(
+                                    row.startDate
+                                  ).toLocaleDateString() || "N/A"}
+                                </div>
+                              </Tooltip>
+                            </div>
+                          </TableCell>
+                          <TableCell
+                            style={{
+                              fontSize: "14px",
+                              color: "#000",
+                              fontWeight: 400,
+                              border: "1px solid #e0e0e0",
+                              padding: "0 8px",
+                              height: "40px",
+                              lineHeight: "40px",
+                              // height: 48,
+                            }}
+                          >
+                            <div className="d-flex align-items-center justify-content-between">
+                              {row?.Offer?.sessions}
+                            </div>
+                          </TableCell>
+                          <TableCell
+                            style={{
+                              fontSize: "14px",
+                              color: "#000",
+                              fontWeight: 400,
+                              border: "1px solid #e0e0e0",
+                              padding: "0 8px",
+                              height: "40px",
+                              lineHeight: "40px",
+                              // height: 48,
+                            }}
+                          >
+                            <div className="d-flex align-items-center justify-content-between">
+                              {row?.completedSessions}
+                            </div>
+                          </TableCell>
+                          <TableCell
+                            style={{
+                              fontSize: "14px",
+                              color: "#000",
+                              fontWeight: 400,
+                              border: "1px solid #e0e0e0",
+                              padding: "0 8px",
+                              height: "40px",
+                              lineHeight: "40px",
+                              maxWidth: "220px",
+                            }}
+                          >
+                            <Tooltip
+                              title={row.Offer?.subject?.join(", ") || ""}
+                              arrow
+                              placement="top"
+                              componentsProps={{
+                                tooltip: {
+                                  sx: {
+                                    fontSize: "13px",
+                                    maxWidth: "300px",
+                                    backgroundColor: "#333",
+                                    padding: "8px 12px",
+                                    lineHeight: 1.4,
+                                  },
+                                },
                               }}
                             >
-                              <Box display="flex" justifyContent="flex-end">
-                                <IconButton
-                                  size="small"
-                                  onClick={(e) => handleMenuOpen(e, row)}
-                                >
-                                  <MoreVertIcon />
-                                </IconButton>
+                              <div
+                                style={{
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                {row.Offer?.subject?.join(", ") || "-"}
+                              </div>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell
+                            style={{
+                              fontSize: "14px",
+                              color: "#000",
+                              fontWeight: 400,
+                              border: "1px solid #e0e0e0",
+                              padding: "0 8px",
+                              height: "40px",
+                              maxWidth: "220px",
+                            }}
+                          >
+                            <Tooltip
+                              title={row?.Offer?.description || ""}
+                              arrow
+                              placement="top"
+                              componentsProps={{
+                                tooltip: {
+                                  sx: {
+                                    fontSize: "13px",
+                                    maxWidth: "300px",
+                                    backgroundColor: "#333",
+                                    padding: "8px 12px",
+                                    lineHeight: 1.4,
+                                  },
+                                },
+                              }}
+                            >
+                              <div
+                                style={{
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                {row?.Offer?.description || "-"}
+                              </div>
+                            </Tooltip>
+                          </TableCell>
 
-                                <Menu
-                                  anchorEl={anchorEl}
-                                  open={open}
-                                  onClose={handleMenuClose}
-                                  anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "right",
+                          <TableCell
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: 600,
+                              height: "40px",
+                              textAlign: "center",
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: "#2e7d32",
+                                border: "1px solid #2e7d32",
+                                padding: "2px 8px",
+                              }}
+                            >
+                              {row.status}
+                            </span>
+                          </TableCell>
+
+                          <TableCell
+                            style={{
+                              fontSize: "14px",
+                              color: "#000",
+                              fontWeight: 400,
+                              border: "1px solid #e0e0e0",
+                              padding: "0 24px",
+                              // height: "40px",
+                            }}
+                          >
+                            <Box display="flex" justifyContent="flex-end">
+                              <IconButton
+                                size="small"
+                                onClick={(e) => handleMenuOpen(e, row)}
+                              >
+                                <MoreVertIcon />
+                              </IconButton>
+
+                              <Menu
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleMenuClose}
+                                anchorOrigin={{
+                                  vertical: "bottom",
+                                  horizontal: "right",
+                                }}
+                                transformOrigin={{
+                                  vertical: "top",
+                                  horizontal: "right",
+                                }}
+                                PaperProps={{
+                                  sx: {
+                                    borderRadius: "8px",
+                                    minWidth: "140px",
+                                  },
+                                }}
+                              >
+                                <MenuItem
+                                  onClick={() => {
+                                    handleMenuClose();
+                                    handleViewDetails(row);
                                   }}
-                                  transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                  }}
-                                  PaperProps={{
-                                    sx: {
-                                      borderRadius: "8px",
-                                      minWidth: "140px",
+                                  sx={{
+                                    color: "#fff",
+                                    bgcolor: "#1976d2",
+                                    "&:hover": {
+                                      bgcolor: "#1565c0",
                                     },
+                                    borderRadius: "4px",
+                                    mx: 1,
+                                    my: 0.5,
                                   }}
                                 >
-                                  <MenuItem
-                                    onClick={() => {
-                                      handleMenuClose();
-                                      handleViewDetails(row);
-                                    }}
-                                    sx={{
-                                      color: "#fff",
-                                      bgcolor: "#1976d2",
-                                      "&:hover": {
-                                        bgcolor: "#1565c0",
-                                      },
-                                      borderRadius: "4px",
-                                      mx: 1,
-                                      my: 0.5,
-                                    }}
-                                  >
-                                    View
-                                  </MenuItem>
-                                  <MenuItem
-                                    onClick={() => {
-                                      handleMenuClose();
-                                      handleOpenResolutionModal(row, "ACTIVE");
-                                    }}
-                                    sx={{
-                                      color: "#fff",
-                                      bgcolor: "#ED6C02", // Warning/Orange color for Active/Reactivate
-                                      "&:hover": {
-                                        bgcolor: "#E65100",
-                                      },
-                                      borderRadius: "4px",
-                                      mx: 1,
-                                      my: 0.5,
-                                    }}
-                                  >
-                                    Active
-                                  </MenuItem>
+                                  View
+                                </MenuItem>
+                                <MenuItem
+                                  onClick={() => {
+                                    handleMenuClose();
+                                    handleOpenResolutionModal(row, "ACTIVE");
+                                  }}
+                                  sx={{
+                                    color: "#fff",
+                                    bgcolor: "#ED6C02", // Warning/Orange color for Active/Reactivate
+                                    "&:hover": {
+                                      bgcolor: "#E65100",
+                                    },
+                                    borderRadius: "4px",
+                                    mx: 1,
+                                    my: 0.5,
+                                  }}
+                                >
+                                  Active
+                                </MenuItem>
 
-                                  <MenuItem
-                                    onClick={() => {
-                                      handleMenuClose();
-                                      handleOpenResolutionModal(
-                                        row,
-                                        "CANCELLED"
-                                      );
-                                    }}
-                                    sx={{
-                                      color: "#fff",
-                                      bgcolor: "#d32f2f",
-                                      "&:hover": {
-                                        bgcolor: "#b71c1c",
-                                      },
-                                      borderRadius: "4px",
-                                      mx: 1,
-                                      my: 0.5,
-                                    }}
-                                  >
-                                    Terminate
-                                  </MenuItem>
+                                <MenuItem
+                                  onClick={() => {
+                                    handleMenuClose();
+                                    handleOpenResolutionModal(
+                                      row,
+                                      "CANCELLED"
+                                    );
+                                  }}
+                                  sx={{
+                                    color: "#fff",
+                                    bgcolor: "#d32f2f",
+                                    "&:hover": {
+                                      bgcolor: "#b71c1c",
+                                    },
+                                    borderRadius: "4px",
+                                    mx: 1,
+                                    my: 0.5,
+                                  }}
+                                >
+                                  Terminate
+                                </MenuItem>
 
-                                  <MenuItem
-                                    onClick={() => {
-                                      handleMenuClose();
-                                      handleOpenResolutionModal(
-                                        row,
-                                        "COMPLETED"
-                                      );
-                                    }}
-                                    sx={{
-                                      color: "#fff",
-                                      bgcolor: "#2E7D32",
-                                      "&:hover": {
-                                        bgcolor: "#1b5e20",
-                                      },
-                                      borderRadius: "4px",
-                                      mx: 1,
-                                      my: 0.5,
-                                    }}
-                                  >
-                                    Complete
-                                  </MenuItem>
-                                </Menu>
-                              </Box>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                                <MenuItem
+                                  onClick={() => {
+                                    handleMenuClose();
+                                    handleOpenResolutionModal(
+                                      row,
+                                      "COMPLETED"
+                                    );
+                                  }}
+                                  sx={{
+                                    color: "#fff",
+                                    bgcolor: "#2E7D32",
+                                    "&:hover": {
+                                      bgcolor: "#1b5e20",
+                                    },
+                                    borderRadius: "4px",
+                                    mx: 1,
+                                    my: 0.5,
+                                  }}
+                                >
+                                  Complete
+                                </MenuItem>
+                              </Menu>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-              {/* Pagination */}
-              {disputedContractsPagination && (
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={disputedContractsPagination.total || 0}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  sx={{
-                    width: "100%",
+            {/* Pagination */}
+            {disputedContractsPagination && (
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={disputedContractsPagination.total || 0}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                sx={{
+                  width: "100%",
 
-                    "& .MuiTablePagination-toolbar": {
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      position: "relative",
-                    },
+                  "& .MuiTablePagination-toolbar": {
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    position: "relative",
+                  },
 
-                    /* LEFT: Rows per page (label + select) */
-                    "& .MuiTablePagination-selectLabel": {
-                      margin: 0,
-                    },
+                  /* LEFT: Rows per page (label + select) */
+                  "& .MuiTablePagination-selectLabel": {
+                    margin: 0,
+                  },
 
-                    /* CENTER: 1–2 of 2 */
-                    "& .MuiTablePagination-displayedRows": {
-                      position: "absolute",
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      margin: 0,
-                      whiteSpace: "nowrap",
-                    },
+                  /* CENTER: 1–2 of 2 */
+                  "& .MuiTablePagination-displayedRows": {
+                    position: "absolute",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    margin: 0,
+                    whiteSpace: "nowrap",
+                  },
 
-                    /* RIGHT: arrows */
-                    "& .MuiTablePagination-actions": {
-                      marginLeft: "auto",
-                    },
+                  /* RIGHT: arrows */
+                  "& .MuiTablePagination-actions": {
+                    marginLeft: "auto",
+                  },
 
-                    "& .MuiTablePagination-spacer": {
-                      display: "none",
-                    },
-                  }}
-                />
-              )}
-            </div>
+                  "& .MuiTablePagination-spacer": {
+                    display: "none",
+                  },
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
+      {/* </div > */}
 
       {/* Contract Details Modal */}
-      <Dialog
+      < Dialog
         open={detailsModalOpen}
         onClose={handleCloseDetailsModal}
         maxWidth="md"
         fullWidth
         PaperProps={{
           sx: { borderRadius: "12px" },
-        }}
+        }
+        }
       >
         <DialogTitle
           sx={{
@@ -1111,20 +1128,20 @@ const ContractDashboard = () => {
           <Box>
             {(selectedContract?.status === "CANCELLED" ||
               selectedContract?.status === "COMPLETED") && (
-              <Button
-                onClick={handleRefund}
-                variant="outlined"
-                color="error"
-                disabled={isRefundingContract}
-                startIcon={
-                  isRefundingContract ? (
-                    <CircularProgress size={20} color="inherit" />
-                  ) : null
-                }
-              >
-                {isRefundingContract ? "Refunding..." : "Refund"}
-              </Button>
-            )}
+                <Button
+                  onClick={handleRefund}
+                  variant="outlined"
+                  color="error"
+                  disabled={isRefundingContract}
+                  startIcon={
+                    isRefundingContract ? (
+                      <CircularProgress size={20} color="inherit" />
+                    ) : null
+                  }
+                >
+                  {isRefundingContract ? "Refunding..." : "Refund"}
+                </Button>
+              )}
           </Box>
           <Button
             onClick={handleCloseDetailsModal}
@@ -1134,10 +1151,10 @@ const ContractDashboard = () => {
             Close
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog >
 
       {/* Resolution Confirmation Modal */}
-      <Dialog
+      < Dialog
         open={resolutionModalOpen}
         onClose={handleCloseResolutionModal}
         maxWidth="sm"
@@ -1202,7 +1219,7 @@ const ContractDashboard = () => {
             Confirm Resolution
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog >
     </>
   );
 };

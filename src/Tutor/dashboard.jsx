@@ -393,8 +393,8 @@ const TutorDashboard = () => {
                       fontSize: "14px",
                       borderRadius: "16px",
                       border: "1px solid #ccc",
-                      outline: "none",
-                      color: "#000",
+                      backgroundColor: 'transparent'
+
                     }}
                   />
                 </div>

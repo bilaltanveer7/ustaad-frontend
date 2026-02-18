@@ -387,6 +387,7 @@ const ParentDashboard = () => {
                       fontSize: "14px",
                       borderRadius: "16px",
                       border: "1px solid #ccc",
+                      backgroundColor:'transparent'
                       // width:'90%'
                     }}
                   />

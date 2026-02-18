@@ -81,6 +81,7 @@ const TransactionDashboard = () => {
     "REJECTED",
   ];
   const [selectedStatus, setSelectedStatus] = useState("ALL");
+  const [selectedDate, setSelectedDate] = useState("");
 
   // Pagination state
   const [page, setPage] = useState(0);
@@ -91,11 +92,11 @@ const TransactionDashboard = () => {
     const delayDebounceFn = setTimeout(() => {
       const statusParam = selectedStatus === "ALL" ? "" : selectedStatus;
       // API expects 1-based index for page
-      fetchPaymentRequests(searchValue, statusParam, page + 1, rowsPerPage);
+      fetchPaymentRequests(searchValue, statusParam, page + 1, rowsPerPage, selectedDate);
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [fetchPaymentRequests, searchValue, selectedStatus, page, rowsPerPage]);
+  }, [fetchPaymentRequests, searchValue, selectedStatus, page, rowsPerPage, selectedDate]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -335,6 +336,22 @@ const TransactionDashboard = () => {
                   >
                     {tableData.length} Results
                   </span>
+                </div>
+                <div style={{ marginBottom: "12px" }}>
+                  <input
+                    type="date"
+                    placeholder="dd/mm/yyyy"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    style={{
+                      padding: "8px 12px",
+                      fontSize: "14px",
+                      borderRadius: "16px",
+                      border: "1px solid #ccc",
+                      backgroundColor: 'transparent'
+
+                    }}
+                  />
                 </div>
               </div>
             </div>

@@ -58,11 +58,12 @@ const AdminsDashboard = () => {
   const [adminToDelete, setAdminToDelete] = useState(null);
   const [page, setPage] = useState(0); // 0-indexed for MUI
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedDate, setSelectedDate] = useState("");
 
   // Fetch admins on component mount
   useEffect(() => {
-    fetchAdmins();
-  }, [fetchAdmins]);
+    fetchAdmins(selectedDate);
+  }, [fetchAdmins, selectedDate]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -298,8 +299,14 @@ const AdminsDashboard = () => {
               </div> */}
 
             {/* Search and Filter Row */}
-            <div className="row align-items-center mb-3">
-              <div className="col-md-6">
+            <div 
+            style=
+            {{display:'flex', 
+            justifyContent:'space-between', 
+            alignItems:'center',
+            marginBottom:'20px'
+            }}>
+              <div>
                 {/* <TextField
                   placeholder="Search by name, email, or phone"
                   variant="outlined"
@@ -367,6 +374,22 @@ const AdminsDashboard = () => {
                     </Select>
                   </FormControl>
                 </div> */}
+              <div style={{ marginBottom: "12px" }}>
+                <input
+                  type="date"
+                  placeholder="dd/mm/yyyy"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  style={{
+                    padding: "8px 12px",
+                    fontSize: "14px",
+                    borderRadius: "16px",
+                    border: "1px solid #ccc",
+                    backgroundColor: 'transparent'
+
+                  }}
+                />
+              </div>
             </div>
 
             {/* Admins Table */}

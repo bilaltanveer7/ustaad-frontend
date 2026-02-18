@@ -641,7 +641,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <SiLinuxprofessionalinstitute style={{ color: '#1E9CBC', height:20, width:20 }} />
+                  <SiLinuxprofessionalinstitute style={{ color: '#1E9CBC', height: 20, width: 20 }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Institute"
@@ -654,7 +654,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <SiAltiumdesigner style={{ color: '#1E9CBC', height:20, width:20 }} />
+                  <SiAltiumdesigner style={{ color: '#1E9CBC', height: 20, width: 20 }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Designation"
@@ -768,17 +768,17 @@ const UserDetail = () => {
     const parent = userData.parent;
 
     return (
-      <Card sx={{ mb: 3 }}>
+      <Card sx={{ mb: 3, bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
         <CardContent>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Parent Information
           </Typography>
-          <Grid container spacing={1} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
               <List>
                 <ListItem>
                   <ListItemIcon>
-                    <PersonIcon />
+                    <PersonIcon sx={{ color: '#1E9CBC' }} />
                   </ListItemIcon>
                   <ListItemText
                     primary="Parent ID"
@@ -786,8 +786,8 @@ const UserDetail = () => {
                       <Typography
                         component="span"
                         sx={{
-                          fontFamily: "monospace",
-                          backgroundColor: "#f5f5f5",
+                          // fontFamily: "monospace",
+                          // backgroundColor: "#f5f5f5",
                           padding: "2px 6px",
                           borderRadius: "4px",
                         }}
@@ -799,20 +799,16 @@ const UserDetail = () => {
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
-                    <CalendarIcon />
+                    <CalendarIcon sx={{ color: '#1E9CBC' }} />
                   </ListItemIcon>
                   <ListItemText
                     primary="Profile Created"
                     secondary={formatDate(parent.createdAt)}
                   />
                 </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <List>
                 <ListItem>
                   <ListItemIcon>
-                    <CalendarIcon />
+                    <CalendarIcon sx={{ color: '#1E9CBC' }} />
                   </ListItemIcon>
                   <ListItemText
                     primary="Last Updated"
@@ -822,7 +818,7 @@ const UserDetail = () => {
                 {parent.customerId && (
                   <ListItem>
                     <ListItemIcon>
-                      <CardIcon />
+                      <CardIcon sx={{ color: '#1E9CBC' }} />
                     </ListItemIcon>
                     <ListItemText
                       primary="Customer ID"

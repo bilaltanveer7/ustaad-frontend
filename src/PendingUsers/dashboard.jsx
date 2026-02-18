@@ -410,6 +410,15 @@ const PendingUsersDashboard = () => {
                   size="small"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  sx={{
+                    width: "300px",
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "16px",
+                      "& fieldset": {
+                        borderRadius: "16px",
+                      },
+                    },
+                  }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -432,6 +441,12 @@ const PendingUsersDashboard = () => {
                           <FilterListIcon style={{ color: "#8A8AA3" }} />
                         </InputAdornment>
                       }
+                      sx={{
+                        borderRadius: "16px",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderRadius: "16px",
+                        },
+                      }}
                     >
                       <MenuItem value="ALL">All Roles</MenuItem>
                       <MenuItem value="PARENT">Parents</MenuItem>
@@ -445,6 +460,12 @@ const PendingUsersDashboard = () => {
                       value={rowsPerPage}
                       onChange={handleRowsPerPageChange}
                       displayEmpty
+                      sx={{
+                        borderRadius: "16px",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderRadius: "16px",
+                        },
+                      }}
                     >
                       <MenuItem value={10}>10</MenuItem>
                       <MenuItem value={25}>25</MenuItem>
@@ -590,14 +611,14 @@ const PendingUsersDashboard = () => {
                           borderBottom: "1px solid #e0e0e0",
                           // cursor: "pointer",
                         }}
-                        // sx={{
-                        //   "&:hover": {
-                        //     backgroundColor: "#f0f8ff",
-                        //     transform: "translateY(-1px)",
-                        //     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                        //   },
-                        //   transition: "all 0.2s ease-in-out",
-                        // }}
+                      // sx={{
+                      //   "&:hover": {
+                      //     backgroundColor: "#f0f8ff",
+                      //     transform: "translateY(-1px)",
+                      //     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                      //   },
+                      //   transition: "all 0.2s ease-in-out",
+                      // }}
                       >
                         <TableCell
                           style={{ border: "1px solid #e0e0e0" }}
@@ -703,9 +724,8 @@ const PendingUsersDashboard = () => {
                             size="small"
                             style={{
                               backgroundColor: getRoleColor(user.role).bg,
-                              border: `1px solid ${
-                                getRoleColor(user.role).border
-                              }`,
+                              border: `1px solid ${getRoleColor(user.role).border
+                                }`,
                               color: getRoleColor(user.role).color,
                               fontWeight: 500,
                               fontSize: "12px",
@@ -829,10 +849,9 @@ const PendingUsersDashboard = () => {
                               backgroundColor: getStatusColor(
                                 user.isOnBoard || "pending"
                               ).bg,
-                              border: `1px solid ${
-                                getStatusColor(user.isOnBoard || "pending")
-                                  .border
-                              }`,
+                              border: `1px solid ${getStatusColor(user.isOnBoard || "pending")
+                                .border
+                                }`,
                               color: getStatusColor(user.isOnBoard || "pending")
                                 .color,
                               fontWeight: 500,
