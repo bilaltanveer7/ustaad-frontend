@@ -92,10 +92,18 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${page + 1
-      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+    const query = `?page=${
+      page + 1
+    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
     fetchDisputedContracts(query);
-  }, [fetchDisputedContracts, page, rowsPerPage, searchValue, selectedStatus, selectedDate]);
+  }, [
+    fetchDisputedContracts,
+    page,
+    rowsPerPage,
+    searchValue,
+    selectedStatus,
+    selectedDate,
+  ]);
 
   const handleRefund = async () => {
     if (!selectedContract) return;
@@ -107,8 +115,9 @@ const ContractDashboard = () => {
         handleCloseDetailsModal();
         // Refresh the list
         const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-        const query = `?page=${page + 1
-          }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        const query = `?page=${
+          page + 1
+        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
         fetchDisputedContracts(query);
       }
     }
@@ -141,8 +150,6 @@ const ContractDashboard = () => {
 
   const handleSubmitResolution = async () => {
     if (!contractToResolve || !targetStatus) return;
-
-    console.log("fasdfasdf");
 
     try {
       await resolveDisputeContract(
@@ -315,7 +322,13 @@ const ContractDashboard = () => {
               backgroundColor: "#F9F9FB",
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
                 {statusOptions.map((status) => (
                   <Chip
@@ -351,7 +364,7 @@ const ContractDashboard = () => {
                     fontSize: "14px",
                     borderRadius: "16px",
                     border: "1px solid #ccc",
-                    backgroundColor: 'transparent'
+                    backgroundColor: "transparent",
                     // width:'90%'
                   }}
                 />
@@ -401,9 +414,7 @@ const ContractDashboard = () => {
                   ) : disputedContractsError ? (
                     <TableRow>
                       <TableCell colSpan={10} align="center">
-                        <Alert severity="error">
-                          {disputedContractsError}
-                        </Alert>
+                        <Alert severity="error">{disputedContractsError}</Alert>
                       </TableCell>
                     </TableRow>
                   ) : tableData.length === 0 ? (
@@ -501,9 +512,7 @@ const ContractDashboard = () => {
                           >
                             <Tooltip
                               title={
-                                row.tutor?.firstName +
-                                " " +
-                                row.tutor?.lastName
+                                row.tutor?.firstName + " " + row.tutor?.lastName
                               }
                               arrow
                             >
@@ -571,8 +580,8 @@ const ContractDashboard = () => {
                                 title={
                                   row.startDate
                                     ? new Date(
-                                      row.startDate
-                                    ).toLocaleDateString()
+                                        row.startDate
+                                      ).toLocaleDateString()
                                     : "N/A"
                                 }
                                 arrow
@@ -804,10 +813,7 @@ const ContractDashboard = () => {
                                 <MenuItem
                                   onClick={() => {
                                     handleMenuClose();
-                                    handleOpenResolutionModal(
-                                      row,
-                                      "CANCELLED"
-                                    );
+                                    handleOpenResolutionModal(row, "CANCELLED");
                                   }}
                                   sx={{
                                     color: "#fff",
@@ -826,10 +832,7 @@ const ContractDashboard = () => {
                                 <MenuItem
                                   onClick={() => {
                                     handleMenuClose();
-                                    handleOpenResolutionModal(
-                                      row,
-                                      "COMPLETED"
-                                    );
+                                    handleOpenResolutionModal(row, "COMPLETED");
                                   }}
                                   sx={{
                                     color: "#fff",
@@ -906,15 +909,14 @@ const ContractDashboard = () => {
       {/* </div > */}
 
       {/* Contract Details Modal */}
-      < Dialog
+      <Dialog
         open={detailsModalOpen}
         onClose={handleCloseDetailsModal}
         maxWidth="md"
         fullWidth
         PaperProps={{
           sx: { borderRadius: "12px" },
-        }
-        }
+        }}
       >
         <DialogTitle
           sx={{
@@ -1128,20 +1130,20 @@ const ContractDashboard = () => {
           <Box>
             {(selectedContract?.status === "CANCELLED" ||
               selectedContract?.status === "COMPLETED") && (
-                <Button
-                  onClick={handleRefund}
-                  variant="outlined"
-                  color="error"
-                  disabled={isRefundingContract}
-                  startIcon={
-                    isRefundingContract ? (
-                      <CircularProgress size={20} color="inherit" />
-                    ) : null
-                  }
-                >
-                  {isRefundingContract ? "Refunding..." : "Refund"}
-                </Button>
-              )}
+              <Button
+                onClick={handleRefund}
+                variant="outlined"
+                color="error"
+                disabled={isRefundingContract}
+                startIcon={
+                  isRefundingContract ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : null
+                }
+              >
+                {isRefundingContract ? "Refunding..." : "Refund"}
+              </Button>
+            )}
           </Box>
           <Button
             onClick={handleCloseDetailsModal}
@@ -1151,10 +1153,10 @@ const ContractDashboard = () => {
             Close
           </Button>
         </DialogActions>
-      </Dialog >
+      </Dialog>
 
       {/* Resolution Confirmation Modal */}
-      < Dialog
+      <Dialog
         open={resolutionModalOpen}
         onClose={handleCloseResolutionModal}
         maxWidth="sm"
@@ -1219,7 +1221,7 @@ const ContractDashboard = () => {
             Confirm Resolution
           </Button>
         </DialogActions>
-      </Dialog >
+      </Dialog>
     </>
   );
 };

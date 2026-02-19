@@ -540,8 +540,8 @@ export const useAdminStore = create((set, get) => ({
     } catch (error) {
       console.log(error);
       let errorMessage = "Failed to resolve dispute";
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
+      if (error.response?.data?.errors[0].message) {
+        errorMessage = error.response.data.errors[0].message;
       }
       set({
         resolveDisputeError: errorMessage,

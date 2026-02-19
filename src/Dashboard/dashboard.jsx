@@ -71,21 +71,6 @@ import {
 } from "recharts";
 
 const drawerWidth = 260;
-const performanceData = [
-  { name: "Jan", value: 65 },
-  { name: "Feb", value: 75 },
-  { name: "Mar", value: 85 },
-  { name: "Apr", value: 70 },
-  { name: "May", value: 90 },
-  { name: "Jun", value: 80 },
-  { name: "Jul", value: 85 },
-  { name: "Aug", value: 75 },
-  { name: "Sep", value: 70 },
-  { name: "Oct", value: 60 },
-  { name: "Nov", value: 55 },
-  { name: "Dec", value: 45 },
-];
-
 // Sample data for the pie chart
 const jobData = [
   { name: "Active", value: 15, color: "#00bcd4" },
@@ -796,9 +781,9 @@ const Dashboard = () => {
                           color: "#101219",
                         }}
                       >
-                        Performance Team
+                        User Growth
                       </Typography>
-                      <FormControl
+                      {/* <FormControl
                         size="small"
                         variant="outlined"
                         sx={{
@@ -824,29 +809,42 @@ const Dashboard = () => {
                           <MenuItem value="Month">Month</MenuItem>
                           <MenuItem value="Year">Year</MenuItem>
                         </Select>
-                      </FormControl>
+                      </FormControl> */}
                     </Box>
                     <ResponsiveContainer width="100%" height={300}>
-                      <LineChart data={performanceData}>
+                      <LineChart
+                        data={
+                          stats?.graphData?.map((item) => ({
+                            name: new Date(item.date).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                day: "numeric",
+                              }
+                            ),
+                            total: item.total,
+                          })) || []
+                        }
+                      >
                         <XAxis
                           dataKey="name"
                           axisLine={false}
                           tickLine={false}
+                          tick={{ fontSize: 12, fill: "#4D5874" }}
                         />
                         <YAxis
-                          domain={[0, 100]}
                           axisLine={false}
                           tickLine={false}
-                          tickFormatter={(value) => `${value}%`}
+                          tick={{ fontSize: 12, fill: "#4D5874" }}
                         />
                         <Line
                           type="monotone"
-                          dataKey="value"
-                          stroke="#4caf50"
+                          dataKey="total"
+                          stroke="#1E9CBC"
                           strokeWidth={2}
-                          fill="#4caf50"
-                          fillOpacity={0.1}
-                          dot={false}
+                          dot={{ r: 4 }}
+                          activeDot={{ r: 6 }}
+                          name="Total Users"
                         />
                       </LineChart>
                     </ResponsiveContainer>
