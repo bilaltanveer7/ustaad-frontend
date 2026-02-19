@@ -232,7 +232,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
             </Alert>
           </Box>
         ) : selectedPaymentRequest ? (
-          <Box sx={{ p: 3, width:'100%' }}>
+          <Box sx={{ p: 3, width: "100%" }}>
             {/* Status Update Messages */}
             {updateSuccess && (
               <Alert severity="success" sx={{ mb: 2 }}>
@@ -245,10 +245,25 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
               </Alert>
             )}
 
+            {(selectedPaymentRequest.paymentRequest.status === "PAID" ||
+              selectedPaymentRequest.paymentRequest.status === "REJECTED") && (
+              <Alert severity="info" sx={{ mb: 2 }}>
+                This transaction is finalized (
+                {selectedPaymentRequest.paymentRequest.status}). The status
+                cannot be changed.
+              </Alert>
+            )}
+
             {/* Transaction Overview Card */}
-            <Grid container spacing={2} sx={{mb:2, width:'100%'}}>
+            <Grid container spacing={2} sx={{ mb: 2, width: "100%" }}>
               <Grid item xs={12} md={9}>
-                <Card sx={{ border: "1px solid #E0E3EB", height: "100%", width:'100%' }}>
+                <Card
+                  sx={{
+                    border: "1px solid #E0E3EB",
+                    height: "100%",
+                    width: "100%",
+                  }}
+                >
                   <CardContent>
                     <Box
                       sx={{
@@ -265,7 +280,9 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                         Payment Request:{" "}
                         {selectedPaymentRequest.paymentRequest.id.slice(0, 4)}
                       </Typography>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
                         {/* {getStatusIcon(selectedPaymentRequest.status)} */}
                         <Chip
                           label={selectedPaymentRequest.paymentRequest.status}
@@ -277,10 +294,11 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                             color: getStatusColor(
                               selectedPaymentRequest.paymentRequest.status
                             ).color,
-                            border: `1px solid ${getStatusColor(
-                              selectedPaymentRequest.paymentRequest.status
-                            ).border
-                              }`,
+                            border: `1px solid ${
+                              getStatusColor(
+                                selectedPaymentRequest.paymentRequest.status
+                              ).border
+                            }`,
                             fontWeight: 500,
                           }}
                         />
@@ -364,10 +382,21 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                 </Card>
               </Grid>
               <Grid item xs={12} md={3}>
-                <Card sx={{ border: "1px solid #E0E3EB", height: "100%", width:'100%' }}>
+                <Card
+                  sx={{
+                    border: "1px solid #E0E3EB",
+                    height: "100%",
+                    width: "100%",
+                  }}
+                >
                   <CardContent>
                     <Box
-                      sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 2,
+                      }}
                     >
                       <UpdateIcon sx={{ color: "#1E9CBC" }} />
                       <Typography
@@ -397,7 +426,14 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                               )
                             }
                             onChange={(e) => setLocalStatus(e.target.value)}
-                            disabled={isUpdating || isUpdatingPaymentRequest}
+                            disabled={
+                              isUpdating ||
+                              isUpdatingPaymentRequest ||
+                              selectedPaymentRequest.paymentRequest.status ===
+                                "PAID" ||
+                              selectedPaymentRequest.paymentRequest.status ===
+                                "REJECTED"
+                            }
                             sx={{
                               height: "37px",
                               "& .MuiOutlinedInput-root": {
@@ -437,7 +473,11 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                             isUpdating ||
                             isUpdatingPaymentRequest ||
                             !localStatus ||
-                            localStatus === selectedPaymentRequest.status
+                            localStatus === selectedPaymentRequest.status ||
+                            selectedPaymentRequest.paymentRequest.status ===
+                              "PAID" ||
+                            selectedPaymentRequest.paymentRequest.status ===
+                              "REJECTED"
                           }
                           sx={{
                             backgroundColor: "#1E9CBC",
@@ -653,7 +693,6 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                 </CardContent>
               </Card>
             </Grid>
-
           </Box>
         ) : (
           <Box sx={{ p: 3, textAlign: "center" }}>

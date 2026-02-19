@@ -14,6 +14,7 @@ import {
   getDisputedContracts,
   resolveDispute,
   refundContract,
+  deleteUser,
 } from "../api/admin";
 
 export const useAdminStore = create((set, get) => ({
@@ -49,6 +50,8 @@ export const useAdminStore = create((set, get) => ({
   isLoadingUserData: false,
   isApprovingUser: false,
   isLoadingDisputedContracts: false,
+  isDeletingUser: false,
+  deleteUserError: null,
 
   // Error states
   error: null,
@@ -566,6 +569,34 @@ export const useAdminStore = create((set, get) => ({
         refundContractError: errorMessage,
         isRefundingContract: false,
       });
+      return { success: false, error: errorMessage };
+    }
+  },
+
+  // Delete user
+  deleteUserById: async (id) => {
+    set({ isDeletingUser: true, deleteUserError: null });
+    try {
+      const response = await deleteUser(id);
+      if (response.data && response.data.success) {
+        set({ isDeletingUser: false });
+        return { success: true, data: response.data.data };
+      } else {
+        const errorMessage = response.data?.message || "Failed to delete user";
+        set({ deleteUserError: errorMessage, isDeletingUser: false });
+        return { success: false, error: errorMessage };
+      }
+    } catch (error) {
+      console.error("Delete user error:", error);
+      let errorMessage = "Failed to delete user";
+
+      if (error.response?.data?.errors) {
+        errorMessage = error.response.data.errors[0]?.message || errorMessage;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      set({ deleteUserError: errorMessage, isDeletingUser: false });
       return { success: false, error: errorMessage };
     }
   },

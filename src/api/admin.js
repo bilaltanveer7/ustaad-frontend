@@ -139,3 +139,11 @@ export const refundContract = async (id) => {
   });
   return data;
 };
+
+export const deleteUser = async (id) => {
+  const data = await invoke({
+    url: `/admin/users/${id}`,
+    method: "DELETE",
+  });
+  return data;
+};

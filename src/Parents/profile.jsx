@@ -38,7 +38,9 @@ import {
   Close as CloseIcon,
 } from "@mui/icons-material";
 import { useParentStore } from "../store/useParentStore";
+import { useAdminStore } from "../store/useAdminStore";
 import DocumentModal from "../components/DocumentModal";
+import DeleteUserDialog from "../components/DeleteUserDialog";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const drawerWidth = 260;
@@ -56,6 +58,9 @@ const ParentsProfile = () => {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const { deleteUserById, isDeletingUser, deleteUserError } = useAdminStore();
 
   // Form state for editable fields - will be populated from API
   const [profileData, setProfileData] = useState({
@@ -238,6 +243,18 @@ const ParentsProfile = () => {
     setSelectedDocument(null);
   };
 
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    const result = await deleteUserById(parentId);
+    if (result.success) {
+      setIsDeleteDialogOpen(false);
+      navigate("/admin/parents"); // Redirect to parents list after deletion
+    }
+  };
+
   const getSortIcon = (columnKey) => {
     if (sortConfig.key !== columnKey) {
       return (
@@ -321,12 +338,13 @@ const ParentsProfile = () => {
   const childrenData = children.map((child) => {
     const subscriptionSessionInfo = child.subscriptions?.length
       ? child.subscriptions
-        .map(
-          (sub) =>
-            `${sub.Offer?.sessions || 0} / ${sub.tutorSessionsDetailCount || 0
-            }`
-        )
-        .join(", ")
+          .map(
+            (sub) =>
+              `${sub.Offer?.sessions || 0} / ${
+                sub.tutorSessionsDetailCount || 0
+              }`
+          )
+          .join(", ")
       : null;
 
     return {
@@ -338,10 +356,10 @@ const ParentsProfile = () => {
       curriculum: child.curriculum || "N/A",
       subjects: child.subscriptions?.length
         ? [
-          ...new Set(
-            child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
-          ),
-        ].join(", ") || "N/A"
+            ...new Set(
+              child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
+            ),
+          ].join(", ") || "N/A"
         : child.subjects?.join(", ") || "N/A",
       tutorHired:
         subscriptionSessionInfo ||
@@ -1353,8 +1371,22 @@ const ParentsProfile = () => {
                         fontSize: "14px",
                         padding: "4px 8px",
                         borderRadius: "8px",
+                        marginRight: "1rem",
                       }}
                     />
+                    <Button
+                      variant="contained"
+                      onClick={handleDeleteClick}
+                      style={{
+                        backgroundColor: "#f44336",
+                        borderRadius: "8px",
+                        color: "white",
+                        textTransform: "none",
+                        fontSize: "14px",
+                      }}
+                    >
+                      Delete User
+                    </Button>
                   </div>
 
                   {/* Right Column - Edit Button */}
@@ -1713,6 +1745,17 @@ const ParentsProfile = () => {
         open={isModalOpen}
         onClose={handleCloseModal}
         document={selectedDocument}
+      />
+      <DeleteUserDialog
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+        userName={
+          parent?.User?.firstName + " " + parent?.User?.lastName || "N/A"
+        }
+        userId={parent?.User?.userId}
+        isDeleting={isDeletingUser}
+        error={deleteUserError}
       />
     </>
   );
