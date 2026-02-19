@@ -774,15 +774,16 @@ const ParentsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "14px",
-                          // color: "#000",
+                          color: "#000",
                           fontWeight: 400,
                           border: "1px solid #e0e0e0",
                           padding: "0 8px",
                           height: "30px",
                           lineHeight: "30px",
-                          color:
-                            row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
+                          // color: 
+                          // row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
                           // fontWeight: "400",
+                          textTransform: 'capitalize'
                         }}
                       >
                         {row.gender}
@@ -973,6 +974,7 @@ const ParentsProfile = () => {
                               fontSize: "14px",
                               fontWeight: 400,
                               color: "#000",
+                              textTransform: 'capitalize'
                             }}
                           >
                             {row.toChild.name}
@@ -990,6 +992,31 @@ const ParentsProfile = () => {
                           border: "1px solid #e0e0e0",
                         }}
                       >
+                        {row.date}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                          border: "1px solid #e0e0e0",
+                        }}>
                         <div
                           style={{
                             display: "flex",
@@ -1034,19 +1061,6 @@ const ParentsProfile = () => {
                             </span>
                           </Tooltip>
                         </div>
-                      </TableCell>
-                      <TableCell
-                        style={{
-                          fontSize: "14px",
-                          color: "#000",
-                          fontWeight: 400,
-                          padding: "0 8px",
-                          height: "30px",
-                          lineHeight: "30px",
-                          border: "1px solid #e0e0e0",
-                        }}
-                      >
-                        {row.date}
                       </TableCell>
                     </TableRow>
                   ))

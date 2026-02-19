@@ -521,7 +521,7 @@ const TutorsProfile = () => {
                       {getSortIcon("transactionDate")}
                     </Box>
                   </TableCell>
-                  <TableCell onClick={() => handleSort("name")}>
+                  {/* <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
@@ -535,7 +535,7 @@ const TutorsProfile = () => {
                       Status
                       {getSortIcon("status")}
                     </Box>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -660,7 +660,7 @@ const TutorsProfile = () => {
                       >
                         {row.transactionDate}
                       </TableCell>
-                      <TableCell
+                      {/* <TableCell
                         style={{
                           fontSize: "14px",
                           color: "#000",
@@ -703,7 +703,7 @@ const TutorsProfile = () => {
                             fontSize: "12px",
                           }}
                         />
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   ))
                 )}
@@ -1509,7 +1509,7 @@ const TutorsProfile = () => {
                         {tutor?.subjects && (
                           <Typography
                             variant="body2"
-                            sx={{ color: "#666", mt: 0.5, textTransform:'capitalize' }}
+                            sx={{ color: "#666", mt: 0.5, textTransform: 'capitalize' }}
                           >
                             Subjects: {tutor.subjects.join(", ")}
                           </Typography>
@@ -1698,12 +1698,14 @@ const TutorsProfile = () => {
                         size="small"
                         style={{ width: "100%" }}
                         InputProps={{
-                          style: {
+                          sx: {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
                             cursor: "default",
-                            textTransform:'capitalize'
+                            "& input": {
+                              textTransform: "capitalize",
+                            },
                           },
                         }}
                       />

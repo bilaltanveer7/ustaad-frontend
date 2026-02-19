@@ -510,7 +510,7 @@ const TransactionDashboard = () => {
                                 }}
                               >
                                 <div className="d-flex align-items-center justify-content-between">
-                                  <span>{row.phone}</span>
+                                  <span>+{row.phone}</span>
                                   <IconButton
                                     size="small"
                                     onClick={() => handleCopy(row.phone)}
