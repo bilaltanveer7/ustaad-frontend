@@ -532,12 +532,12 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                       variant="h6"
                       sx={{ fontWeight: 600, color: "#101219" }}
                     >
-                      Tutor Information
+                      User Information
                     </Typography>
                   </Box>
                   <Divider sx={{ mb: 2 }} />
 
-                  <Box
+                  {/* <Box
                     sx={{
                       mb: 2,
                       display: "flex",
@@ -554,7 +554,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      Tutor ID:
+                      User ID:
                     </Typography>
 
                     <Typography
@@ -570,7 +570,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                     >
                       {selectedPaymentRequest.paymentRequest.tutorId || "N/A"}
                     </Typography>
-                  </Box>
+                  </Box> */}
 
                   <>
                     <Box
@@ -599,7 +599,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                           fontSize: "14px",
                         }}
                       >
-                        {selectedPaymentRequest.tutor.name || "N/A"}
+                        {selectedPaymentRequest.accountInfo.name || "N/A"}
                       </Typography>
                     </Box>
                     <Box
@@ -628,7 +628,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                           fontSize: "14px",
                         }}
                       >
-                        {selectedPaymentRequest.tutor.email || "N/A"}
+                        {selectedPaymentRequest.accountInfo.email || "N/A"}
                       </Typography>
                     </Box>
                     <Box
@@ -657,7 +657,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                           fontSize: "14px",
                         }}
                       >
-                        {selectedPaymentRequest.tutor.bankName || "N/A"}
+                        {selectedPaymentRequest.accountInfo.bankName || "N/A"}
                       </Typography>
                     </Box>
                     <Box
@@ -686,7 +686,8 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                           fontSize: "14px",
                         }}
                       >
-                        {selectedPaymentRequest.tutor.accountNumber || "N/A"}
+                        {selectedPaymentRequest.accountInfo.accountNumber ||
+                          "N/A"}
                       </Typography>
                     </Box>
                   </>
