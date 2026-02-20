@@ -162,14 +162,14 @@ const ParentDashboard = () => {
   const getSortIcon = (columnKey) => {
     if (sortConfig.key === columnKey) {
       return sortConfig.direction === "asc" ? (
-        <ArrowUpwardIcon style={{ fontSize: "16px", marginLeft: "4px" }} />
+        <ArrowUpwardIcon style={{ fontSize: "18px", marginLeft: "4px", color:'#4D5874' }} />
       ) : (
-        <ArrowDownwardIcon style={{ fontSize: "16px", marginLeft: "4px" }} />
+        <ArrowDownwardIcon style={{ fontSize: "18px", marginLeft: "4px", color:'#4D5874' }} />
       );
     }
     return (
       <UnfoldMoreIcon
-        style={{ fontSize: "16px", marginLeft: "4px", color: "#ccc" }}
+        style={{ fontSize: "18px", marginLeft: "4px", color: "#4D5874" }}
       />
     );
   };
@@ -442,10 +442,10 @@ const ParentDashboard = () => {
           {!isLoading && !error && tableData && tableData.length > 0 && (
             <div className="row">
               <div className="col-12">
-                <TableContainer component={Paper}>
+                <TableContainer>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
+                      <TableRow sx={{ height: 20, bgcolor: "#FFFFFF" }}>
                         {/* <TableCell padding="checkbox" sx={{ py: 0, height: 32 }}>
                         <Checkbox
                           indeterminate={
@@ -472,9 +472,9 @@ const ParentDashboard = () => {
                           <TableCell
                             key={key}
                             sx={{
-                              fontSize: "16px",
-                              fontWeight: 600,
-                              color: "#FFFFFF",
+                              fontSize: "14px",
+                              fontWeight: 500,
+                              color: "#4D5874",
                               whiteSpace: "nowrap",
                               // cursor: "pointer",
                               // py: 0,
@@ -532,9 +532,9 @@ const ParentDashboard = () => {
                               <Tooltip title={row.userId} arrow>
                                 <div
                                   style={{
-                                    fontWeight: 600,
-                                    fontSize: "14px",
-                                    color: "#000",
+                                    fontWeight: 400,
+                                    fontSize: "16px",
+                                    color: "#4D5874",
                                     // height: 48,
                                     cursor: "pointer",
                                     maxWidth: "80px",
