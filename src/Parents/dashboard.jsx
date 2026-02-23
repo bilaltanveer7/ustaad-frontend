@@ -162,9 +162,9 @@ const ParentDashboard = () => {
   const getSortIcon = (columnKey) => {
     if (sortConfig.key === columnKey) {
       return sortConfig.direction === "asc" ? (
-        <ArrowUpwardIcon style={{ fontSize: "18px", marginLeft: "4px", color:'#4D5874' }} />
+        <ArrowUpwardIcon style={{ fontSize: "18px", marginLeft: "4px", color: '#4D5874' }} />
       ) : (
-        <ArrowDownwardIcon style={{ fontSize: "18px", marginLeft: "4px", color:'#4D5874' }} />
+        <ArrowDownwardIcon style={{ fontSize: "18px", marginLeft: "4px", color: '#4D5874' }} />
       );
     }
     return (
@@ -387,7 +387,7 @@ const ParentDashboard = () => {
                       fontSize: "14px",
                       borderRadius: "16px",
                       border: "1px solid #ccc",
-                      backgroundColor:'transparent'
+                      backgroundColor: 'transparent'
                       // width:'90%'
                     }}
                   />
@@ -445,7 +445,11 @@ const ParentDashboard = () => {
                 <TableContainer>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ height: 20, bgcolor: "#FFFFFF" }}>
+                      <TableRow
+                        sx={{
+                          height: "32px",
+                          bgcolor: "#FFFFFF",
+                        }}>
                         {/* <TableCell padding="checkbox" sx={{ py: 0, height: 32 }}>
                         <Checkbox
                           indeterminate={
@@ -472,13 +476,14 @@ const ParentDashboard = () => {
                           <TableCell
                             key={key}
                             sx={{
+                              height: "32px",
+                              py: 0,
+                              px: 2,
                               fontSize: "14px",
                               fontWeight: 500,
                               color: "#4D5874",
                               whiteSpace: "nowrap",
-                              // cursor: "pointer",
-                              // py: 0,
-                              // height: 32,
+                              verticalAlign: "middle",
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -507,14 +512,17 @@ const ParentDashboard = () => {
                             onClick={() => handleSelectRow(row.id)}
                             selected={isItemSelected}
                             sx={{
-                              height: "30px",
-                              backgroundColor: "transparent",
+                              height: "48px",
+                              backgroundColor: index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
+                              "&:hover": {
+                                backgroundColor: "#F1F3F7",
+                              },
                             }}
                           >
                             {/* <TableCell
                             padding="checkbox"
                             style={{
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                               py: 0,
                               height: 48,
                             }}
@@ -524,9 +532,9 @@ const ParentDashboard = () => {
                             <TableCell
                               sx={{
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
-                                border: "1px solid #e0e0e0",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                             >
                               <Tooltip title={row.userId} arrow>
@@ -541,6 +549,7 @@ const ParentDashboard = () => {
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
+                                    textAlign: 'center'
                                   }}
                                 >
                                   {row.userId}
@@ -551,9 +560,9 @@ const ParentDashboard = () => {
                             <TableCell
                               style={{
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
-                                border: "1px solid #e0e0e0",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                               onClick={() =>
                                 navigate(`/parent-profile/${row.id}`)
@@ -561,7 +570,7 @@ const ParentDashboard = () => {
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <div
-                                  className="d-flex align-items-center"
+                                  className="d-flex align-items-center" style={{ marginLeft: '5px' }}
                                   onClick={() =>
                                     navigate(`/parent-profile/${row.id}`)
                                   }
@@ -578,8 +587,8 @@ const ParentDashboard = () => {
                                     <div
                                       style={{
                                         fontWeight: 400,
-                                        fontSize: "14px",
-                                        color: "#000",
+                                        fontSize: "16px",
+                                        color: "#101219",
                                         cursor: "pointer",
                                         maxWidth: "100px",
                                         overflow: "hidden",
@@ -596,28 +605,31 @@ const ParentDashboard = () => {
 
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
+                                fontSize: "16px",
+                                color: "#101219",
                                 fontWeight: 400,
-                                border: "1px solid #e0e0e0",
+                                border: "1px solid #E0E3EB",
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                height: "48px",
+                                lineHeight: "48px",
                                 // height: 48,
                               }}
                             >
-                              <div className="d-flex align-items-center justify-content-between">
+                              <div className="d-flex align-items-center justify-content-between"
+                              >
                                 <Tooltip title={row.email} arrow>
                                   <div
                                     style={{
                                       fontWeight: 400,
-                                      fontSize: "14px",
-                                      color: "#000",
+                                      fontSize: "16px",
+                                      color: "#101219",
                                       cursor: "pointer",
                                       maxWidth: "140px",
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
+                                      textAlign: 'center',
+                                      marginLeft: '5px'
                                     }}
                                   >
                                     {row.email}
@@ -632,20 +644,20 @@ const ParentDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "16px", color: "#666" }}
+                                    style={{ fontSize: "16px", color: "#666", marginRight: '5px' }}
                                   />
                                 </IconButton>
                               </div>
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
+                                fontSize: "16px",
+                                color: "#101219",
                                 fontWeight: 400,
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
-                                border: "1px solid #e0e0e0",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
@@ -653,13 +665,14 @@ const ParentDashboard = () => {
                                   <div
                                     style={{
                                       fontWeight: 400,
-                                      fontSize: "14px",
-                                      color: "#000",
+                                      fontSize: "16px",
+                                      color: "#101219",
                                       cursor: "pointer",
                                       maxWidth: "120px",
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
+                                      marginLeft: '5px'
                                     }}
                                   >
                                     +{row.phone || "N/A"}
@@ -678,6 +691,7 @@ const ParentDashboard = () => {
                                       style={{
                                         fontSize: "16px",
                                         color: "#666",
+                                        marginRight: '5px'
                                       }}
                                     />
                                   </IconButton>
@@ -686,17 +700,18 @@ const ParentDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
+                                fontSize: "16px",
+                                color: "#4D5874",
                                 fontWeight: 400,
-                                border: "1px solid #e0e0e0",
+                                border: "1px solid #E0E3EB",
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                height: "48px",
+                                lineHeight: "48px",
                                 // height: 48,
                               }}
                             >
-                              <div className="d-flex align-items-center justify-content-between">
+                              <div className="d-flex align-items-center justify-content-between"
+                                style={{ marginLeft: '10px' }}>
                                 {row.date}
                               </div>
                             </TableCell>
@@ -755,35 +770,22 @@ const ParentDashboard = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                     sx={{
                       width: "100%",
-
                       "& .MuiTablePagination-toolbar": {
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "space-between",
-                        position: "relative",
                       },
-
-                      /* LEFT: Rows per page (label + select) */
+                      "& .MuiTablePagination-spacer": {
+                        flex: "0 0 auto",
+                      },
                       "& .MuiTablePagination-selectLabel": {
                         margin: 0,
                       },
-
-                      /* CENTER: 1–2 of 2 */
                       "& .MuiTablePagination-displayedRows": {
-                        position: "absolute",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        margin: 0,
+                        margin: "0 auto",
                         whiteSpace: "nowrap",
                       },
-
-                      /* RIGHT: arrows */
                       "& .MuiTablePagination-actions": {
                         marginLeft: "auto",
-                      },
-
-                      "& .MuiTablePagination-spacer": {
-                        display: "none",
                       },
                     }}
                   />

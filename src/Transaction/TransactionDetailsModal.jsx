@@ -130,12 +130,12 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
       case "REJECTED":
         return { bg: "#FEECEC", color: "#F31616", border: "#FFCDD2" };
       case "PENDING":
-        return { bg: "#F0F2F5", color: "#7D879C", border: "#E0E0E0" };
+        return { bg: "#F0F2F5", color: "#7D879C", border: "#E0E3EB" };
       case "IN_REVIEW":
       case "REQUESTED":
         return { bg: "#EEF3FF", color: "#235DFF", border: "#C5D9FF" };
       default:
-        return { bg: "#F5F5F5", color: "#666", border: "#E0E0E0" };
+        return { bg: "#F5F5F5", color: "#666", border: "#E0E3EB" };
     }
   };
 

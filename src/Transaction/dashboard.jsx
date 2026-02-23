@@ -459,7 +459,7 @@ const TransactionDashboard = () => {
                               sx={{
                                 height: "40px",
                                 backgroundColor: "transparent",
-                                borderBottom: "1px solid #e0e0e0",
+                                borderBottom: "1px solid #E0E3EB",
                               }}
                             >
                               <TableCell
@@ -470,7 +470,7 @@ const TransactionDashboard = () => {
                                   padding: "0 8px",
                                   height: "30px",
                                   lineHeight: "30px",
-                                  border: "1px solid #e0e0e0",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 <div className="d-flex align-items-center gap-2">
@@ -493,7 +493,7 @@ const TransactionDashboard = () => {
                                   padding: "0 8px",
                                   height: "30px",
                                   lineHeight: "30px",
-                                  border: "1px solid #e0e0e0",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 {row.email}
@@ -506,7 +506,7 @@ const TransactionDashboard = () => {
                                   padding: "0 8px",
                                   height: "30px",
                                   lineHeight: "30px",
-                                  border: "1px solid #e0e0e0",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 <div className="d-flex align-items-center justify-content-between">
@@ -532,7 +532,7 @@ const TransactionDashboard = () => {
                                   padding: "0 8px",
                                   height: "30px",
                                   lineHeight: "30px",
-                                  border: "1px solid #e0e0e0",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 <div className="d-flex align-items-center justify-content-between">
@@ -548,7 +548,7 @@ const TransactionDashboard = () => {
                                   padding: "0 8px",
                                   height: "30px",
                                   lineHeight: "30px",
-                                  border: "1px solid #e0e0e0",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 <div className="d-flex align-items-center justify-content-start gap-2">
@@ -659,7 +659,7 @@ const TransactionDashboard = () => {
                                   padding: "0 8px",
                                   height: "30px",
                                   lineHeight: "30px",
-                                  border: "1px solid #e0e0e0",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 <div className="d-flex align-items-center justify-content-between">
@@ -675,7 +675,7 @@ const TransactionDashboard = () => {
                                   padding: "0 8px",
                                   height: "30px",
                                   lineHeight: "30px",
-                                  border: "1px solid #e0e0e0",
+                                  border: "1px solid #E0E3EB",
                                   textAlign: "center",
                                 }}
                               >
@@ -729,6 +729,35 @@ const TransactionDashboard = () => {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                    sx={{
+                      width: "100%",
+
+                      "& .MuiTablePagination-toolbar": {
+                        display: "flex",
+                        alignItems: "center",
+                      },
+
+                      /* Remove spacer completely */
+                      "& .MuiTablePagination-spacer": {
+                        flex: "0 0 auto",
+                      },
+
+                      /* Left side */
+                      "& .MuiTablePagination-selectLabel": {
+                        margin: 0,
+                      },
+
+                      /* Center properly using flex grow */
+                      "& .MuiTablePagination-displayedRows": {
+                        margin: "0 auto",
+                        whiteSpace: "nowrap",
+                      },
+
+                      /* Right side arrows */
+                      "& .MuiTablePagination-actions": {
+                        marginLeft: "auto",
+                      },
+                    }}
                   />
                 )}
               </div>

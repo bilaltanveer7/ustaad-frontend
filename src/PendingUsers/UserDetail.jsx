@@ -157,7 +157,7 @@ const UserDetail = () => {
       case "rejected":
         return { bg: "#FEECEC", color: "#F31616", border: "#FFCDD2" };
       default:
-        return { bg: "#F5F5F5", color: "#666", border: "#E0E0E0" };
+        return { bg: "#F5F5F5", color: "#666", border: "#E0E3EB" };
     }
   };
 
@@ -170,7 +170,7 @@ const UserDetail = () => {
       case "ADMIN":
         return { bg: "#FFF3E0", color: "#F57C00", border: "#FFCC02" };
       default:
-        return { bg: "#F5F5F5", color: "#666", border: "#E0E0E0" };
+        return { bg: "#F5F5F5", color: "#666", border: "#E0E3EB" };
     }
   };
 
@@ -1054,7 +1054,7 @@ const UserDetail = () => {
                         fontSize: "14px",
                         color: "#000",
                         fontWeight: 400,
-                        border: "1px solid #e0e0e0",
+                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
                         height: "30px",
                         lineHeight: "30px",
@@ -1080,7 +1080,7 @@ const UserDetail = () => {
                         fontSize: "14px",
                         color: "#000",
                         fontWeight: 400,
-                        border: "1px solid #e0e0e0",
+                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
                         height: "30px",
                         lineHeight: "30px",
@@ -1101,7 +1101,7 @@ const UserDetail = () => {
                         fontSize: "14px",
                         color: "#000",
                         fontWeight: 400,
-                        border: "1px solid #e0e0e0",
+                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
                         height: "30px",
                         lineHeight: "30px",
@@ -1114,7 +1114,7 @@ const UserDetail = () => {
                         fontSize: "14px",
                         color: "#000",
                         fontWeight: 400,
-                        border: "1px solid #e0e0e0",
+                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
                         height: "30px",
                         lineHeight: "30px",
@@ -1127,7 +1127,7 @@ const UserDetail = () => {
                         fontSize: "14px",
                         color: "#000",
                         fontWeight: 400,
-                        border: "1px solid #e0e0e0",
+                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
                         height: "30px",
                         lineHeight: "30px",

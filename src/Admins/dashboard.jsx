@@ -401,7 +401,7 @@ const AdminsDashboard = () => {
                 // borderRadius: "8px",
               }}
             >
-              <Table style={{ border: "1px solid #e0e0e0" }}>
+              <Table style={{ border: "1px solid #E0E3EB" }}>
                 <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
                   <TableRow
                     sx={{
@@ -509,7 +509,7 @@ const AdminsDashboard = () => {
                           padding: '0 8px',
                           height: '30px',
                           lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          border: "1px solid #E0E3EB",
                         }}>
                           <Tooltip title={admin.id} arrow>
                             <div
@@ -517,7 +517,7 @@ const AdminsDashboard = () => {
                                 fontWeight: 600,
                                 fontSize: "14px",
                                 color: "#000",
-                                // border: "1px solid #e0e0e0",
+                                // border: "1px solid #E0E3EB",
                                 py: 0,
                                 // height: 48,
                                 cursor: "pointer",
@@ -535,7 +535,7 @@ const AdminsDashboard = () => {
                           padding: '0 8px',
                           height: '30px',
                           lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          border: "1px solid #E0E3EB",
                         }}>
                           <div
                             style={{
@@ -596,7 +596,7 @@ const AdminsDashboard = () => {
                           padding: '0 8px',
                           height: '30px',
                           lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          border: "1px solid #E0E3EB",
                         }}>
                           <Tooltip title={admin.email || "N/A"} arrow>
                             <div
@@ -619,7 +619,7 @@ const AdminsDashboard = () => {
                           padding: '0 8px',
                           height: '30px',
                           lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          border: "1px solid #E0E3EB",
                         }}>
                           <span
                             style={{
@@ -637,7 +637,7 @@ const AdminsDashboard = () => {
                           padding: '0 8px',
                           height: '30px',
                           lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          border: "1px solid #E0E3EB",
                         }}>
                           <Chip
                             label="Active"
@@ -655,7 +655,7 @@ const AdminsDashboard = () => {
                           padding: '0 8px',
                           height: '30px',
                           lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          border: "1px solid #E0E3EB",
                         }}>
                           <Tooltip title="Delete Admin">
                             <IconButton

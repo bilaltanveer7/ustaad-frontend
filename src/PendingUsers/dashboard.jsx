@@ -178,7 +178,7 @@ const PendingUsersDashboard = () => {
       case "rejected":
         return { bg: "#FEECEC", color: "#F31616", border: "#FFCDD2" };
       default:
-        return { bg: "#F5F5F5", color: "#666", border: "#E0E0E0" };
+        return { bg: "#F5F5F5", color: "#666", border: "#E0E3EB" };
     }
   };
 
@@ -191,7 +191,7 @@ const PendingUsersDashboard = () => {
       case "ADMIN":
         return { bg: "#FFF3E0", color: "#F57C00", border: "#FFCC02" };
       default:
-        return { bg: "#F5F5F5", color: "#666", border: "#E0E0E0" };
+        return { bg: "#F5F5F5", color: "#666", border: "#E0E3EB" };
     }
   };
 
@@ -493,7 +493,7 @@ const PendingUsersDashboard = () => {
                 marginTop: 5,
               }}
             >
-              <Table style={{ border: "1px solid #e0e0e0" }}>
+              <Table style={{ border: "1px solid #E0E3EB" }}>
                 <TableHead
                   sx={{
                     backgroundColor: "#1E9CBC",
@@ -608,7 +608,7 @@ const PendingUsersDashboard = () => {
                       <TableRow
                         key={user.id}
                         style={{
-                          borderBottom: "1px solid #e0e0e0",
+                          borderBottom: "1px solid #E0E3EB",
                           // cursor: "pointer",
                         }}
                       // sx={{
@@ -621,7 +621,7 @@ const PendingUsersDashboard = () => {
                       // }}
                       >
                         <TableCell
-                          style={{ border: "1px solid #e0e0e0" }}
+                          style={{ border: "1px solid #E0E3EB" }}
                           onClick={() =>
                             handleUserClick(user.profileId, user.role)
                           }
@@ -671,7 +671,7 @@ const PendingUsersDashboard = () => {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                        <TableCell style={{ border: "1px solid #E0E3EB" }}>
                           <div>
                             <div
                               style={{
@@ -718,7 +718,7 @@ const PendingUsersDashboard = () => {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                        <TableCell style={{ border: "1px solid #E0E3EB" }}>
                           <Chip
                             label={user.role}
                             size="small"
@@ -732,7 +732,7 @@ const PendingUsersDashboard = () => {
                             }}
                           />
                         </TableCell>
-                        <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                        <TableCell style={{ border: "1px solid #E0E3EB" }}>
                           <div
                             style={{
                               display: "flex",
@@ -829,7 +829,7 @@ const PendingUsersDashboard = () => {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                        <TableCell style={{ border: "1px solid #E0E3EB" }}>
                           <Typography
                             // variant="body2"
                             style={{
@@ -841,7 +841,7 @@ const PendingUsersDashboard = () => {
                             {formatDate(user.createdAt)}
                           </Typography>
                         </TableCell>
-                        <TableCell style={{ border: "1px solid #e0e0e0" }}>
+                        <TableCell style={{ border: "1px solid #E0E3EB" }}>
                           <Chip
                             label={user.isOnBoard?.toUpperCase() || "PENDING"}
                             size="small"

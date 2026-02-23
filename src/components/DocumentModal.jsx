@@ -40,7 +40,7 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
   const handleZoomOut = () => {
     setZoom((prev) => Math.max(prev - 0.2, 0.5));
   };
-  
+
   const handleDownload = () => {
     if (doc) {
       const link = document.createElement("a");
@@ -189,8 +189,8 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
               transform: `scale(${zoom})`,
               transition: "transform 0.2s ease-in-out",
             }}
-            // onLoad={handleImageLoad}
-            // onError={handleImageError}
+          // onLoad={handleImageLoad}
+          // onError={handleImageError}
           />
         </Box>
       );
@@ -269,14 +269,19 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
     >
       <DialogTitle
         sx={{
-          m: 0,
-          p: 2,
+          padding: "6px 16px !important",
+          minHeight: "36px !important",
+          height: "36px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
-        <Typography variant="h6" component="div">
+        <Typography variant="subtitle1"
+          sx={{
+            fontWeight: 600,
+            lineHeight: 1.2,
+          }}>
           {doc?.split("/").pop() || "Document Viewer"}
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -305,15 +310,22 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
         </Box>
       </DialogTitle>
 
-      <DialogContent dividers sx={{ p: 0 }}>
+      <DialogContent dividers sx={{
+        p: 0,
+        overflow: "auto",
+        scrollbarWidth: "none",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+      }}>
         {renderContent()}
       </DialogContent>
 
-      <DialogActions sx={{ p: 2 }}>
+      {/* <DialogActions sx={{ p: 2 }}>
         <Button onClick={onClose} variant="outlined">
           Close
         </Button>
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
   );
 };

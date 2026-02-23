@@ -75,7 +75,7 @@ const drawerWidth = 260;
 const jobData = [
   { name: "Active", value: 15, color: "#00bcd4" },
   { name: "Completed", value: 20, color: "#4caf50" },
-  { name: "Remaining", value: 738, color: "#e0e0e0" },
+  { name: "Remaining", value: 738, color: "#E0E3EB" },
 ];
 
 const Dashboard = () => {
@@ -1628,7 +1628,7 @@ const Dashboard = () => {
                           height: 48,
                           backgroundColor:
                             index % 2 === 0 ? "white" : "#fafafa",
-                          borderBottom: "1px solid #e0e0e0",
+                          borderBottom: "1px solid #E0E3EB",
                         }}
                       >
                         <TableCell
@@ -1637,7 +1637,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             py: 0,
                             height: 48,
                           }}
@@ -1649,7 +1649,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             py: 0,
                             height: 48,
                           }}
@@ -1687,7 +1687,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             py: 0,
                             height: 48,
                           }}
@@ -1704,7 +1704,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             py: 0,
                             height: 48,
                           }}
@@ -1721,7 +1721,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             height: 48,
                             paddingTop: 0,
                             paddingBottom: 0,
@@ -1791,7 +1791,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             height: 48,
                             paddingTop: 0,
                             paddingBottom: 0,

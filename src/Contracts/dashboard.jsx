@@ -61,13 +61,13 @@ const ContractDashboard = () => {
   } = useAdminStore();
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const statusOptions = ["ALL", "ACTIVE", "DISPUTE", "CANCELLED", "COMPLETED"];
+  const statusOptions = ["ALL", "ACTIVE", "DISPUTE", "CANCELLED", "COMPLETED", "REFUND"];
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [selectedContract, setSelectedContract] = useState(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const [resolutionModalOpen, setResolutionModalOpen] = useState(false);
-  const [targetStatus, setTargetStatus] = useState(""); // "active" | "cancelled" | "completed"
+  const [targetStatus, setTargetStatus] = useState(""); // "active" | "cancelled" | "completed" | "refund"
   const [adminNotes, setAdminNotes] = useState("");
   const [contractToResolve, setContractToResolve] = useState(null);
 
@@ -92,9 +92,8 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${
-      page + 1
-    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+    const query = `?page=${page + 1
+      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
     fetchDisputedContracts(query);
   }, [
     fetchDisputedContracts,
@@ -115,9 +114,8 @@ const ContractDashboard = () => {
         handleCloseDetailsModal();
         // Refresh the list
         const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-        const query = `?page=${
-          page + 1
-        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        const query = `?page=${page + 1
+          }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
         fetchDisputedContracts(query);
       }
     }
@@ -441,7 +439,7 @@ const ContractDashboard = () => {
                               padding: "0 8px",
                               height: "40px",
                               lineHeight: "40px",
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                             }}
                           >
                             <Tooltip
@@ -471,7 +469,7 @@ const ContractDashboard = () => {
                           </TableCell>
                           <TableCell
                             style={{
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                               padding: "0 8px",
                               height: "40px",
                               lineHeight: "40px",
@@ -507,7 +505,7 @@ const ContractDashboard = () => {
                               padding: "0 8px",
                               height: "40px",
                               lineHeight: "40px",
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                             }}
                           >
                             <Tooltip
@@ -538,7 +536,7 @@ const ContractDashboard = () => {
                               fontSize: "14px",
                               color: "#000",
                               fontWeight: 400,
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                               padding: "0 8px",
                               height: "30px",
                               lineHeight: "30px",
@@ -572,7 +570,7 @@ const ContractDashboard = () => {
                               padding: "0 8px",
                               height: "40px",
                               lineHeight: "40px",
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                             }}
                           >
                             <div className="d-flex align-items-center justify-content-between">
@@ -580,8 +578,8 @@ const ContractDashboard = () => {
                                 title={
                                   row.startDate
                                     ? new Date(
-                                        row.startDate
-                                      ).toLocaleDateString()
+                                      row.startDate
+                                    ).toLocaleDateString()
                                     : "N/A"
                                 }
                                 arrow
@@ -610,7 +608,7 @@ const ContractDashboard = () => {
                               fontSize: "14px",
                               color: "#000",
                               fontWeight: 400,
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                               padding: "0 8px",
                               height: "40px",
                               lineHeight: "40px",
@@ -626,7 +624,7 @@ const ContractDashboard = () => {
                               fontSize: "14px",
                               color: "#000",
                               fontWeight: 400,
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                               padding: "0 8px",
                               height: "40px",
                               lineHeight: "40px",
@@ -642,7 +640,7 @@ const ContractDashboard = () => {
                               fontSize: "14px",
                               color: "#000",
                               fontWeight: 400,
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                               padding: "0 8px",
                               height: "40px",
                               lineHeight: "40px",
@@ -682,7 +680,7 @@ const ContractDashboard = () => {
                               fontSize: "14px",
                               color: "#000",
                               fontWeight: 400,
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                               padding: "0 8px",
                               height: "40px",
                               maxWidth: "220px",
@@ -741,7 +739,7 @@ const ContractDashboard = () => {
                               fontSize: "14px",
                               color: "#000",
                               fontWeight: 400,
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                               padding: "0 24px",
                               // height: "40px",
                             }}
@@ -847,6 +845,25 @@ const ContractDashboard = () => {
                                 >
                                   Complete
                                 </MenuItem>
+
+                                <MenuItem
+                                  onClick={() => {
+                                    handleMenuClose();
+                                    handleOpenResolutionModal(row, "REFUND");
+                                  }}
+                                  sx={{
+                                    color: "#fff",
+                                    bgcolor: "#063455",
+                                    "&:hover": {
+                                      bgcolor: "#063455",
+                                    },
+                                    borderRadius: "4px",
+                                    mx: 1,
+                                    my: 0.5,
+                                  }}
+                                >
+                                  Refunf
+                                </MenuItem>
                               </Menu>
                             </Box>
                           </TableCell>
@@ -870,35 +887,22 @@ const ContractDashboard = () => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 sx={{
                   width: "100%",
-
                   "& .MuiTablePagination-toolbar": {
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-between",
-                    position: "relative",
                   },
-
-                  /* LEFT: Rows per page (label + select) */
+                  "& .MuiTablePagination-spacer": {
+                    flex: "0 0 auto",
+                  },
                   "& .MuiTablePagination-selectLabel": {
                     margin: 0,
                   },
-
-                  /* CENTER: 1–2 of 2 */
                   "& .MuiTablePagination-displayedRows": {
-                    position: "absolute",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    margin: 0,
+                    margin: "0 auto",
                     whiteSpace: "nowrap",
                   },
-
-                  /* RIGHT: arrows */
                   "& .MuiTablePagination-actions": {
                     marginLeft: "auto",
-                  },
-
-                  "& .MuiTablePagination-spacer": {
-                    display: "none",
                   },
                 }}
               />
@@ -1130,20 +1134,20 @@ const ContractDashboard = () => {
           <Box>
             {(selectedContract?.status === "CANCELLED" ||
               selectedContract?.status === "COMPLETED") && (
-              <Button
-                onClick={handleRefund}
-                variant="outlined"
-                color="error"
-                disabled={isRefundingContract}
-                startIcon={
-                  isRefundingContract ? (
-                    <CircularProgress size={20} color="inherit" />
-                  ) : null
-                }
-              >
-                {isRefundingContract ? "Refunding..." : "Refund"}
-              </Button>
-            )}
+                <Button
+                  onClick={handleRefund}
+                  variant="outlined"
+                  color="error"
+                  disabled={isRefundingContract}
+                  startIcon={
+                    isRefundingContract ? (
+                      <CircularProgress size={20} color="inherit" />
+                    ) : null
+                  }
+                >
+                  {isRefundingContract ? "Refunding..." : "Refund"}
+                </Button>
+              )}
           </Box>
           <Button
             onClick={handleCloseDetailsModal}

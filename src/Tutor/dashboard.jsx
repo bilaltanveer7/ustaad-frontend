@@ -449,10 +449,10 @@ const TutorDashboard = () => {
           {!isLoading && !error && tableData && tableData.length > 0 && (
             <div className="row">
               <div className="col-12">
-                <TableContainer component={Paper}>
+                <TableContainer>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
+                      <TableRow sx={{ height: 32, bgcolor: "#FFFFFF" }}>
                         {[
                           { label: "Tutor ID", key: "clientId" },
                           { label: "Tutor Name", key: "name" },
@@ -463,10 +463,14 @@ const TutorDashboard = () => {
                           <TableCell
                             key={key}
                             sx={{
-                              fontSize: "16px",
-                              fontWeight: 600,
-                              color: "#FFFFFF",
+                              height: "32px",
+                              py: 0,
+                              px: 2,
+                              fontSize: "14px",
+                              fontWeight: 500,
+                              color: "#4D5874",
                               whiteSpace: "nowrap",
+                              verticalAlign: "middle",
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -494,34 +498,35 @@ const TutorDashboard = () => {
                             hover
                             onClick={() => handleSelectRow(row.id)}
                             selected={isItemSelected}
-                            style={{
-                              height: "30px",
-                              backgroundColor: "transparent",
+                            sx={{
+                              height: "48px",
+                              backgroundColor: index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
+                              "&:hover": {
+                                backgroundColor: "#F1F3F7",
+                              },
                             }}
                           >
                             <TableCell
                               sx={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                             >
                               <Tooltip title={row.userId} arrow>
                                 <div
                                   style={{
-                                    fontWeight: 600,
-                                    fontSize: "14px",
-                                    color: "#000",
-                                    // border: "1px solid #e0e0e0",
+                                    fontWeight: 400,
+                                    fontSize: "16px",
+                                    color: "#4D5874",
+                                    // height: 48,
                                     cursor: "pointer",
                                     maxWidth: "80px",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
+                                    textAlign: 'center'
                                   }}
                                 >
                                   {row.userId}
@@ -531,13 +536,10 @@ const TutorDashboard = () => {
 
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
-                                fontWeight: 400,
-                                border: "1px solid #e0e0e0",
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                               onClick={() =>
                                 navigate(`/tutor-profile/${row.id}`)
@@ -545,7 +547,7 @@ const TutorDashboard = () => {
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <div
-                                  className="d-flex align-items-center"
+                                  className="d-flex align-items-center" style={{ marginLeft: '5px' }}
                                   onClick={() =>
                                     navigate(`/tutor-profile/${row.id}`)
                                   }
@@ -562,14 +564,13 @@ const TutorDashboard = () => {
                                     <div
                                       style={{
                                         fontWeight: 400,
-                                        fontSize: "14px",
-                                        color: "#000",
+                                        fontSize: "16px",
+                                        color: "#101219",
                                         cursor: "pointer",
-                                        maxWidth: "160px",
+                                        maxWidth: "100px",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
-                                        marginLeft: "6px",
                                       }}
                                     >
                                       {row.name}
@@ -580,21 +581,29 @@ const TutorDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
+                                fontSize: "16px",
+                                color: "#101219",
                                 fontWeight: 400,
-                                border: "1px solid #e0e0e0",
+                                border: "1px solid #E0E3EB",
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                // height: 48,
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <span
                                   style={{
-                                    fontSize: "14px",
-                                    color: "#000",
                                     fontWeight: 400,
+                                    fontSize: "16px",
+                                    color: "#101219",
+                                    cursor: "pointer",
+                                    maxWidth: "140px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                    textAlign: 'center',
+                                    marginLeft: '5px'
                                   }}
                                 >
                                   {row.email}
@@ -608,32 +617,34 @@ const TutorDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "16px", color: "#666" }}
+                                    style={{ fontSize: "16px", color: "#666", marginRight: '5px' }}
                                   />
                                 </IconButton>
                               </div>
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
+                                fontSize: "16px",
+                                color: "#101219",
                                 fontWeight: 400,
-                                border: "1px solid #e0e0e0",
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <span
                                   style={{
-                                    maxWidth: "200px",
+                                    fontWeight: 400,
+                                    fontSize: "16px",
+                                    color: "#101219",
+                                    cursor: "pointer",
+                                    maxWidth: "120px",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
-                                    fontSize: "14px",
-                                    color: "#000",
-                                    fontWeight: 400,
+                                    marginLeft: '5px'
                                   }}
                                 >
                                   {"+" + row.phone}
@@ -647,30 +658,26 @@ const TutorDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "16px", color: "#666" }}
+                                    style={{ fontSize: "16px", color: "#666", marginRight: '5px' }}
                                   />
                                 </IconButton>
                               </div>
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
+                                fontSize: "16px",
+                                color: "#4D5874",
                                 fontWeight: 400,
-                                border: "1px solid #e0e0e0",
+                                border: "1px solid #E0E3EB",
                                 padding: "0 8px",
-                                height: "30px",
-                                lineHeight: "30px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                // height: 48,
                               }}
                             >
                               <div
                                 className="d-flex align-items-center justify-content-between"
-                                style={{
-                                  fontSize: "14px",
-                                  color: "#000",
-                                  fontWeight: 400,
-                                }}
-                              >
+                                style={{ marginLeft: '10px' }} >
                                 {row.date}
                               </div>
                             </TableCell>
@@ -691,39 +698,22 @@ const TutorDashboard = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                     sx={{
                       width: "100%",
-
                       "& .MuiTablePagination-toolbar": {
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "space-between",
-                        position: "relative",
                       },
-
-                      /* LEFT: Rows per page (label + select) */
+                      "& .MuiTablePagination-spacer": {
+                        flex: "0 0 auto",
+                      },
                       "& .MuiTablePagination-selectLabel": {
                         margin: 0,
                       },
-
-                      "& .MuiTablePagination-select": {
-                        marginLeft: 1,
-                      },
-
-                      /* CENTER: 1–2 of 2 */
                       "& .MuiTablePagination-displayedRows": {
-                        position: "absolute",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        margin: 0,
+                        margin: "0 auto",
                         whiteSpace: "nowrap",
                       },
-
-                      /* RIGHT: arrows */
                       "& .MuiTablePagination-actions": {
                         marginLeft: "auto",
-                      },
-
-                      "& .MuiTablePagination-spacer": {
-                        display: "none",
                       },
                     }}
                   />
