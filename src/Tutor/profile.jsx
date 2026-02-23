@@ -320,35 +320,70 @@ const TutorsProfile = () => {
   // Transform API data for display
   const experienceData =
     experience?.length > 0
-      ? experience?.map((exp) => ({
-        id: exp.id,
-        company: exp.company || "N/A",
-        title: exp.description || "N/A", // API uses 'description' for job title/role
-        startYear: exp.startDate
-          ? new Date(exp.startDate).getFullYear().toString()
-          : "N/A",
-        endYear:
-          exp.endDate === "Present"
-            ? "Present"
-            : new Date(exp.endDate).getFullYear().toString(),
-      }))
+      ? experience?.map((exp) => {
+          const startYear = exp.startDate
+            ? new Date(exp.startDate).getFullYear()
+            : null;
+          const endYear =
+            exp.endDate === "Present"
+              ? new Date().getFullYear()
+              : exp.endDate
+              ? new Date(exp.endDate).getFullYear()
+              : null;
+          const totalYears =
+            startYear !== null && endYear !== null
+              ? (endYear - startYear).toString()
+              : "N/A";
+
+          return {
+            id: exp.id,
+            company: exp.company || "N/A",
+            title: exp.description || "N/A", // API uses 'description' for job title/role
+            designation: exp.designation || "N/A",
+            startYear: startYear ? startYear.toString() : "N/A",
+            endYear:
+              exp.endDate === "Present"
+                ? "Present"
+                : endYear
+                ? endYear.toString()
+                : "N/A",
+            totalYears,
+          };
+        })
       : [];
 
   const educationData =
     education?.length > 0
-      ? education?.map((edu) => ({
-        id: edu.id,
-        institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-        degree: edu.degree || "N/A", // API uses 'description' for degree info
-        description: edu.description || "N/A", // API uses 'description' for degree info
-        startDate: edu.startDate
-          ? new Date(edu.startDate).getFullYear().toString()
-          : "N/A",
-        endDate:
-          edu.endDate === "Present"
-            ? "Present"
-            : new Date(edu.endDate).getFullYear().toString(),
-      }))
+      ? education?.map((edu) => {
+          const startYear = edu.startDate
+            ? new Date(edu.startDate).getFullYear()
+            : null;
+          const endYear =
+            edu.endDate === "Present"
+              ? new Date().getFullYear()
+              : edu.endDate
+              ? new Date(edu.endDate).getFullYear()
+              : null;
+          const totalYears =
+            startYear !== null && endYear !== null
+              ? (endYear - startYear).toString()
+              : "N/A";
+
+          return {
+            id: edu.id,
+            institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
+            degree: edu.degree || "N/A",
+            description: edu.description || "N/A",
+            startDate: startYear ? startYear.toString() : "N/A",
+            endDate:
+              edu.endDate === "Present"
+                ? "Present"
+                : endYear
+                ? endYear.toString()
+                : "N/A",
+            totalYears,
+          };
+        })
       : [];
 
   // Transform API transactions data for display
@@ -979,6 +1014,40 @@ const TutorsProfile = () => {
                       >
                         {row.endYear}
                       </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          color: "#000",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
+                        {row.totalYears}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          color: "#000",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
+                        {row.designation}
+                      </TableCell>
                     </TableRow>
                   ))
                 )}
@@ -1314,6 +1383,21 @@ const TutorsProfile = () => {
                       {getSortIcon("end_date")}
                     </Box>
                   </TableCell>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        color: "#FFFFFF",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Total Years
+                    </Box>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -1423,6 +1507,19 @@ const TutorsProfile = () => {
                         }}
                       >
                         {row.endDate}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#000",
+                          fontWeight: 400,
+                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                        }}
+                      >
+                        {row.totalYears}
                       </TableCell>
                     </TableRow>
                   ))
