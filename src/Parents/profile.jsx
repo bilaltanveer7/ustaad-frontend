@@ -316,7 +316,7 @@ const ParentsProfile = () => {
         (parent?.User?.firstName && parent?.User?.lastName
           ? `${parent.User.firstName} ${parent.User.lastName}`
           : parent?.User?.firstName || parent?.User?.lastName || "N/A"),
-      cost: `$${tx.amount?.toFixed(2) || "0.00"}`,
+      cost: `${tx.amount?.toFixed(2) || "0.00"}`,
     },
     tutorName: tx.tutor.name || "N/A",
     child: {
@@ -339,12 +339,13 @@ const ParentsProfile = () => {
   const childrenData = children.map((child) => {
     const subscriptionSessionInfo = child.subscriptions?.length
       ? child.subscriptions
-        .map(
-          (sub) =>
-            `${sub.Offer?.sessions || 0} / ${sub.tutorSessionsDetailCount || 0
-            }`
-        )
-        .join(", ")
+          .map(
+            (sub) =>
+              `${sub.Offer?.sessions || 0} / ${
+                sub.tutorSessionsDetailCount || 0
+              }`
+          )
+          .join(", ")
       : null;
 
     return {
@@ -356,10 +357,10 @@ const ParentsProfile = () => {
       curriculum: child.curriculum || "N/A",
       subjects: child.subscriptions?.length
         ? [
-          ...new Set(
-            child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
-          ),
-        ].join(", ") || "N/A"
+            ...new Set(
+              child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
+            ),
+          ].join(", ") || "N/A"
         : child.subjects?.join(", ") || "N/A",
       tutorHired:
         subscriptionSessionInfo ||
@@ -515,7 +516,7 @@ const ParentsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <img
@@ -543,7 +544,7 @@ const ParentsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <span
@@ -565,7 +566,7 @@ const ParentsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <div
@@ -601,7 +602,7 @@ const ParentsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.transactionDate}
@@ -636,7 +637,8 @@ const ParentsProfile = () => {
                     fontWeight: 500,
                     borderBottom: "none",
                   },
-                }}>
+                }}
+              >
                 <TableRow
                   sx={{
                     fontSize: "16px",
@@ -754,7 +756,7 @@ const ParentsProfile = () => {
                           height: "42px",
                           lineHeight: "42px",
                           textTransform: "capitalize",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.childName}
@@ -771,7 +773,7 @@ const ParentsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.age}
@@ -788,7 +790,7 @@ const ParentsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.grade}
@@ -805,7 +807,7 @@ const ParentsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.curriculum}
@@ -819,11 +821,11 @@ const ParentsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          // color: 
+                          // color:
                           // row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
                           // fontWeight: "500",
-                          textTransform: 'capitalize',
-                          paddingLeft: '15px'
+                          textTransform: "capitalize",
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.gender}
@@ -859,7 +861,8 @@ const ParentsProfile = () => {
                     fontWeight: 500,
                     borderBottom: "none",
                   },
-                }}>
+                }}
+              >
                 <TableRow
                   sx={{
                     fontSize: "14px",
@@ -976,7 +979,7 @@ const ParentsProfile = () => {
                           height: "42px",
                           lineHeight: "42px",
                           border: "1px solid #E0E3EB",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <div
@@ -1015,7 +1018,7 @@ const ParentsProfile = () => {
                           height: "42px",
                           lineHeight: "42px",
                           border: "1px solid #E0E3EB",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <div
@@ -1034,7 +1037,7 @@ const ParentsProfile = () => {
                               fontSize: "16px",
                               fontWeight: 400,
                               color: "#101219",
-                              textTransform: 'capitalize'
+                              textTransform: "capitalize",
                             }}
                           >
                             {row.toChild.name}
@@ -1051,8 +1054,9 @@ const ParentsProfile = () => {
                           height: "42px",
                           lineHeight: "42px",
                           border: "1px solid #E0E3EB",
-                          paddingLeft: '15px'
-                        }}>
+                          paddingLeft: "15px",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -1407,10 +1411,10 @@ const ParentsProfile = () => {
                     </div>
                     <div
                       style={{
-                        display: 'flex',
-                        gap: 10
-                      }}>
-
+                        display: "flex",
+                        gap: 10,
+                      }}
+                    >
                       <Chip
                         label="Verified"
                         size="small"
@@ -1434,7 +1438,7 @@ const ParentsProfile = () => {
                           color: "white",
                           textTransform: "none",
                           fontSize: "14px",
-                          height: 35
+                          height: 35,
                         }}
                       >
                         Delete User

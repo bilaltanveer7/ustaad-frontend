@@ -61,7 +61,14 @@ const ContractDashboard = () => {
   } = useAdminStore();
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const statusOptions = ["ALL", "ACTIVE", "DISPUTE", "CANCELLED", "COMPLETED", "REFUND"];
+  const statusOptions = [
+    "ALL",
+    "ACTIVE",
+    "DISPUTE",
+    "CANCELLED",
+    "COMPLETED",
+    "REFUND",
+  ];
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [selectedContract, setSelectedContract] = useState(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
@@ -92,8 +99,9 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${page + 1
-      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+    const query = `?page=${
+      page + 1
+    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
     fetchDisputedContracts(query);
   }, [
     fetchDisputedContracts,
@@ -114,8 +122,9 @@ const ContractDashboard = () => {
         handleCloseDetailsModal();
         // Refresh the list
         const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-        const query = `?page=${page + 1
-          }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        const query = `?page=${
+          page + 1
+        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
         fetchDisputedContracts(query);
       }
     }
@@ -578,8 +587,8 @@ const ContractDashboard = () => {
                                 title={
                                   row.startDate
                                     ? new Date(
-                                      row.startDate
-                                    ).toLocaleDateString()
+                                        row.startDate
+                                      ).toLocaleDateString()
                                     : "N/A"
                                 }
                                 arrow
@@ -846,24 +855,26 @@ const ContractDashboard = () => {
                                   Complete
                                 </MenuItem>
 
-                                <MenuItem
-                                  onClick={() => {
-                                    handleMenuClose();
-                                    handleOpenResolutionModal(row, "REFUND");
-                                  }}
-                                  sx={{
-                                    color: "#fff",
-                                    bgcolor: "#063455",
-                                    "&:hover": {
+                                {row.isRefunded === false && (
+                                  <MenuItem
+                                    onClick={() => {
+                                      handleMenuClose();
+                                      handleOpenResolutionModal(row, "REFUND");
+                                    }}
+                                    sx={{
+                                      color: "#fff",
                                       bgcolor: "#063455",
-                                    },
-                                    borderRadius: "4px",
-                                    mx: 1,
-                                    my: 0.5,
-                                  }}
-                                >
-                                  Refunf
-                                </MenuItem>
+                                      "&:hover": {
+                                        bgcolor: "#063455",
+                                      },
+                                      borderRadius: "4px",
+                                      mx: 1,
+                                      my: 0.5,
+                                    }}
+                                  >
+                                    Refund
+                                  </MenuItem>
+                                )}
                               </Menu>
                             </Box>
                           </TableCell>
@@ -943,14 +954,6 @@ const ContractDashboard = () => {
             <Grid container spacing={3}>
               {/* Dispute Info */}
               <Grid item xs={12}>
-                <Typography
-                  variant="subtitle1"
-                  fontWeight="bold"
-                  color="error"
-                  gutterBottom
-                >
-                  Dispute Information
-                </Typography>
                 {refundContractError && (
                   <Alert severity="error" sx={{ mb: 2 }}>
                     {refundContractError}
@@ -1109,14 +1112,6 @@ const ContractDashboard = () => {
                   </Grid>
                   <Grid item xs={6} sm={3}>
                     <Typography variant="body2" color="textSecondary">
-                      Days
-                    </Typography>
-                    <Typography variant="body1">
-                      {selectedContract.Offer?.days?.join(", ")}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
                       Next Billing
                     </Typography>
                     <Typography variant="body1">
@@ -1133,7 +1128,8 @@ const ContractDashboard = () => {
         <DialogActions sx={{ p: 2, justifyContent: "space-between" }}>
           <Box>
             {(selectedContract?.status === "CANCELLED" ||
-              selectedContract?.status === "COMPLETED") && (
+              selectedContract?.status === "COMPLETED") &&
+              selectedContract?.isRefunded === false && (
                 <Button
                   onClick={handleRefund}
                   variant="outlined"

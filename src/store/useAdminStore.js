@@ -107,12 +107,19 @@ export const useAdminStore = create((set, get) => ({
     search = "",
     status = "",
     page = 1,
-    limit = 10
+    limit = 10,
+    date = ""
   ) => {
     set({ isLoadingPaymentRequests: true, paymentRequestsError: null });
 
     try {
-      const response = await getAllPaymentRequests(search, status, page, limit);
+      const response = await getAllPaymentRequests(
+        search,
+        status,
+        page,
+        limit,
+        date
+      );
 
       if (response.data && response.data.success) {
         // Handle pagination structure (data.items) or direct array (data)

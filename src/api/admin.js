@@ -25,11 +25,13 @@ export const getAllPaymentRequests = async (
   search = "",
   status = "",
   page = 1,
-  limit = 10
+  limit = 10,
+  date = ""
 ) => {
   let url = `/admin/payment-requests?page=${page}&limit=${limit}&`;
   if (search) url += `search=${search}&`;
   if (status) url += `status=${status}&`;
+  if (date) url += `date=${date}&`;
 
   const data = await invoke({
     url: url,
