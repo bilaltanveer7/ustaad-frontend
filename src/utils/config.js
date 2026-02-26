@@ -1,6 +1,6 @@
 const config = {
   // Use environment variables first, then fallback to remote servers
-  apiUrl: process.env.REACT_APP_API_URL || "http://localhost:5100",
+  apiUrl: process.env.REACT_APP_API_URL || "http://15.235.204.49:5000",
   parentDocumentUrl:
     process.env.REACT_APP_PARENT_DOCUMENT_URL || "http://15.235.204.49:301",
   tutorDocumentUrl:
