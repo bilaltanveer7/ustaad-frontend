@@ -47,6 +47,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { CiWallet } from "react-icons/ci";
 import config from "../utils/config";
+import { capitalize, formatArray } from "../utils/helpers";
 
 const drawerWidth = 260;
 
@@ -101,7 +102,8 @@ const TutorsProfile = () => {
         experienceYears: totalExperience
           ? Math.round(totalExperience).toString()
           : "0",
-        subjects: tutor?.subjects?.join(", ") || "N/A",
+        subjects: formatArray(tutor?.subjects) || "N/A",
+        curriculum: formatArray(tutor?.curriculum) || "N/A",
         description: tutor?.about || "No description available",
       }));
     }
@@ -389,72 +391,72 @@ const TutorsProfile = () => {
   // Transform API transactions data for display
   const transactionsData = transactions
     ? // Handle both single object and array cases
-    (Array.isArray(transactions) ? transactions : [transactions]).map(
-      (tx) => ({
-        id: tx.id,
-        payment: {
-          name: tutor?.User?.fullName || "Unknown",
-          cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
-        },
-        parent: tx?.parent?.name || "N/A",
-        invoiceId: tx?.parentTransactions[0]?.invoiceId || "N/A",
-        child: {
-          name: "Student", // API doesn't provide child info, using placeholder
-          avatar: "/placeholder.svg?height=32&width=32",
-        },
-        pay: tx.amount || 0,
-        paymentMethod: {
-          type: "bank",
-          accountNumber: tutor?.accountNumber || "N/A",
-        },
-        transactionDate: tx.createdAt
-          ? new Date(tx.createdAt).toLocaleDateString()
-          : "N/A",
-        status: tx.status || "UNKNOWN",
-      })
-    )
+      (Array.isArray(transactions) ? transactions : [transactions]).map(
+        (tx) => ({
+          id: tx.id,
+          payment: {
+            name: tutor?.User?.fullName || "Unknown",
+            cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
+          },
+          parent: tx?.parent?.name || "N/A",
+          invoiceId: tx?.parentTransactions[0]?.invoiceId || "N/A",
+          child: {
+            name: "Student", // API doesn't provide child info, using placeholder
+            avatar: "/placeholder.svg?height=32&width=32",
+          },
+          pay: tx.amount || 0,
+          paymentMethod: {
+            type: "bank",
+            accountNumber: tutor?.accountNumber || "N/A",
+          },
+          transactionDate: tx.createdAt
+            ? new Date(tx.createdAt).toLocaleDateString()
+            : "N/A",
+          status: tx.status || "UNKNOWN",
+        })
+      )
     : [];
 
   // Transform API documents data for display
   const documentsData = documents
     ? [
-      {
-        id: 1,
-        name: "Resume",
-        type: documents.resume
-          ? documents.resume.toLowerCase().endsWith(".pdf")
-            ? "PDF"
-            : "Image"
-          : "N/A",
-        url: `${config.tutorDocumentUrl}${documents.resume}`,
-        uploadDate: "N/A", // Upload date not available in API
-        status: documents.resume ? "Available" : "Missing",
-      },
-      {
-        id: 2,
-        name: "ID Front",
-        type: documents.idFront
-          ? documents.idFront.toLowerCase().endsWith(".pdf")
-            ? "PDF"
-            : "Image"
-          : "N/A",
-        url: `${config.tutorDocumentUrl}${documents.idFront}`,
-        uploadDate: "N/A", // Upload date not available in API
-        status: documents.idFront ? "Available" : "Missing",
-      },
-      {
-        id: 3,
-        name: "ID Back",
-        type: documents.idBack
-          ? documents.idBack.toLowerCase().endsWith(".pdf")
-            ? "PDF"
-            : "Image"
-          : "N/A",
-        url: `${config.tutorDocumentUrl}${documents.idBack}`,
-        uploadDate: "N/A", // Upload date not available in API
-        status: documents.idBack ? "Available" : "Missing",
-      },
-    ].filter((doc) => doc.url)
+        {
+          id: 1,
+          name: "Resume",
+          type: documents.resume
+            ? documents.resume.toLowerCase().endsWith(".pdf")
+              ? "PDF"
+              : "Image"
+            : "N/A",
+          url: `${config.tutorDocumentUrl}${documents.resume}`,
+          uploadDate: "N/A", // Upload date not available in API
+          status: documents.resume ? "Available" : "Missing",
+        },
+        {
+          id: 2,
+          name: "ID Front",
+          type: documents.idFront
+            ? documents.idFront.toLowerCase().endsWith(".pdf")
+              ? "PDF"
+              : "Image"
+            : "N/A",
+          url: `${config.tutorDocumentUrl}${documents.idFront}`,
+          uploadDate: "N/A", // Upload date not available in API
+          status: documents.idFront ? "Available" : "Missing",
+        },
+        {
+          id: 3,
+          name: "ID Back",
+          type: documents.idBack
+            ? documents.idBack.toLowerCase().endsWith(".pdf")
+              ? "PDF"
+              : "Image"
+            : "N/A",
+          url: `${config.tutorDocumentUrl}${documents.idBack}`,
+          uploadDate: "N/A", // Upload date not available in API
+          status: documents.idBack ? "Available" : "Missing",
+        },
+      ].filter((doc) => doc.url)
     : [];
 
   const childrenData = [
@@ -517,7 +519,8 @@ const TutorsProfile = () => {
                     fontWeight: 500,
                     borderBottom: "none",
                   },
-                }}>
+                }}
+              >
                 <TableRow
                   sx={{
                     fontSize: "14px",
@@ -631,7 +634,7 @@ const TutorsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <img
@@ -659,7 +662,7 @@ const TutorsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <span
@@ -689,7 +692,7 @@ const TutorsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <div
@@ -723,7 +726,7 @@ const TutorsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.transactionDate}
@@ -803,7 +806,8 @@ const TutorsProfile = () => {
                     fontWeight: 500,
                     borderBottom: "none",
                   },
-                }}>
+                }}
+              >
                 <TableRow
                   sx={{
                     fontSize: "14px",
@@ -938,7 +942,7 @@ const TutorsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <img
@@ -967,7 +971,7 @@ const TutorsProfile = () => {
                           height: "42px",
                           lineHeight: "42px",
                           border: "1px solid #E0E3EB",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         <Tooltip title={row.title} arrow>
@@ -995,7 +999,7 @@ const TutorsProfile = () => {
                           lineHeight: "42px",
                           border: "1px solid #E0E3EB",
                           padding: "0 8px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.startYear}
@@ -1009,7 +1013,7 @@ const TutorsProfile = () => {
                           lineHeight: "42px",
                           border: "1px solid #E0E3EB",
                           padding: "0 8px",
-                          paddingLeft: '15px'
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.endYear}
@@ -1079,7 +1083,8 @@ const TutorsProfile = () => {
                     fontWeight: 500,
                     borderBottom: "none",
                   },
-                }}>
+                }}
+              >
                 <TableRow
                   sx={{
                     fontSize: "14px",
@@ -1295,7 +1300,8 @@ const TutorsProfile = () => {
                     fontWeight: 500,
                     borderBottom: "none",
                   },
-                }}>
+                }}
+              >
                 <TableRow
                   sx={{
                     fontSize: "14px",
@@ -1588,7 +1594,13 @@ const TutorsProfile = () => {
                   border: "1px solid #D1D1DB",
                 }}
               >
-                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                  }}
+                >
                   {/* <div> */}
                   <div
                     style={{
@@ -1635,8 +1647,8 @@ const TutorsProfile = () => {
                         {tutor?.User?.firstName && tutor?.User?.lastName
                           ? `${tutor.User.firstName} ${tutor.User.lastName}`
                           : tutor?.User?.firstName ||
-                          tutor?.User?.lastName ||
-                          "N/A"}
+                            tutor?.User?.lastName ||
+                            "N/A"}
                       </h5>
                       <Typography variant="body2" sx={{ color: "#666" }}>
                         Email: {tutor?.User?.email || "No email"}
@@ -1655,20 +1667,32 @@ const TutorsProfile = () => {
                             textTransform: "capitalize",
                           }}
                         >
-                          Subjects: {tutor.subjects.join(", ")}
+                          Subjects: {formatArray(tutor.subjects)}
                         </Typography>
+                      )}
+                      {tutor?.curriculum && (
+                        <span
+                          style={{
+                            fontSize: "14px",
+                            fontWeight: 400,
+                            color: "#4D5874",
+                          }}
+                        >
+                          Curriculum: {formatArray(tutor.curriculum)}
+                        </span>
                       )}
                     </div>
                   </div>
                   {/* </div> */}
                   <div
                     style={{
-                      display: 'flex',
-                      // width:'100%', 
-                      // alignItems:'center', 
-                      // justifyContent:'flex-end', 
+                      display: "flex",
+                      // width:'100%',
+                      // alignItems:'center',
+                      // justifyContent:'flex-end',
                       gap: 10,
-                    }}>
+                    }}
+                  >
                     {activeTab === 0 && (
                       <Button
                         variant="contained"
@@ -1691,7 +1715,7 @@ const TutorsProfile = () => {
                           fontSize: "14px",
                           height: 35,
                           px: 5,
-                          whiteSpace: 'nowrap'
+                          whiteSpace: "nowrap",
                         }}
                       >
                         Rs {tutor?.balance?.toFixed(2) || "0.00"}
@@ -1735,7 +1759,7 @@ const TutorsProfile = () => {
                         fontSize: "14px",
                         height: 35,
                         px: 5,
-                        whiteSpace: 'nowrap'
+                        whiteSpace: "nowrap",
                       }}
                     >
                       Delete User

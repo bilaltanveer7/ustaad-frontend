@@ -760,122 +760,6 @@ const ContractDashboard = () => {
                               >
                                 <MoreVertIcon />
                               </IconButton>
-
-                              <Menu
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleMenuClose}
-                                anchorOrigin={{
-                                  vertical: "bottom",
-                                  horizontal: "right",
-                                }}
-                                transformOrigin={{
-                                  vertical: "top",
-                                  horizontal: "right",
-                                }}
-                                PaperProps={{
-                                  sx: {
-                                    borderRadius: "8px",
-                                    minWidth: "140px",
-                                  },
-                                }}
-                              >
-                                <MenuItem
-                                  onClick={() => {
-                                    handleMenuClose();
-                                    handleViewDetails(row);
-                                  }}
-                                  sx={{
-                                    color: "#fff",
-                                    bgcolor: "#1976d2",
-                                    "&:hover": {
-                                      bgcolor: "#1565c0",
-                                    },
-                                    borderRadius: "4px",
-                                    mx: 1,
-                                    my: 0.5,
-                                  }}
-                                >
-                                  View
-                                </MenuItem>
-                                <MenuItem
-                                  onClick={() => {
-                                    handleMenuClose();
-                                    handleOpenResolutionModal(row, "ACTIVE");
-                                  }}
-                                  sx={{
-                                    color: "#fff",
-                                    bgcolor: "#ED6C02", // Warning/Orange color for Active/Reactivate
-                                    "&:hover": {
-                                      bgcolor: "#E65100",
-                                    },
-                                    borderRadius: "4px",
-                                    mx: 1,
-                                    my: 0.5,
-                                  }}
-                                >
-                                  Active
-                                </MenuItem>
-
-                                <MenuItem
-                                  onClick={() => {
-                                    handleMenuClose();
-                                    handleOpenResolutionModal(row, "CANCELLED");
-                                  }}
-                                  sx={{
-                                    color: "#fff",
-                                    bgcolor: "#d32f2f",
-                                    "&:hover": {
-                                      bgcolor: "#b71c1c",
-                                    },
-                                    borderRadius: "4px",
-                                    mx: 1,
-                                    my: 0.5,
-                                  }}
-                                >
-                                  Terminate
-                                </MenuItem>
-
-                                <MenuItem
-                                  onClick={() => {
-                                    handleMenuClose();
-                                    handleOpenResolutionModal(row, "COMPLETED");
-                                  }}
-                                  sx={{
-                                    color: "#fff",
-                                    bgcolor: "#2E7D32",
-                                    "&:hover": {
-                                      bgcolor: "#1b5e20",
-                                    },
-                                    borderRadius: "4px",
-                                    mx: 1,
-                                    my: 0.5,
-                                  }}
-                                >
-                                  Complete
-                                </MenuItem>
-
-                                {row.isRefunded === false && (
-                                  <MenuItem
-                                    onClick={() => {
-                                      handleMenuClose();
-                                      handleOpenResolutionModal(row, "REFUND");
-                                    }}
-                                    sx={{
-                                      color: "#fff",
-                                      bgcolor: "#063455",
-                                      "&:hover": {
-                                        bgcolor: "#063455",
-                                      },
-                                      borderRadius: "4px",
-                                      mx: 1,
-                                      my: 0.5,
-                                    }}
-                                  >
-                                    Refund
-                                  </MenuItem>
-                                )}
-                              </Menu>
                             </Box>
                           </TableCell>
                         </TableRow>
@@ -885,6 +769,126 @@ const ContractDashboard = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleMenuClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              PaperProps={{
+                sx: {
+                  borderRadius: "8px",
+                  minWidth: "140px",
+                },
+              }}
+            >
+              <MenuItem
+                onClick={() => {
+                  handleMenuClose();
+                  handleViewDetails(selectedContract);
+                }}
+                sx={{
+                  color: "#fff",
+                  bgcolor: "#1976d2",
+                  "&:hover": {
+                    bgcolor: "#1565c0",
+                  },
+                  borderRadius: "4px",
+                  mx: 1,
+                  my: 0.5,
+                }}
+              >
+                View
+              </MenuItem>
+              {selectedContract?.status?.toUpperCase() !== "COMPLETED" && (
+                <>
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      handleOpenResolutionModal(selectedContract, "ACTIVE");
+                    }}
+                    sx={{
+                      color: "#fff",
+                      bgcolor: "#ED6C02", // Warning/Orange color for Active/Reactivate
+                      "&:hover": {
+                        bgcolor: "#E65100",
+                      },
+                      borderRadius: "4px",
+                      mx: 1,
+                      my: 0.5,
+                    }}
+                  >
+                    Active
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      handleOpenResolutionModal(selectedContract, "CANCELLED");
+                    }}
+                    sx={{
+                      color: "#fff",
+                      bgcolor: "#d32f2f",
+                      "&:hover": {
+                        bgcolor: "#b71c1c",
+                      },
+                      borderRadius: "4px",
+                      mx: 1,
+                      my: 0.5,
+                    }}
+                  >
+                    Terminate
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      handleOpenResolutionModal(selectedContract, "COMPLETED");
+                    }}
+                    sx={{
+                      color: "#fff",
+                      bgcolor: "#2E7D32",
+                      "&:hover": {
+                        bgcolor: "#1b5e20",
+                      },
+                      borderRadius: "4px",
+                      mx: 1,
+                      my: 0.5,
+                    }}
+                  >
+                    Complete
+                  </MenuItem>
+
+                  {selectedContract?.isRefunded === false && (
+                    <MenuItem
+                      onClick={() => {
+                        handleMenuClose();
+                        handleOpenResolutionModal(selectedContract, "REFUND");
+                      }}
+                      sx={{
+                        color: "#fff",
+                        bgcolor: "#063455",
+                        "&:hover": {
+                          bgcolor: "#063455",
+                        },
+                        borderRadius: "4px",
+                        mx: 1,
+                        my: 0.5,
+                      }}
+                    >
+                      Refund
+                    </MenuItem>
+                  )}
+                </>
+              )}
+            </Menu>
 
             {/* Pagination */}
             {disputedContractsPagination && (

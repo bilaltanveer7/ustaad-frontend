@@ -4,6 +4,7 @@ import SideNav from "../sidebar/sidenav";
 import DocumentModal from "../components/DocumentModal";
 import { useAdminStore } from "../store/useAdminStore";
 import config from "../utils/config";
+import { capitalize, formatArray } from "../utils/helpers";
 import profileImg from "../assets/profile.PNG";
 import { MdOutlineSubject } from "react-icons/md";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -492,8 +493,9 @@ const UserDetail = () => {
         size="medium"
         sx={{
           backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
-          border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border
-            }`,
+          border: `1px solid ${
+            getStatusColor(user?.isOnBoard || "pending").border
+          }`,
           color: getStatusColor(user?.isOnBoard || "pending").color,
           fontWeight: 500,
           fontSize: "14px",
@@ -615,7 +617,7 @@ const UserDetail = () => {
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <SchoolIcon sx={{ color: '#1E9CBC' }} />
+                  <SchoolIcon sx={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Education"
@@ -628,7 +630,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <WorkIcon sx={{ color: '#1E9CBC' }} />
+                  <WorkIcon sx={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Work Experience"
@@ -641,7 +643,9 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <SiLinuxprofessionalinstitute style={{ color: '#1E9CBC', height: 20, width: 20 }} />
+                  <SiLinuxprofessionalinstitute
+                    style={{ color: "#1E9CBC", height: 20, width: 20 }}
+                  />
                 </ListItemIcon>
                 <ListItemText
                   primary="Institute"
@@ -654,7 +658,9 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <SiAltiumdesigner style={{ color: '#1E9CBC', height: 20, width: 20 }} />
+                  <SiAltiumdesigner
+                    style={{ color: "#1E9CBC", height: 20, width: 20 }}
+                  />
                 </ListItemIcon>
                 <ListItemText
                   primary="Designation"
@@ -667,7 +673,7 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <SchoolIcon sx={{ color: '#1E9CBC' }} />
+                  <SchoolIcon sx={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Grade"
@@ -698,7 +704,7 @@ const UserDetail = () => {
               {/* Profile Created */}
               <ListItem>
                 <ListItemIcon>
-                  <CalendarIcon sx={{ color: '#1E9CBC' }} />
+                  <CalendarIcon sx={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Profile Created"
@@ -707,19 +713,20 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <BankIcon sx={{ color: '#1E9CBC' }} />
+                  <BankIcon sx={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Bank Details"
-                  secondary={`${tutor.bankName || "N/A"} - ${tutor.accountNumber || "N/A"
-                    }`}
+                  secondary={`${tutor.bankName || "N/A"} - ${
+                    tutor.accountNumber || "N/A"
+                  }`}
                 />
               </ListItem>
 
               {/* Subjects */}
               <ListItem alignItems="flex-start">
                 <ListItemIcon>
-                  <MdOutlineSubject size={22} style={{ color: '#1E9CBC' }} />
+                  <MdOutlineSubject size={22} style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Subjects"
@@ -730,7 +737,7 @@ const UserDetail = () => {
                       {(tutor.subjects || ["N/A"]).map((subject, index) => (
                         <Chip
                           key={index}
-                          label={subject}
+                          label={capitalize(subject)}
                           size="small"
                           sx={{
                             backgroundColor: "#EEF3FF",
@@ -744,10 +751,45 @@ const UserDetail = () => {
                 />
               </ListItem>
 
+              {/* Curriculum */}
+              {tutor.curriculum && (
+                <ListItem alignItems="flex-start">
+                  <ListItemIcon>
+                    <SchoolIcon sx={{ color: "#1E9CBC" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Curriculum"
+                    secondary={
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          flexWrap: "wrap",
+                          mt: 1,
+                        }}
+                      >
+                        {(tutor.curriculum || ["N/A"]).map((item, index) => (
+                          <Chip
+                            key={index}
+                            label={capitalize(item)}
+                            size="small"
+                            sx={{
+                              backgroundColor: "#F3E5F5",
+                              color: "#7B1FA2",
+                              border: "1px solid #CE93D8",
+                            }}
+                          />
+                        ))}
+                      </Box>
+                    }
+                  />
+                </ListItem>
+              )}
+
               {/* About */}
               <ListItem alignItems="flex-start">
                 <ListItemIcon>
-                  <InfoOutlinedIcon sx={{ color: '#1E9CBC' }} />
+                  <InfoOutlinedIcon sx={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="About"
@@ -778,7 +820,7 @@ const UserDetail = () => {
               <List>
                 <ListItem>
                   <ListItemIcon>
-                    <PersonIcon sx={{ color: '#1E9CBC' }} />
+                    <PersonIcon sx={{ color: "#1E9CBC" }} />
                   </ListItemIcon>
                   <ListItemText
                     primary="Parent ID"
@@ -799,7 +841,7 @@ const UserDetail = () => {
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
-                    <CalendarIcon sx={{ color: '#1E9CBC' }} />
+                    <CalendarIcon sx={{ color: "#1E9CBC" }} />
                   </ListItemIcon>
                   <ListItemText
                     primary="Profile Created"
@@ -808,7 +850,7 @@ const UserDetail = () => {
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
-                    <CalendarIcon sx={{ color: '#1E9CBC' }} />
+                    <CalendarIcon sx={{ color: "#1E9CBC" }} />
                   </ListItemIcon>
                   <ListItemText
                     primary="Last Updated"
@@ -818,7 +860,7 @@ const UserDetail = () => {
                 {parent.customerId && (
                   <ListItem>
                     <ListItemIcon>
-                      <CardIcon sx={{ color: '#1E9CBC' }} />
+                      <CardIcon sx={{ color: "#1E9CBC" }} />
                     </ListItemIcon>
                     <ListItemText
                       primary="Customer ID"
@@ -891,10 +933,11 @@ const UserDetail = () => {
                             </Typography>
                           </Box>
                           <Chip
-                            label={`${formatDate(edu.startDate)} - ${edu.endDate === "Present"
-                              ? "Present"
-                              : formatDate(edu.endDate)
-                              }`}
+                            label={`${formatDate(edu.startDate)} - ${
+                              edu.endDate === "Present"
+                                ? "Present"
+                                : formatDate(edu.endDate)
+                            }`}
                             size="small"
                             sx={{
                               backgroundColor: "#EEF3FF",
@@ -966,10 +1009,11 @@ const UserDetail = () => {
                             </Typography>
                           </Box>
                           <Chip
-                            label={`${formatDate(exp.startDate)} - ${exp.endDate === "Present"
-                              ? "Present"
-                              : formatDate(exp.endDate)
-                              }`}
+                            label={`${formatDate(exp.startDate)} - ${
+                              exp.endDate === "Present"
+                                ? "Present"
+                                : formatDate(exp.endDate)
+                            }`}
                             size="small"
                             sx={{
                               backgroundColor: "#F3E5F5",
@@ -1013,9 +1057,7 @@ const UserDetail = () => {
             <Typography>No documents uploaded yet</Typography>
           </Box>
         ) : (
-          <TableContainer
-            sx={{ border: "1px solid #E0E3EB" }}
-          >
+          <TableContainer sx={{ border: "1px solid #E0E3EB" }}>
             <Table>
               <TableHead sx={{ backgroundColor: "#1E9CBC" }}>
                 <TableRow>
@@ -1258,8 +1300,8 @@ const UserDetail = () => {
                 {user?.isOnBoard === "approved"
                   ? "Approved"
                   : isApprovingUser
-                    ? "Approving..."
-                    : "Approve User"}
+                  ? "Approving..."
+                  : "Approve User"}
               </Button>
             </Box>
           </Box>
