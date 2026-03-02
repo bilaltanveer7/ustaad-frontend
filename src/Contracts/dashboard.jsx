@@ -433,7 +433,7 @@ const ContractDashboard = () => {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    tableData.map((row) => {
+                    tableData.map((row, index) => {
                       return (
                         <TableRow
                           key={row.id}
@@ -442,7 +442,7 @@ const ContractDashboard = () => {
                           sx={{
                             cursor: "pointer",
                             height: "48px",
-                            backgroundColor: "transparent",
+                            backgroundColor: index % 2 === 0 ? "#F5F5F5" : "#FFFFFF",
                           }}
                         >
                           <TableCell
@@ -503,6 +503,7 @@ const ContractDashboard = () => {
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
+                                      textTransform:'capitalize'
                                     }}
                                   >
                                     {row.Offer?.childName}

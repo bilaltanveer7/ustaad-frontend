@@ -6,6 +6,7 @@ import { useAdminStore } from "../store/useAdminStore";
 import config from "../utils/config";
 import { capitalize, formatArray } from "../utils/helpers";
 import profileImg from "../assets/profile.PNG";
+import parentprofileImg from "../assets/parent_profile.PNG";
 import { MdOutlineSubject } from "react-icons/md";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { SiLinuxprofessionalinstitute } from "react-icons/si";
@@ -270,12 +271,12 @@ const UserDetail = () => {
   }
 
   const capitalize = (value) => {
-  if (value === null || value === undefined) return "N/A";
+    if (value === null || value === undefined) return "N/A";
 
-  return String(value)
-    .toUpperCase()
-    .replace(/,/g, ", ");
-};
+    return String(value)
+      .toUpperCase()
+      .replace(/,/g, ", ");
+  };
 
   const user = userData?.user;
   const tutorProfile = userData?.tutor;
@@ -361,6 +362,14 @@ const UserDetail = () => {
   const documents = getDocuments();
 
   console.log("documents", documents);
+  console.log("user role------+++++++", role);
+
+  const getDefaultAvatar = () => {
+    if (user?.role === "TUTOR") return profileImg;
+    if (user?.role === "PARENT") return parentprofileImg;
+    return parentprofileImg; // fallback safety
+  };
+
 
   const renderBasicInfo = () => (
     <Card
@@ -380,11 +389,16 @@ const UserDetail = () => {
           <Grid item xs={12} md={4}>
             <Box sx={{ alignItems: "center" }}>
               <Avatar
-                src={user?.image || profileImg}
+                src={
+                  user?.image && user.image.trim() !== ""
+                    ? user.image
+                    : getDefaultAvatar()
+                }
+                onError={(e) => {
+                  e.currentTarget.src = getDefaultAvatar();
+                }}
                 sx={{ width: 80, height: 80, mx: "auto", mb: 2 }}
-              >
-                {/* {user?.firstName?.charAt(0).toUpperCase()} */}
-              </Avatar>
+              />
               <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
                 {user?.firstName && user?.lastName
                   ? `${user.firstName} ${user.lastName}`
@@ -392,6 +406,8 @@ const UserDetail = () => {
               </Typography>
               <Chip
                 label={user?.role || "USER"}
+
+
                 size="medium"
                 sx={{
                   backgroundColor: getRoleColor(user?.role).bg,
@@ -495,9 +511,8 @@ const UserDetail = () => {
         size="medium"
         sx={{
           backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
-          border: `1px solid ${
-            getStatusColor(user?.isOnBoard || "pending").border
-          }`,
+          border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border
+            }`,
           color: getStatusColor(user?.isOnBoard || "pending").color,
           fontWeight: 500,
           fontSize: "14px",
@@ -719,14 +734,13 @@ const UserDetail = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Bank Details"
-                  secondary={`${tutor.bankName || "N/A"} - ${
-                    tutor.accountNumber || "N/A"
-                  }`}
+                  secondary={`${tutor.bankName || "N/A"} - ${tutor.accountNumber || "N/A"
+                    }`}
                 />
               </ListItem>
 
               {/* Subjects */}
-              <ListItem alignItems="flex-start">
+              <ListItem>
                 <ListItemIcon>
                   <MdOutlineSubject size={22} style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
@@ -734,7 +748,7 @@ const UserDetail = () => {
                   primary="Subjects"
                   secondary={
                     <Box
-                      sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 1 }}
+                      sx={{ display: "flex", gap:1 }}
                     >
                       {(tutor.subjects || ["N/A"]).map((subject, index) => (
                         <Chip
@@ -742,9 +756,9 @@ const UserDetail = () => {
                           label={capitalize(subject)}
                           size="small"
                           sx={{
-                            backgroundColor: "#EEF3FF",
-                            color: "#235DFF",
-                            border: "1px solid #BBDEFB",
+                            backgroundColor: "transparent",
+                            color: "#1E9CBC",
+                            border: "1px solid #1E9CBC",
                           }}
                         />
                       ))}
@@ -767,7 +781,7 @@ const UserDetail = () => {
                           display: "flex",
                           gap: 1,
                           flexWrap: "wrap",
-                          mt: 1,
+                          // mt: 1,
                         }}
                       >
                         {(tutor.curriculum || ["N/A"]).map((item, index) => (
@@ -776,9 +790,9 @@ const UserDetail = () => {
                             label={capitalize(item)}
                             size="small"
                             sx={{
-                              backgroundColor: "#F3E5F5",
-                              color: "#7B1FA2",
-                              border: "1px solid #CE93D8",
+                              backgroundColor: "transparent",
+                              color: "#1E9CBC",
+                              border: "1px solid #1E9CBC",
                             }}
                           />
                         ))}
@@ -901,17 +915,16 @@ const UserDetail = () => {
               <Grid container spacing={3}>
                 {education.map((edu, index) => (
                   <Grid item xs={12} key={edu.id || index}>
-                    <Card
-                      variant="outlined"
+                    <Box
                       sx={{
-                        border: "1px solid #E0E3EB",
+                        border: "1px solid #1E9CBC",
                         borderRadius: "8px",
+                        p:1,
                         "&:hover": {
                           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                         },
                       }}
                     >
-                      <CardContent>
                         <Box
                           sx={{
                             display: "flex",
@@ -920,7 +933,7 @@ const UserDetail = () => {
                             mb: 2,
                           }}
                         >
-                          <Box sx={{ flex: 1 }}>
+                          <Box>
                             <Typography
                               variant="h6"
                               sx={{ fontWeight: 600, color: "#101219" }}
@@ -929,22 +942,23 @@ const UserDetail = () => {
                             </Typography>
                             <Typography
                               variant="body1"
-                              sx={{ color: "#1976D2", mb: 1 }}
+                              sx={{ color: "#1E9CBC", mb: 1 }}
                             >
                               {edu.institute || "N/A"}
                             </Typography>
                           </Box>
                           <Chip
-                            label={`${formatDate(edu.startDate)} - ${
-                              edu.endDate === "Present"
-                                ? "Present"
-                                : formatDate(edu.endDate)
-                            }`}
+                            label={`${formatDate(edu.startDate)} - ${edu.endDate === "Present"
+                              ? "Present"
+                              : formatDate(edu.endDate)
+                              }`}
                             size="small"
                             sx={{
-                              backgroundColor: "#EEF3FF",
-                              color: "#235DFF",
+                              backgroundColor: "transparent",
+                              color: "#1E9CBC",
+                              border:'1px solid #1E9CBC',
                               fontWeight: 500,
+                              // mb:15
                             }}
                           />
                         </Box>
@@ -953,8 +967,7 @@ const UserDetail = () => {
                             {edu.description}
                           </Typography>
                         )}
-                      </CardContent>
-                    </Card>
+                    </Box>
                   </Grid>
                 ))}
               </Grid>
@@ -963,8 +976,8 @@ const UserDetail = () => {
         </Card>
 
         {/* Experience Section */}
-        <Card sx={{ bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
-          <CardContent>
+        <Box sx={{ p:2, border: "1px solid #D1D1DB", bgcolor:'#EEFBFD' }}>
+          
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Work Experience
             </Typography>
@@ -977,19 +990,20 @@ const UserDetail = () => {
               <Grid container spacing={3}>
                 {experience.map((exp, index) => (
                   <Grid item xs={12} key={exp.id || index}>
-                    <Card
+                    <Box
                       variant="outlined"
                       sx={{
-                        border: "1px solid #E0E3EB",
+                        border: "1px solid #1E9CBC",
                         borderRadius: "8px",
+                        p:1,
                         "&:hover": {
                           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                         },
                       }}
                     >
-                      <CardContent>
                         <Box
                           sx={{
+                            flex:1,
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "flex-start",
@@ -1005,21 +1019,21 @@ const UserDetail = () => {
                             </Typography>
                             <Typography
                               variant="body1"
-                              sx={{ color: "#7B1FA2", mb: 1 }}
+                              sx={{ color: "#1E9CBC", mb: 1 }}
                             >
                               {exp.company || "N/A"}
                             </Typography>
                           </Box>
                           <Chip
-                            label={`${formatDate(exp.startDate)} - ${
-                              exp.endDate === "Present"
-                                ? "Present"
-                                : formatDate(exp.endDate)
-                            }`}
+                            label={`${formatDate(exp.startDate)} - ${exp.endDate === "Present"
+                              ? "Present"
+                              : formatDate(exp.endDate)
+                              }`}
                             size="small"
                             sx={{
-                              backgroundColor: "#F3E5F5",
-                              color: "#7B1FA2",
+                              backgroundColor: "transparent",
+                              border:'1px solid #1E9CBC',
+                              color: "#1E9CBC",
                               fontWeight: 500,
                             }}
                           />
@@ -1029,14 +1043,12 @@ const UserDetail = () => {
                             {exp.description}
                           </Typography>
                         )}
-                      </CardContent>
-                    </Card>
+                    </Box>
                   </Grid>
                 ))}
               </Grid>
             )}
-          </CardContent>
-        </Card>
+        </Box>
       </>
     );
   };
@@ -1302,8 +1314,8 @@ const UserDetail = () => {
                 {user?.isOnBoard === "approved"
                   ? "Approved"
                   : isApprovingUser
-                  ? "Approving..."
-                  : "Approve User"}
+                    ? "Approving..."
+                    : "Approve User"}
               </Button>
             </Box>
           </Box>

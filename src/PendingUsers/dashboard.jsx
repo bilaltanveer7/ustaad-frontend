@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useAdminStore } from "../store/useAdminStore";
 import profileImg from "../assets/profile.PNG";
-import parent_profileImg from "../assets/parent_profile.PNG";
+import parentprofileImg from "../assets/parent_profile.PNG";
 import {
   Button,
   Table,
@@ -200,6 +200,18 @@ const PendingUsersDashboard = () => {
     if (!dateString) return "N/A";
     return new Date(dateString).toLocaleDateString();
   };
+
+  console.log(
+    "All Roles^^^^^^^^^^:",
+    pendingUsers.map((user) => user.role)
+  );
+
+
+  // const getDefaultAvatar = () => {
+  //   if (user?.role === "TUTOR") return profileImg;
+  //   if (user?.role === "PARENT") return parentprofileImg;
+  //   return parentprofileImg; // fallback safety
+  // };
 
 
   return (
@@ -490,8 +502,8 @@ const PendingUsersDashboard = () => {
               component={Paper}
               style={{
                 boxShadow: "none",
-                border: "1px solid #E0E3EB",
-                borderRadius: "8px",
+                // border: "1px solid #E0E3EB",
+                // borderRadius: "8px",
                 marginTop: 5,
               }}
             >
@@ -623,21 +635,18 @@ const PendingUsersDashboard = () => {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredUsers.map((user) => (
+                    filteredUsers.map((user, index) => (
                       <TableRow
                         key={user.id}
                         style={{
                           borderBottom: "1px solid #E0E3EB",
                           // cursor: "pointer",
                         }}
-                      // sx={{
-                      //   "&:hover": {
-                      //     backgroundColor: "#f0f8ff",
-                      //     transform: "translateY(-1px)",
-                      //     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                      //   },
-                      //   transition: "all 0.2s ease-in-out",
-                      // }}
+                        sx={{
+                          cursor: "pointer",
+                          height: "48px",
+                          backgroundColor: index % 2 === 0 ? "#F5F5F5" : "#FFFFFF",
+                        }}
                       >
                         <TableCell
                           onClick={() =>
@@ -656,18 +665,14 @@ const PendingUsersDashboard = () => {
                           >
                             <Avatar
                               src={
-                                user.image
+                                user?.image && user.image.trim() !== ""
                                   ? user.image
-                                  : user.role === "tutor"
-                                    ? profileImg
-                                    : user.role === "parent"
-                                      ? parent_profileImg
-                                      : profileImg
+                                  : user?.role?.toLowerCase() === "parent"
+                                    ? parentprofileImg
+                                    : profileImg
                               }
-                              style={{ width: 40, height: 40 }}
-                            >
-                              {/* {user.firstName?.charAt(0).toUpperCase()} */}
-                            </Avatar>
+                              sx={{ width: 40, height: 40 }}
+                            />
                             <div>
                               <Typography
                                 // variant="body1"

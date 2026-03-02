@@ -402,7 +402,7 @@ const AdminsDashboard = () => {
                 // borderRadius: "8px",
               }}
             >
-              <Table style={{ border: "1px solid #E0E3EB" }}>
+              <Table>
                 <TableHead sx={{ backgroundColor: "#FFFFFF", height: 32 }}>
                   <TableRow
                     sx={{
