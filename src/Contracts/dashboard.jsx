@@ -99,9 +99,8 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${
-      page + 1
-    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
+    const query = `?page=${page + 1
+      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
     fetchDisputedContracts(query);
   }, [
     fetchDisputedContracts,
@@ -122,9 +121,8 @@ const ContractDashboard = () => {
         handleCloseDetailsModal();
         // Refresh the list
         const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-        const query = `?page=${
-          page + 1
-        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        const query = `?page=${page + 1
+          }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
         fetchDisputedContracts(query);
       }
     }
@@ -380,7 +378,7 @@ const ContractDashboard = () => {
             <TableContainer style={{ marginTop: "1rem" }}>
               <Table style={{ boxShadow: "none", overflowX: "auto" }}>
                 <TableHead>
-                  <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
+                  <TableRow sx={{ height: 32, bgcolor: "#FFFFFF" }}>
                     {[
                       { label: "Parent Name", key: "parent_name" },
                       { label: "Child Name", key: "child_name" },
@@ -400,10 +398,14 @@ const ContractDashboard = () => {
                       <TableCell
                         key={key}
                         sx={{
-                          fontSize: "16px",
-                          fontWeight: 600,
-                          color: "#FFFFFF",
+                          height: "32px",
+                          py: 0,
+                          px: 2,
+                          fontSize: "14px",
+                          fontWeight: 500,
+                          color: "#4D5874",
                           whiteSpace: "nowrap",
+                          // verticalAlign: "middle",
                         }}
                       >
                         {label}
@@ -439,15 +441,15 @@ const ContractDashboard = () => {
                           // onClick={() => handleViewDetails(row)}
                           sx={{
                             cursor: "pointer",
-                            height: "40px",
+                            height: "48px",
                             backgroundColor: "transparent",
                           }}
                         >
                           <TableCell
                             sx={{
                               padding: "0 8px",
-                              height: "40px",
-                              lineHeight: "40px",
+                              height: "48px",
+                              lineHeight: "48px",
                               border: "1px solid #E0E3EB",
                             }}
                           >
@@ -461,8 +463,8 @@ const ContractDashboard = () => {
                             >
                               <div
                                 style={{
-                                  fontWeight: 600,
-                                  fontSize: "14px",
+                                  fontWeight: 400,
+                                  fontSize: "16px",
                                   color: "#000",
                                   // height: 48,
                                   cursor: "pointer",
@@ -480,8 +482,8 @@ const ContractDashboard = () => {
                             style={{
                               border: "1px solid #E0E3EB",
                               padding: "0 8px",
-                              height: "40px",
-                              lineHeight: "40px",
+                              height: "48px",
+                              lineHeight: "48px",
                               // height: 48,
                             }}
                           >
@@ -494,7 +496,7 @@ const ContractDashboard = () => {
                                   <div
                                     style={{
                                       fontWeight: 400,
-                                      fontSize: "14px",
+                                      fontSize: "16px",
                                       color: "#000",
                                       cursor: "pointer",
                                       maxWidth: "100px",
@@ -512,8 +514,8 @@ const ContractDashboard = () => {
                           <TableCell
                             sx={{
                               padding: "0 8px",
-                              height: "40px",
-                              lineHeight: "40px",
+                              height: "48px",
+                              lineHeight: "48px",
                               border: "1px solid #E0E3EB",
                             }}
                           >
@@ -525,8 +527,8 @@ const ContractDashboard = () => {
                             >
                               <div
                                 style={{
-                                  fontWeight: 600,
-                                  fontSize: "14px",
+                                  fontWeight: 400,
+                                  fontSize: "16px",
                                   color: "#000",
                                   // height: 48,
                                   cursor: "pointer",
@@ -542,13 +544,13 @@ const ContractDashboard = () => {
                           </TableCell>
                           <TableCell
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               color: "#000",
                               fontWeight: 400,
                               border: "1px solid #E0E3EB",
                               padding: "0 8px",
-                              height: "30px",
-                              lineHeight: "30px",
+                              height: "48px",
+                              lineHeight: "48px",
                               // height: 48,
                             }}
                           >
@@ -557,7 +559,7 @@ const ContractDashboard = () => {
                                 <div
                                   style={{
                                     fontWeight: 400,
-                                    fontSize: "14px",
+                                    fontSize: "16px",
                                     color: "#000",
                                     cursor: "pointer",
                                     maxWidth: "140px",
@@ -573,12 +575,12 @@ const ContractDashboard = () => {
                           </TableCell>
                           <TableCell
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               color: "#000",
                               fontWeight: 400,
                               padding: "0 8px",
-                              height: "40px",
-                              lineHeight: "40px",
+                              height: "48px",
+                              lineHeight: "48px",
                               border: "1px solid #E0E3EB",
                             }}
                           >
@@ -587,8 +589,8 @@ const ContractDashboard = () => {
                                 title={
                                   row.startDate
                                     ? new Date(
-                                        row.startDate
-                                      ).toLocaleDateString()
+                                      row.startDate
+                                    ).toLocaleDateString()
                                     : "N/A"
                                 }
                                 arrow
@@ -596,8 +598,8 @@ const ContractDashboard = () => {
                                 <div
                                   style={{
                                     fontWeight: 400,
-                                    fontSize: "14px",
-                                    color: "#000",
+                                    fontSize: "16px",
+                                    color: "#4D5874",
                                     cursor: "pointer",
                                     maxWidth: "120px",
                                     overflow: "hidden",
@@ -614,13 +616,13 @@ const ContractDashboard = () => {
                           </TableCell>
                           <TableCell
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               color: "#000",
                               fontWeight: 400,
                               border: "1px solid #E0E3EB",
                               padding: "0 8px",
-                              height: "40px",
-                              lineHeight: "40px",
+                              height: "48px",
+                              lineHeight: "48px",
                               // height: 48,
                             }}
                           >
@@ -630,13 +632,13 @@ const ContractDashboard = () => {
                           </TableCell>
                           <TableCell
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               color: "#000",
                               fontWeight: 400,
                               border: "1px solid #E0E3EB",
                               padding: "0 8px",
-                              height: "40px",
-                              lineHeight: "40px",
+                              height: "48px",
+                              lineHeight: "48px",
                               // height: 48,
                             }}
                           >
@@ -646,13 +648,13 @@ const ContractDashboard = () => {
                           </TableCell>
                           <TableCell
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               color: "#000",
                               fontWeight: 400,
                               border: "1px solid #E0E3EB",
                               padding: "0 8px",
-                              height: "40px",
-                              lineHeight: "40px",
+                              height: "48px",
+                              lineHeight: "48px",
                               maxWidth: "220px",
                             }}
                           >
@@ -686,12 +688,12 @@ const ContractDashboard = () => {
                           </TableCell>
                           <TableCell
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               color: "#000",
                               fontWeight: 400,
                               border: "1px solid #E0E3EB",
                               padding: "0 8px",
-                              height: "40px",
+                              height: "48px",
                               maxWidth: "220px",
                             }}
                           >
@@ -726,9 +728,9 @@ const ContractDashboard = () => {
 
                           <TableCell
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               fontWeight: 600,
-                              height: "40px",
+                              height: "48px",
                               textAlign: "center",
                             }}
                           >
@@ -745,7 +747,7 @@ const ContractDashboard = () => {
 
                           <TableCell
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               color: "#000",
                               fontWeight: 400,
                               border: "1px solid #E0E3EB",

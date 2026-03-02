@@ -269,10 +269,12 @@ const UserDetail = () => {
   }
 
   const capitalize = (value) => {
-    if (value === null || value === undefined) return "N/A";
+  if (value === null || value === undefined) return "N/A";
 
-    return String(value).charAt(0).toUpperCase() + String(value).slice(1);
-  };
+  return String(value)
+    .toUpperCase()
+    .replace(/,/g, ", ");
+};
 
   const user = userData?.user;
   const tutorProfile = userData?.tutor;

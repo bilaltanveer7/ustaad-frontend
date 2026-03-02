@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useAdminStore } from "../store/useAdminStore";
 import profileImg from "../assets/profile.PNG";
+import parent_profileImg from "../assets/parent_profile.PNG";
 import {
   Button,
   Table,
@@ -199,6 +200,7 @@ const PendingUsersDashboard = () => {
     if (!dateString) return "N/A";
     return new Date(dateString).toLocaleDateString();
   };
+
 
   return (
     <>
@@ -493,97 +495,114 @@ const PendingUsersDashboard = () => {
                 marginTop: 5,
               }}
             >
-              <Table style={{ border: "1px solid #E0E3EB" }}>
+              <Table>
                 <TableHead
                   sx={{
-                    backgroundColor: "#1E9CBC",
+                    backgroundColor: "#FFFFFF",
                     height: 32,
                   }}
                 >
                   <TableRow
                     sx={{
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#FFFFFF",
+                      height: "32px",
+                      py: 0,
+                      px: 2,
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      color: "#4D5874",
+                      whiteSpace: "nowrap",
+                      verticalAlign: "middle",
                     }}
                   >
-                    <TableCell>
-                      <Box
-                        sx={{
-                          // display: "flex",
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                          // alignItems: "center",
-                        }}
-                      >
-                        User Details
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      User Details
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          // display: "flex",
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                          // alignItems: "center",
-                        }}
-                      >
-                        Contact Info
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Contact Info
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          // display: "flex",
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                          // alignItems: "center",
-                        }}
-                      >
-                        Role
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Role
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          // display: "flex",
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                          // alignItems: "center",
-                        }}
-                      >
-                        Verification Status
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Verification Status
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          // display: "flex",
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                          // alignItems: "center",
-                        }}
-                      >
-                        Joining Date
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Joining Date
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          // display: "flex",
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                          // alignItems: "center",
-                        }}
-                      >
-                        Status
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Status
+
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -621,7 +640,6 @@ const PendingUsersDashboard = () => {
                       // }}
                       >
                         <TableCell
-                          style={{ border: "1px solid #E0E3EB" }}
                           onClick={() =>
                             handleUserClick(user.profileId, user.role)
                           }
@@ -637,7 +655,15 @@ const PendingUsersDashboard = () => {
                             }
                           >
                             <Avatar
-                              src={user.image ? user.image : profileImg}
+                              src={
+                                user.image
+                                  ? user.image
+                                  : user.role === "tutor"
+                                    ? profileImg
+                                    : user.role === "parent"
+                                      ? parent_profileImg
+                                      : profileImg
+                              }
                               style={{ width: 40, height: 40 }}
                             >
                               {/* {user.firstName?.charAt(0).toUpperCase()} */}

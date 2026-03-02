@@ -299,13 +299,14 @@ const AdminsDashboard = () => {
               </div> */}
 
             {/* Search and Filter Row */}
-            <div 
-            style=
-            {{display:'flex', 
-            justifyContent:'space-between', 
-            alignItems:'center',
-            marginBottom:'20px'
-            }}>
+            <div
+              style=
+              {{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '20px'
+              }}>
               <div>
                 {/* <TextField
                   placeholder="Search by name, email, or phone"
@@ -402,81 +403,108 @@ const AdminsDashboard = () => {
               }}
             >
               <Table style={{ border: "1px solid #E0E3EB" }}>
-                <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
+                <TableHead sx={{ backgroundColor: "#FFFFFF", height: 32 }}>
                   <TableRow
                     sx={{
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#FFFFFF",
+                      height: "32px",
+                      py: 0,
+                      px: 2,
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      color: "#4D5874",
+                      whiteSpace: "nowrap",
+                      verticalAlign: "middle",
                     }}
                   >
-                    <TableCell>
-                      <Box
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                          // alignItems: "center",
-                        }}
-                      >
-                        ID
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      ID
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                        }}
-                      >
-                        Admin Details
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Admin Details
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                        }}
-                      >
-                        Email
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Email
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        Created Date
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Created Date
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                        }}
-                      >
-                        Status
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Status
+
                     </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "16px",
-                          color: "#FFFFFF",
-                        }}
-                      >
-                        Actions
-                      </Box>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Actions
+
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -501,21 +529,24 @@ const AdminsDashboard = () => {
                       <TableRow
                         key={admin.id}
                         style={{
-                          height: '40px',
+                          height: '48px',
                           backgroundColor: 'transparent'
                         }}
                       >
                         <TableCell style={{
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
                           border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "48px",
+                          lineHeight: "48px",
                         }}>
                           <Tooltip title={admin.id} arrow>
                             <div
                               style={{
-                                fontWeight: 600,
-                                fontSize: "14px",
+                                fontWeight: 400,
+                                fontSize: "16px",
                                 color: "#000",
                                 // border: "1px solid #E0E3EB",
                                 py: 0,
@@ -532,10 +563,13 @@ const AdminsDashboard = () => {
                           </Tooltip>
                         </TableCell>
                         <TableCell style={{
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
                           border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "48px",
+                          lineHeight: "48px",
                         }}>
                           <div
                             style={{
@@ -561,9 +595,9 @@ const AdminsDashboard = () => {
                                 arrow
                               >
                                 <div
-                                  variant="body1"
+                                  // variant="body1"
                                   style={{
-                                    fontSize: "14px",
+                                    fontSize: "16px",
                                     fontWeight: 400,
                                     color: "#000",
                                     margin: 0,
@@ -593,15 +627,18 @@ const AdminsDashboard = () => {
                           </div>
                         </TableCell>
                         <TableCell style={{
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
                           border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "48px",
+                          lineHeight: "48px",
                         }}>
                           <Tooltip title={admin.email || "N/A"} arrow>
                             <div
                               style={{
-                                fontSize: "14px",
+                                fontSize: "16px",
                                 fontWeight: 400,
                                 color: "#000",
                                 // cursor: "pointer",
@@ -616,16 +653,19 @@ const AdminsDashboard = () => {
                           </Tooltip>
                         </TableCell>
                         <TableCell style={{
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          fontSize: "16px",
+                          color: "#4D5874",
+                          fontWeight: 400,
                           border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "48px",
+                          lineHeight: "48px",
                         }}>
                           <span
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               fontWeight: 400,
-                              color: "#000",
+                              color: "#4D5874",
                             }}
                           >
                             {admin.createdAt
@@ -634,10 +674,13 @@ const AdminsDashboard = () => {
                           </span>
                         </TableCell>
                         <TableCell style={{
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
                           border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "48px",
+                          lineHeight: "48px",
                         }}>
                           <Chip
                             label="Active"
@@ -652,10 +695,13 @@ const AdminsDashboard = () => {
                           />
                         </TableCell>
                         <TableCell style={{
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
                           border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "48px",
+                          lineHeight: "48px",
                         }}>
                           <Tooltip title="Delete Admin">
                             <IconButton

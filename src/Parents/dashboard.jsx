@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useParentStore } from "../store/useParentStore";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import profileImg from "../assets/profile.PNG";
+import profileImg from "../assets/parent_profile.PNG";
 import {
   Box,
   Table,

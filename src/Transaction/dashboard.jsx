@@ -413,7 +413,7 @@ const TransactionDashboard = () => {
                 <TableContainer component={Paper}>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
+                      <TableRow sx={{ height: 32, bgcolor: "#FFFFFF" }}>
                         {[
                           { label: "Tutor Name", key: "tutorName" },
                           { label: "Email", key: "email" },
@@ -426,10 +426,14 @@ const TransactionDashboard = () => {
                           <TableCell
                             key={key}
                             sx={{
-                              fontSize: "16px",
-                              fontWeight: 600,
-                              color: "#FFFFFF",
+                              height: "32px",
+                              py: 0,
+                              px: 2,
+                              fontSize: "14px",
+                              fontWeight: 500,
+                              color: "#4D5874",
                               whiteSpace: "nowrap",
+                              verticalAlign: "middle",
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -457,19 +461,21 @@ const TransactionDashboard = () => {
                               key={row.id}
                               selected={isItemSelected}
                               sx={{
-                                height: "40px",
-                                backgroundColor: "transparent",
-                                borderBottom: "1px solid #E0E3EB",
+                                height: "48px",
+                                backgroundColor: index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
+                                "&:hover": {
+                                  backgroundColor: "#F1F3F7",
+                                },
                               }}
                             >
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
+                                  fontSize: "16px",
                                   color: "#000",
                                   padding: "0 8px",
-                                  height: "30px",
-                                  lineHeight: "30px",
+                                  height: "48px",
+                                  lineHeight: "48px",
                                   border: "1px solid #E0E3EB",
                                 }}
                               >
@@ -488,11 +494,11 @@ const TransactionDashboard = () => {
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
+                                  fontSize: "16px",
                                   color: "#000",
                                   padding: "0 8px",
-                                  height: "30px",
-                                  lineHeight: "30px",
+                                  height: "48px",
+                                  lineHeight: "48px",
                                   border: "1px solid #E0E3EB",
                                 }}
                               >
@@ -501,11 +507,11 @@ const TransactionDashboard = () => {
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
+                                  fontSize: "16px",
                                   color: "#000",
                                   padding: "0 8px",
-                                  height: "30px",
-                                  lineHeight: "30px",
+                                  height: "48px",
+                                  lineHeight: "48px",
                                   border: "1px solid #E0E3EB",
                                 }}
                               >
@@ -527,11 +533,11 @@ const TransactionDashboard = () => {
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
+                                  fontSize: "16px",
                                   color: "#000",
                                   padding: "0 8px",
-                                  height: "30px",
-                                  lineHeight: "30px",
+                                  height: "48px",
+                                  lineHeight: "48px",
                                   border: "1px solid #E0E3EB",
                                 }}
                               >
@@ -543,11 +549,11 @@ const TransactionDashboard = () => {
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
+                                  fontSize: "16px",
                                   color: "#000",
                                   padding: "0 8px",
-                                  height: "30px",
-                                  lineHeight: "30px",
+                                  height: "48px",
+                                  lineHeight: "48px",
                                   border: "1px solid #E0E3EB",
                                 }}
                               >
@@ -654,11 +660,11 @@ const TransactionDashboard = () => {
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
-                                  color: "#000",
+                                  fontSize: "16px",
+                                  color: "#4D5874",
                                   padding: "0 8px",
-                                  height: "30px",
-                                  lineHeight: "30px",
+                                  height: "48px",
+                                  lineHeight: "48px",
                                   border: "1px solid #E0E3EB",
                                 }}
                               >
@@ -671,10 +677,10 @@ const TransactionDashboard = () => {
                                 style={{
                                   fontWeight: 400,
                                   fontSize: "16px",
-                                  color: "#000",
+                                  color: "#101219",
                                   padding: "0 8px",
-                                  height: "30px",
-                                  lineHeight: "30px",
+                                  height: "48px",
+                                  lineHeight: "48px",
                                   border: "1px solid #E0E3EB",
                                   textAlign: "center",
                                 }}
