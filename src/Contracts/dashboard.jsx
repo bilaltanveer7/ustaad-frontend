@@ -42,6 +42,7 @@ import {
 } from "@mui/icons-material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { capitalize } from "../utils/helpers";
 
 const drawerWidth = 260;
 
@@ -67,7 +68,7 @@ const ContractDashboard = () => {
     "DISPUTE",
     "CANCELLED",
     "COMPLETED",
-    "REFUND",
+    "REFUNDED",
   ];
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [selectedContract, setSelectedContract] = useState(null);
@@ -813,87 +814,94 @@ const ContractDashboard = () => {
               >
                 View
               </MenuItem>
-              {selectedContract?.status?.toUpperCase() !== "COMPLETED" && (
-                <>
-                  <MenuItem
-                    onClick={() => {
-                      handleMenuClose();
-                      handleOpenResolutionModal(selectedContract, "ACTIVE");
-                    }}
-                    sx={{
-                      color: "#fff",
-                      bgcolor: "#ED6C02", // Warning/Orange color for Active/Reactivate
-                      "&:hover": {
-                        bgcolor: "#E65100",
-                      },
-                      borderRadius: "4px",
-                      mx: 1,
-                      my: 0.5,
-                    }}
-                  >
-                    Active
-                  </MenuItem>
-
-                  <MenuItem
-                    onClick={() => {
-                      handleMenuClose();
-                      handleOpenResolutionModal(selectedContract, "CANCELLED");
-                    }}
-                    sx={{
-                      color: "#fff",
-                      bgcolor: "#d32f2f",
-                      "&:hover": {
-                        bgcolor: "#b71c1c",
-                      },
-                      borderRadius: "4px",
-                      mx: 1,
-                      my: 0.5,
-                    }}
-                  >
-                    Terminate
-                  </MenuItem>
-
-                  <MenuItem
-                    onClick={() => {
-                      handleMenuClose();
-                      handleOpenResolutionModal(selectedContract, "COMPLETED");
-                    }}
-                    sx={{
-                      color: "#fff",
-                      bgcolor: "#2E7D32",
-                      "&:hover": {
-                        bgcolor: "#1b5e20",
-                      },
-                      borderRadius: "4px",
-                      mx: 1,
-                      my: 0.5,
-                    }}
-                  >
-                    Complete
-                  </MenuItem>
-
-                  {selectedContract?.isRefunded === false && (
+              {selectedContract?.status?.toUpperCase() !== "COMPLETED" ||
+                (selectedContract?.status?.toUpperCase() !== "CANCELLED" && (
+                  <>
                     <MenuItem
                       onClick={() => {
                         handleMenuClose();
-                        handleOpenResolutionModal(selectedContract, "REFUND");
+                        handleOpenResolutionModal(selectedContract, "ACTIVE");
                       }}
                       sx={{
                         color: "#fff",
-                        bgcolor: "#063455",
+                        bgcolor: "#ED6C02", // Warning/Orange color for Active/Reactivate
                         "&:hover": {
-                          bgcolor: "#063455",
+                          bgcolor: "#E65100",
                         },
                         borderRadius: "4px",
                         mx: 1,
                         my: 0.5,
                       }}
                     >
-                      Refund
+                      Active
                     </MenuItem>
-                  )}
-                </>
-              )}
+
+                    <MenuItem
+                      onClick={() => {
+                        handleMenuClose();
+                        handleOpenResolutionModal(
+                          selectedContract,
+                          "CANCELLED"
+                        );
+                      }}
+                      sx={{
+                        color: "#fff",
+                        bgcolor: "#d32f2f",
+                        "&:hover": {
+                          bgcolor: "#b71c1c",
+                        },
+                        borderRadius: "4px",
+                        mx: 1,
+                        my: 0.5,
+                      }}
+                    >
+                      Terminate
+                    </MenuItem>
+
+                    <MenuItem
+                      onClick={() => {
+                        handleMenuClose();
+                        handleOpenResolutionModal(
+                          selectedContract,
+                          "COMPLETED"
+                        );
+                      }}
+                      sx={{
+                        color: "#fff",
+                        bgcolor: "#2E7D32",
+                        "&:hover": {
+                          bgcolor: "#1b5e20",
+                        },
+                        borderRadius: "4px",
+                        mx: 1,
+                        my: 0.5,
+                      }}
+                    >
+                      Complete
+                    </MenuItem>
+                    {/* 
+                    {selectedContract?.isRefunded === false && (
+                      <MenuItem
+                        onClick={() => {
+                          handleMenuClose();
+                          handleOpenResolutionModal(selectedContract, "REFUND");
+                        }}
+                        sx={{
+                          color: "#fff",
+                          bgcolor: "#063455",
+                          "&:hover": {
+                            bgcolor: "#063455",
+                          },
+                          borderRadius: "4px",
+                          mx: 1,
+                          my: 0.5,
+                        }}
+                      >
+                        Refund
+                      </MenuItem>
+                    )} */}
+                  </>
+                ))}
             </Menu>
 
             {/* Pagination */}
@@ -1055,7 +1063,7 @@ const ContractDashboard = () => {
                       Child Name
                     </Typography>
                     <Typography variant="body1">
-                      {selectedContract.Offer?.childName}
+                      {capitalize(selectedContract.Offer?.childName)}
                     </Typography>
                   </Grid>
                   <Grid item xs={6} sm={3}>
@@ -1106,6 +1114,17 @@ const ContractDashboard = () => {
                   </Grid>
                   <Grid item xs={6} sm={3}>
                     <Typography variant="body2" color="textSecondary">
+                      Tutoring Days
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{ textTransform: "capitalize" }}
+                    >
+                      {selectedContract.completedSessions}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={3}>
+                    <Typography variant="body2" color="textSecondary">
                       Cost Per Session
                     </Typography>
                     <Typography variant="body1">
@@ -1116,8 +1135,11 @@ const ContractDashboard = () => {
                     <Typography variant="body2" color="textSecondary">
                       Subjects
                     </Typography>
-                    <Typography variant="body1">
-                      {selectedContract.Offer?.subject?.join(", ")}
+                    <Typography
+                      variant="body1"
+                      sx={{ textTransform: "capitalize" }}
+                    >
+                      {selectedContract.Offer?.subject.join(", ")}
                     </Typography>
                   </Grid>
                   <Grid item xs={6} sm={3}>
