@@ -997,14 +997,18 @@ const ContractDashboard = () => {
                       variant="outlined"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Disputed At
-                    </Typography>
-                    <Typography variant="body1">
-                      {new Date(selectedContract.disputedAt).toLocaleString()}
-                    </Typography>
-                  </Grid>
+                  {selectedContract.disputedAt && (
+                    <Grid item xs={12} sm={3}>
+                      <Typography variant="body2" color="textSecondary">
+                        Disputed At
+                      </Typography>
+                      <Typography variant="body1">
+                        {new Date(
+                          selectedContract.disputedAt
+                        ).toLocaleDateString()}
+                      </Typography>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
 
@@ -1062,8 +1066,11 @@ const ContractDashboard = () => {
                     <Typography variant="body2" color="textSecondary">
                       Child Name
                     </Typography>
-                    <Typography variant="body1">
-                      {capitalize(selectedContract.Offer?.childName)}
+                    <Typography
+                      variant="body1"
+                      sx={{ textTransform: "capitalize" }}
+                    >
+                      {selectedContract.Offer?.childName}
                     </Typography>
                   </Grid>
                   <Grid item xs={6} sm={3}>
