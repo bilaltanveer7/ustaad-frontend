@@ -273,12 +273,11 @@ const UserDetail = () => {
   const capitalize = (value) => {
     if (value === null || value === undefined) return "N/A";
 
-    return String(value)
-      .toUpperCase()
-      .replace(/,/g, ", ");
+    return String(value).toUpperCase().replace(/,/g, ", ");
   };
 
-  const user = userData?.user;
+  const user =
+    userData?.user || userData?.tutor?.User || userData?.parent?.User;
   const tutorProfile = userData?.tutor;
   const parentProfile = userData?.parent;
 
@@ -290,25 +289,25 @@ const UserDetail = () => {
     if (userData?.tutor) {
       const tutor = userData.tutor;
 
-      if (tutor.idBackUrl) {
-        const extension = tutor.idBackUrl.split(".").pop().toLowerCase();
+      if (tutor.idFrontUrl) {
+        const extension = tutor.idFrontUrl.split(".").pop().toLowerCase();
         docs.push({
           id: "id-front",
           name: "ID Front",
           type: extension === "pdf" ? "application/pdf" : "image/png",
-          url: `${config.tutorDocumentUrl}${tutor.idBackUrl}`,
+          url: `${config.tutorDocumentUrl}${tutor.idFrontUrl}`,
           uploadedAt: tutor.createdAt,
           category: "Identity",
         });
       }
 
-      if (tutor.idFrontUrl) {
-        const extension = tutor.idFrontUrl.split(".").pop().toLowerCase();
+      if (tutor.idBackUrl) {
+        const extension = tutor.idBackUrl.split(".").pop().toLowerCase();
         docs.push({
           id: "id-back",
           name: "ID Back",
           type: extension === "pdf" ? "application/pdf" : "image/png",
-          url: `${config.tutorDocumentUrl}${tutor.idFrontUrl}`,
+          url: `${config.tutorDocumentUrl}${tutor.idBackUrl}`,
           uploadedAt: tutor.createdAt,
           category: "Identity",
         });
@@ -370,7 +369,6 @@ const UserDetail = () => {
     return parentprofileImg; // fallback safety
   };
 
-
   const renderBasicInfo = () => (
     <Card
       sx={{
@@ -406,8 +404,6 @@ const UserDetail = () => {
               </Typography>
               <Chip
                 label={user?.role || "USER"}
-
-
                 size="medium"
                 sx={{
                   backgroundColor: getRoleColor(user?.role).bg,
@@ -511,8 +507,9 @@ const UserDetail = () => {
         size="medium"
         sx={{
           backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
-          border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border
-            }`,
+          border: `1px solid ${
+            getStatusColor(user?.isOnBoard || "pending").border
+          }`,
           color: getStatusColor(user?.isOnBoard || "pending").color,
           fontWeight: 500,
           fontSize: "14px",
@@ -734,8 +731,9 @@ const UserDetail = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Bank Details"
-                  secondary={`${tutor.bankName || "N/A"} - ${tutor.accountNumber || "N/A"
-                    }`}
+                  secondary={`${tutor.bankName || "N/A"} - ${
+                    tutor.accountNumber || "N/A"
+                  }`}
                 />
               </ListItem>
 
@@ -747,9 +745,7 @@ const UserDetail = () => {
                 <ListItemText
                   primary="Subjects"
                   secondary={
-                    <Box
-                      sx={{ display: "flex", gap:1 }}
-                    >
+                    <Box sx={{ display: "flex", gap: 1 }}>
                       {(tutor.subjects || ["N/A"]).map((subject, index) => (
                         <Chip
                           key={index}
@@ -884,6 +880,24 @@ const UserDetail = () => {
                     />
                   </ListItem>
                 )}
+                <ListItem>
+                  <ListItemIcon>
+                    <BankIcon sx={{ color: "#1E9CBC" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Bank Name"
+                    secondary={parent.bankName || "N/A"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <CardIcon sx={{ color: "#1E9CBC" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Account Number"
+                    secondary={parent.accountNumber || "N/A"}
+                  />
+                </ListItem>
               </List>
             </Grid>
           </Grid>
@@ -919,54 +933,55 @@ const UserDetail = () => {
                       sx={{
                         border: "1px solid #1E9CBC",
                         borderRadius: "8px",
-                        p:1,
+                        p: 1,
                         "&:hover": {
                           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                         },
                       }}
                     >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 2,
-                          }}
-                        >
-                          <Box>
-                            <Typography
-                              variant="h6"
-                              sx={{ fontWeight: 600, color: "#101219" }}
-                            >
-                              {edu.degree || "N/A"}
-                            </Typography>
-                            <Typography
-                              variant="body1"
-                              sx={{ color: "#1E9CBC", mb: 1 }}
-                            >
-                              {edu.institute || "N/A"}
-                            </Typography>
-                          </Box>
-                          <Chip
-                            label={`${formatDate(edu.startDate)} - ${edu.endDate === "Present"
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          mb: 2,
+                        }}
+                      >
+                        <Box>
+                          <Typography
+                            variant="h6"
+                            sx={{ fontWeight: 600, color: "#101219" }}
+                          >
+                            {edu.degree || "N/A"}
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            sx={{ color: "#1E9CBC", mb: 1 }}
+                          >
+                            {edu.institute || "N/A"}
+                          </Typography>
+                        </Box>
+                        <Chip
+                          label={`${formatDate(edu.startDate)} - ${
+                            edu.endDate === "Present"
                               ? "Present"
                               : formatDate(edu.endDate)
-                              }`}
-                            size="small"
-                            sx={{
-                              backgroundColor: "transparent",
-                              color: "#1E9CBC",
-                              border:'1px solid #1E9CBC',
-                              fontWeight: 500,
-                              // mb:15
-                            }}
-                          />
-                        </Box>
-                        {edu.description && (
-                          <Typography variant="body2" sx={{ color: "#666" }}>
-                            {edu.description}
-                          </Typography>
-                        )}
+                          }`}
+                          size="small"
+                          sx={{
+                            backgroundColor: "transparent",
+                            color: "#1E9CBC",
+                            border: "1px solid #1E9CBC",
+                            fontWeight: 500,
+                            // mb:15
+                          }}
+                        />
+                      </Box>
+                      {edu.description && (
+                        <Typography variant="body2" sx={{ color: "#666" }}>
+                          {edu.description}
+                        </Typography>
+                      )}
                     </Box>
                   </Grid>
                 ))}
@@ -976,78 +991,78 @@ const UserDetail = () => {
         </Card>
 
         {/* Experience Section */}
-        <Box sx={{ p:2, border: "1px solid #D1D1DB", bgcolor:'#EEFBFD' }}>
-          
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Work Experience
-            </Typography>
-            {experience.length === 0 ? (
-              <Box sx={{ textAlign: "center", py: 4, color: "#666" }}>
-                <WorkIcon sx={{ fontSize: 48, mb: 2, opacity: 0.5 }} />
-                <Typography>No work experience records found</Typography>
-              </Box>
-            ) : (
-              <Grid container spacing={3}>
-                {experience.map((exp, index) => (
-                  <Grid item xs={12} key={exp.id || index}>
+        <Box sx={{ p: 2, border: "1px solid #D1D1DB", bgcolor: "#EEFBFD" }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Work Experience
+          </Typography>
+          {experience.length === 0 ? (
+            <Box sx={{ textAlign: "center", py: 4, color: "#666" }}>
+              <WorkIcon sx={{ fontSize: 48, mb: 2, opacity: 0.5 }} />
+              <Typography>No work experience records found</Typography>
+            </Box>
+          ) : (
+            <Grid container spacing={3}>
+              {experience.map((exp, index) => (
+                <Grid item xs={12} key={exp.id || index}>
+                  <Box
+                    variant="outlined"
+                    sx={{
+                      border: "1px solid #1E9CBC",
+                      borderRadius: "8px",
+                      p: 1,
+                      "&:hover": {
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                      },
+                    }}
+                  >
                     <Box
-                      variant="outlined"
                       sx={{
-                        border: "1px solid #1E9CBC",
-                        borderRadius: "8px",
-                        p:1,
-                        "&:hover": {
-                          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                        },
+                        flex: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        mb: 2,
                       }}
                     >
-                        <Box
-                          sx={{
-                            flex:1,
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 2,
-                          }}
+                      <Box sx={{ flex: 1 }}>
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 600, color: "#101219" }}
                         >
-                          <Box sx={{ flex: 1 }}>
-                            <Typography
-                              variant="h6"
-                              sx={{ fontWeight: 600, color: "#101219" }}
-                            >
-                              {exp.designation || "N/A"}
-                            </Typography>
-                            <Typography
-                              variant="body1"
-                              sx={{ color: "#1E9CBC", mb: 1 }}
-                            >
-                              {exp.company || "N/A"}
-                            </Typography>
-                          </Box>
-                          <Chip
-                            label={`${formatDate(exp.startDate)} - ${exp.endDate === "Present"
-                              ? "Present"
-                              : formatDate(exp.endDate)
-                              }`}
-                            size="small"
-                            sx={{
-                              backgroundColor: "transparent",
-                              border:'1px solid #1E9CBC',
-                              color: "#1E9CBC",
-                              fontWeight: 500,
-                            }}
-                          />
-                        </Box>
-                        {exp.description && (
-                          <Typography variant="body2" sx={{ color: "#666" }}>
-                            {exp.description}
-                          </Typography>
-                        )}
+                          {exp.designation || "N/A"}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{ color: "#1E9CBC", mb: 1 }}
+                        >
+                          {exp.company || "N/A"}
+                        </Typography>
+                      </Box>
+                      <Chip
+                        label={`${formatDate(exp.startDate)} - ${
+                          exp.endDate === "Present"
+                            ? "Present"
+                            : formatDate(exp.endDate)
+                        }`}
+                        size="small"
+                        sx={{
+                          backgroundColor: "transparent",
+                          border: "1px solid #1E9CBC",
+                          color: "#1E9CBC",
+                          fontWeight: 500,
+                        }}
+                      />
                     </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            )}
+                    {exp.description && (
+                      <Typography variant="body2" sx={{ color: "#666" }}>
+                        {exp.description}
+                      </Typography>
+                    )}
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Box>
       </>
     );
@@ -1314,8 +1329,8 @@ const UserDetail = () => {
                 {user?.isOnBoard === "approved"
                   ? "Approved"
                   : isApprovingUser
-                    ? "Approving..."
-                    : "Approve User"}
+                  ? "Approving..."
+                  : "Approve User"}
               </Button>
             </Box>
           </Box>
@@ -1324,7 +1339,10 @@ const UserDetail = () => {
           <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
             <Tabs value={activeTab} onChange={handleTabChange}>
               <Tab label="Overview" sx={{ textTransform: "capitalize" }} />
-              <Tab label="Documents" sx={{ textTransform: "capitalize" }} />
+              <Tab
+                label={`Documents (${documents.length})`}
+                sx={{ textTransform: "capitalize" }}
+              />
               <Tab
                 label={`${user?.role === "TUTOR" ? "Tutor" : "Parent"} Profile`}
                 sx={{ textTransform: "capitalize" }}

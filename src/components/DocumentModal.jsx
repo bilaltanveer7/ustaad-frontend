@@ -24,6 +24,10 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
   const [error, setError] = useState(null);
   const imageRef = useRef(null);
 
+  // Derive URL and Name safely
+  const docUrl = typeof doc === "string" ? doc : doc?.url || "";
+  const docName = typeof doc === "object" ? doc?.name : doc?.split("/").pop();
+
   // Reset states when modal opens or document changes
   useEffect(() => {
     if (open && doc) {
@@ -42,11 +46,11 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
   };
 
   const handleDownload = () => {
-    if (doc) {
+    if (docUrl) {
       const link = document.createElement("a");
-      link.href = doc;
+      link.href = docUrl;
       // Extract filename from URL path
-      const filename = doc.split("/").pop();
+      const filename = docUrl.split("/").pop();
       link.download = filename || "document";
       document.body.appendChild(link);
       link.click();
@@ -71,16 +75,16 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
     setError(null);
     // Force reload by adding timestamp
     const timestamp = new Date().getTime();
-    const newUrl = doc.includes("?")
-      ? `${doc}&t=${timestamp}`
-      : `${doc}?t=${timestamp}`;
+    const newUrl = docUrl.includes("?")
+      ? `${docUrl}&t=${timestamp}`
+      : `${docUrl}?t=${timestamp}`;
     if (imageRef.current) {
       imageRef.current.src = newUrl;
     }
   };
 
   // Check file extension from URL
-  const fileExtension = doc?.split(".").pop()?.toLowerCase();
+  const fileExtension = docUrl?.split(".").pop()?.toLowerCase();
   const imageExtensions = [
     "png",
     "jpg",
@@ -159,7 +163,7 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
             </Button>
             <Button
               variant="outlined"
-              onClick={() => window.open(doc, "_blank")}
+              onClick={() => window.open(docUrl, "_blank")}
               sx={{
                 borderColor: "#1E9CBC",
                 color: "#1E9CBC",
@@ -181,7 +185,7 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
         <Box sx={{ textAlign: "center", overflow: "auto", maxHeight: "70vh" }}>
           <img
             // ref={imageRef}
-            src={doc}
+            src={docUrl}
             alt="Document preview"
             style={{
               maxWidth: "100%",
@@ -189,8 +193,8 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
               transform: `scale(${zoom})`,
               transition: "transform 0.2s ease-in-out",
             }}
-          // onLoad={handleImageLoad}
-          // onError={handleImageError}
+            // onLoad={handleImageLoad}
+            // onError={handleImageError}
           />
         </Box>
       );
@@ -217,7 +221,7 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
             </Box>
           )}
           <iframe
-            src={`${doc}#toolbar=0&navpanes=0&scrollbar=0`}
+            src={`${docUrl}#toolbar=0&navpanes=0&scrollbar=0`}
             width="100%"
             height="100%"
             style={{
@@ -277,12 +281,14 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
           alignItems: "center",
         }}
       >
-        <Typography variant="subtitle1"
+        <Typography
+          variant="subtitle1"
           sx={{
             fontWeight: 600,
             lineHeight: 1.2,
-          }}>
-          {doc?.split("/").pop() || "Document Viewer"}
+          }}
+        >
+          {docName || "Document Viewer"}
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {isImage && (
@@ -310,14 +316,17 @@ const DocumentModal = ({ open, onClose, document: doc }) => {
         </Box>
       </DialogTitle>
 
-      <DialogContent dividers sx={{
-        p: 0,
-        overflow: "auto",
-        scrollbarWidth: "none",
-        "&::-webkit-scrollbar": {
-          display: "none",
-        },
-      }}>
+      <DialogContent
+        dividers
+        sx={{
+          p: 0,
+          overflow: "auto",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        }}
+      >
         {renderContent()}
       </DialogContent>
 

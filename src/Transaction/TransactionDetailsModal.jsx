@@ -33,6 +33,7 @@ import {
   PauseCircleFilled as PauseIcon,
 } from "@mui/icons-material";
 import { useAdminStore } from "../store/useAdminStore";
+import { capitalize } from "../utils/helpers";
 
 const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
   const {
@@ -255,8 +256,17 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
             )}
 
             {/* Transaction Overview Card */}
-            <Box sx={{ mb: 2, width: "100%", display:'flex', justifyContent:'space-between', alignItems:'center', gap:2 }}>
-              <Box sx={{width:'55%'}}>
+            <Box
+              sx={{
+                mb: 2,
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <Box sx={{ width: "55%" }}>
                 <Card
                   sx={{
                     border: "1px solid #E0E3EB",
@@ -278,7 +288,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                         sx={{ fontWeight: 600, color: "#101219" }}
                       >
                         Payment Request:{" "}
-                        {selectedPaymentRequest.paymentRequest.id.slice(0, 4)}
+                        {/* {selectedPaymentRequest.paymentRequest.id.slice(0, 4)} */}
                       </Typography>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
@@ -381,7 +391,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                   </CardContent>
                 </Card>
               </Box>
-              <Box sx={{width:'45%'}}>
+              <Box sx={{ width: "45%" }}>
                 <Card
                   sx={{
                     border: "1px solid #E0E3EB",
@@ -396,7 +406,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                         alignItems: "center",
                         gap: 1,
                         mb: 2,
-                        py:0.2
+                        py: 0.2,
                       }}
                     >
                       <UpdateIcon sx={{ color: "#1E9CBC" }} />
@@ -601,6 +611,36 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                         }}
                       >
                         {selectedPaymentRequest.accountInfo.name || "N/A"}
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        mb: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
+                      <Typography
+                        // variant="body2"
+                        sx={{
+                          color: "#666",
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Role:
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: "#101219",
+                          fontWeight: 500,
+                          fontSize: "14px",
+                        }}
+                      >
+                        {capitalize(selectedPaymentRequest.accountInfo.role) ||
+                          "N/A"}
                       </Typography>
                     </Box>
                     <Box

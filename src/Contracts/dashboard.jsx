@@ -99,8 +99,9 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${page + 1
-      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
+    const query = `?page=${
+      page + 1
+    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
     fetchDisputedContracts(query);
   }, [
     fetchDisputedContracts,
@@ -121,8 +122,9 @@ const ContractDashboard = () => {
         handleCloseDetailsModal();
         // Refresh the list
         const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-        const query = `?page=${page + 1
-          }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        const query = `?page=${
+          page + 1
+        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
         fetchDisputedContracts(query);
       }
     }
@@ -442,7 +444,8 @@ const ContractDashboard = () => {
                           sx={{
                             cursor: "pointer",
                             height: "48px",
-                            backgroundColor: index % 2 === 0 ? "#F5F5F5" : "#FFFFFF",
+                            backgroundColor:
+                              index % 2 === 0 ? "#F5F5F5" : "#FFFFFF",
                           }}
                         >
                           <TableCell
@@ -503,7 +506,7 @@ const ContractDashboard = () => {
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
-                                      textTransform:'capitalize'
+                                      textTransform: "capitalize",
                                     }}
                                   >
                                     {row.Offer?.childName}
@@ -590,8 +593,8 @@ const ContractDashboard = () => {
                                 title={
                                   row.startDate
                                     ? new Date(
-                                      row.startDate
-                                    ).toLocaleDateString()
+                                        row.startDate
+                                      ).toLocaleDateString()
                                     : "N/A"
                                 }
                                 arrow
@@ -1118,13 +1121,21 @@ const ContractDashboard = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Next Billing
+                    <Typography
+                      variant="body2"
+                      color="#d32f2f"
+                      fontWeight="500"
+                    >
+                      Refund Amount
                     </Typography>
-                    <Typography variant="body1">
-                      {new Date(
-                        selectedContract.nextBillingDate
-                      ).toLocaleDateString()}
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "#d32f2f", fontWeight: "bold" }}
+                    >
+                      {((selectedContract?.Offer?.sessions || 0) -
+                        (selectedContract?.completedSessions || 0)) *
+                        (selectedContract?.oneSessionCost || 0)}{" "}
+                      {selectedContract.currency}
                     </Typography>
                   </Grid>
                 </Grid>

@@ -42,6 +42,7 @@ import { useParentStore } from "../store/useParentStore";
 import { useAdminStore } from "../store/useAdminStore";
 import DocumentModal from "../components/DocumentModal";
 import DeleteUserDialog from "../components/DeleteUserDialog";
+import config from "../utils/config";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const drawerWidth = 260;
@@ -1139,6 +1140,30 @@ const ParentsProfile = () => {
         );
 
       case 3: // Documents
+        const docs = [];
+        if (parent) {
+          if (parent.idFrontUrl) {
+            const extension = parent.idFrontUrl.split(".").pop().toLowerCase();
+            docs.push({
+              id: "id-front",
+              name: "ID Front",
+              type: extension === "pdf" ? "PDF" : "Image",
+              url: `${config.parentDocumentUrl}${parent.idFrontUrl}`,
+              status: "Uploaded",
+            });
+          }
+          if (parent.idBackUrl) {
+            const extension = parent.idBackUrl.split(".").pop().toLowerCase();
+            docs.push({
+              id: "id-back",
+              name: "ID Back",
+              type: extension === "pdf" ? "PDF" : "Image",
+              url: `${config.parentDocumentUrl}${parent.idBackUrl}`,
+              status: "Uploaded",
+            });
+          }
+        }
+
         return (
           <TableContainer
             component={Paper}
@@ -1228,48 +1253,75 @@ const ParentsProfile = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell
-                    style={{
-                      fontSize: "16px",
-                      color: "#101219",
-                      fontWeight: 400,
-                      border: "1px solid #E0E3EB",
-                    }}
-                  >
-                    No documents available
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontSize: "16px",
-                      color: "#101219",
-                      fontWeight: 400,
-                      border: "1px solid #E0E3EB",
-                    }}
-                  >
-                    -
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontSize: "16px",
-                      color: "#101219",
-                      fontWeight: "400",
-                      border: "1px solid #E0E3EB",
-                    }}
-                  >
-                    -
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontSize: "16px",
-                      color: "#101219",
-                      fontWeight: 400,
-                      border: "1px solid #E0E3EB",
-                    }}
-                  >
-                    -
-                  </TableCell>
-                </TableRow>
+                {docs.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
+                        fontWeight: 400,
+                        border: "1px solid #E0E3EB",
+                        textAlign: "center",
+                        padding: "20px",
+                      }}
+                    >
+                      No documents available
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  docs.map((doc) => (
+                    <TableRow key={doc.id}>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #E0E3EB",
+                        }}
+                      >
+                        {doc.name}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #E0E3EB",
+                        }}
+                      >
+                        {doc.type}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#388e3c",
+                          fontWeight: "500",
+                          border: "1px solid #E0E3EB",
+                        }}
+                      >
+                        {doc.status}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #E0E3EB",
+                        }}
+                      >
+                        <Button
+                          variant="text"
+                          size="small"
+                          onClick={() => handleDocumentView(doc)}
+                          sx={{ color: "#1E9CBC", textTransform: "none" }}
+                        >
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -1707,8 +1759,13 @@ const ParentsProfile = () => {
                   >
                     <Tab label={`Transactions (${transactions.length})`} />
                     <Tab label={`Children (${children.length})`} />
-                    <Tab label={`Notes by Tutors (0)`} />
-                    <Tab label="Documents (0)" />
+                    <Tab label={`Notes by Tutors (${childNotes.length})`} />
+                    <Tab
+                      label={`Documents (${
+                        (parent?.idFrontUrl ? 1 : 0) +
+                        (parent?.idBackUrl ? 1 : 0)
+                      })`}
+                    />
                   </Tabs>
                 </Box>
 
