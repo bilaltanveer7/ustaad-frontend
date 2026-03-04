@@ -814,8 +814,9 @@ const ContractDashboard = () => {
               >
                 View
               </MenuItem>
-              {selectedContract?.status?.toUpperCase() !== "COMPLETED" ||
-                (selectedContract?.status?.toUpperCase() !== "CANCELLED" && (
+              {selectedContract?.status?.toUpperCase() !== "COMPLETED" &&
+                selectedContract?.status?.toUpperCase() !== "CANCELLED" &&
+                selectedContract?.status?.toUpperCase() !== "REFUNDED" && (
                   <>
                     <MenuItem
                       onClick={() => {
@@ -901,7 +902,7 @@ const ContractDashboard = () => {
                       </MenuItem>
                     )} */}
                   </>
-                ))}
+                )}
             </Menu>
 
             {/* Pagination */}
@@ -1127,7 +1128,7 @@ const ContractDashboard = () => {
                       variant="body1"
                       sx={{ textTransform: "capitalize" }}
                     >
-                      {selectedContract.completedSessions}
+                      {selectedContract.Offer?.daysOfWeek?.join(", ") || "N/A"}
                     </Typography>
                   </Grid>
                   <Grid item xs={6} sm={3}>
