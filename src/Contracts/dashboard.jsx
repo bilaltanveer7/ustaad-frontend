@@ -100,9 +100,8 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${
-      page + 1
-    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
+    const query = `?page=${page + 1
+      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
     fetchDisputedContracts(query);
   }, [
     fetchDisputedContracts,
@@ -123,9 +122,8 @@ const ContractDashboard = () => {
         handleCloseDetailsModal();
         // Refresh the list
         const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-        const query = `?page=${
-          page + 1
-        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        const query = `?page=${page + 1
+          }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
         fetchDisputedContracts(query);
       }
     }
@@ -265,9 +263,9 @@ const ContractDashboard = () => {
             <div className="col-12">
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
-                  <IconButton size="small" style={{ marginRight: "10px" }}>
+                  {/* <IconButton size="small" style={{ marginRight: "10px" }}>
                     <ArrowBackIcon />
-                  </IconButton>
+                  </IconButton> */}
                   <h4
                     className="mb-0 me-3"
                     style={{
@@ -594,8 +592,8 @@ const ContractDashboard = () => {
                                 title={
                                   row.startDate
                                     ? new Date(
-                                        row.startDate
-                                      ).toLocaleDateString()
+                                      row.startDate
+                                    ).toLocaleDateString()
                                     : "N/A"
                                 }
                                 arrow
@@ -777,7 +775,7 @@ const ContractDashboard = () => {
               </Table>
             </TableContainer>
 
-            <Menu
+            {/* <Menu
               anchorEl={anchorEl}
               open={open}
               onClose={handleMenuClose}
@@ -900,9 +898,106 @@ const ContractDashboard = () => {
                       >
                         Refund
                       </MenuItem>
-                    )} */}
+                    )}
                   </>
                 )}
+            </Menu> */}
+
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleMenuClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              PaperProps={{
+                sx: {
+                  borderRadius: "8px",
+                  minWidth: "140px",
+                },
+              }}
+            >
+              {/* VIEW - always visible */}
+              <MenuItem
+                onClick={() => {
+                  handleMenuClose();
+                  handleViewDetails(selectedContract);
+                }}
+                sx={{
+                  color: "#fff",
+                  bgcolor: "#1976d2",
+                  "&:hover": { bgcolor: "#1565c0" },
+                  borderRadius: "4px",
+                  mx: 1,
+                  my: 0.5,
+                }}
+              >
+                View
+              </MenuItem>
+
+              {/* DISPUTE STATUS */}
+              {selectedContract?.status?.toUpperCase() === "DISPUTE" && (
+                <>
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      handleOpenResolutionModal(selectedContract, "ACTIVE");
+                    }}
+                    sx={{
+                      color: "#fff",
+                      bgcolor: "#ED6C02",
+                      "&:hover": { bgcolor: "#E65100" },
+                      borderRadius: "4px",
+                      mx: 1,
+                      my: 0.5,
+                    }}
+                  >
+                    Active
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      handleOpenResolutionModal(selectedContract, "CANCELLED");
+                    }}
+                    sx={{
+                      color: "#fff",
+                      bgcolor: "#d32f2f",
+                      "&:hover": { bgcolor: "#b71c1c" },
+                      borderRadius: "4px",
+                      mx: 1,
+                      my: 0.5,
+                    }}
+                  >
+                    Terminate
+                  </MenuItem>
+                </>
+              )}
+
+              {/* CANCELLED STATUS */}
+              {selectedContract?.status?.toUpperCase() === "CANCELLED" && (
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    handleOpenResolutionModal(selectedContract, "REFUND");
+                  }}
+                  sx={{
+                    color: "#fff",
+                    bgcolor: "#063455",
+                    "&:hover": { bgcolor: "#052c46" },
+                    borderRadius: "4px",
+                    mx: 1,
+                    my: 0.5,
+                  }}
+                >
+                  Refund
+                </MenuItem>
+              )}
             </Menu>
 
             {/* Pagination */}
@@ -956,221 +1051,234 @@ const ContractDashboard = () => {
           sx={{
             bgcolor: "#f5f5f5",
             display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
+          {/* Left */}
           <Typography variant="h6" fontWeight="bold">
             Contract Details
           </Typography>
-          <IconButton onClick={handleCloseDetailsModal} size="small">
-            <CloseIcon />
-          </IconButton>
+
+          {/* Center */}
+          {selectedContract?.disputedAt && (
+            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+              Disputed At:{" "}
+              {new Date(selectedContract.disputedAt).toLocaleDateString()}
+            </Typography>
+          )}
+
+          {/* Right */}
+          {selectedContract?.status && (
+            <Chip
+              label={selectedContract.status}
+              size="small"
+              variant="outlined"
+              color={
+                selectedContract.status?.toUpperCase() === "CANCELLED" ||
+                  selectedContract.status?.toUpperCase() === "DISPUTE"
+                  ? "error"
+                  : "success"
+              }
+            />
+          )}
         </DialogTitle>
         <Divider />
         <DialogContent>
           {selectedContract && (
-            <Grid container spacing={3}>
+            <Box>
               {/* Dispute Info */}
-              <Grid item xs={12}>
-                {refundContractError && (
-                  <Alert severity="error" sx={{ mb: 2 }}>
-                    {refundContractError}
-                  </Alert>
-                )}
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="body2" color="textSecondary">
-                      Reason
-                    </Typography>
+              {/* <Grid item xs={12}> */}
+              {refundContractError && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {refundContractError}
+                </Alert>
+              )}
+              <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+
+                {/* Reason Box */}
+                <Box sx={{ width: "40%" }}>
+                  <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                    Reason
+                  </Typography>
+                  <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderRadius: 1, height: '20vh', overflowY: 'auto' }}>
                     <Typography variant="body1">
-                      {selectedContract.disputeReason}
+                      {selectedContract?.disputeReason}
                     </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Status
+                  </Box>
+                </Box>
+
+                {/* Parent Details */}
+                <Box sx={{ width: "30%" }}>
+                  <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                    Parent Details
+                  </Typography>
+                  <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderRadius: 1, height: '20vh', overflowY: 'auto' }}>
+                    <Typography variant="body2">
+                      <strong>Name:</strong> {selectedContract?.parent?.firstName}{" "}
+                      {selectedContract?.parent?.lastName}
                     </Typography>
-                    <Chip
-                      label={selectedContract.status}
-                      color="error"
-                      size="small"
-                      variant="outlined"
-                    />
-                  </Grid>
-                  {selectedContract.disputedAt && (
-                    <Grid item xs={12} sm={3}>
-                      <Typography variant="body2" color="textSecondary">
-                        Disputed At
-                      </Typography>
-                      <Typography variant="body1">
-                        {new Date(
-                          selectedContract.disputedAt
-                        ).toLocaleDateString()}
-                      </Typography>
-                    </Grid>
-                  )}
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
-
-              {/* Parties */}
-              <Grid item xs={12} md={6}>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                  Parent Details
-                </Typography>
-                <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderRadius: 1 }}>
-                  <Typography variant="body2">
-                    <strong>Name:</strong> {selectedContract.parent?.firstName}{" "}
-                    {selectedContract.parent?.lastName}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Email:</strong> {selectedContract.parent?.email}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Phone:</strong> {selectedContract.parent?.phone}
-                  </Typography>
+                    <Typography variant="body2">
+                      <strong>Email:</strong> {selectedContract?.parent?.email}
+                    </Typography>
+                    <Typography variant="body2">
+                      <strong>Phone:</strong> {selectedContract?.parent?.phone}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                  Tutor Details
-                </Typography>
-                <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderRadius: 1 }}>
-                  <Typography variant="body2">
-                    <strong>Name:</strong> {selectedContract.tutor?.firstName}{" "}
-                    {selectedContract.tutor?.lastName}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Email:</strong> {selectedContract.tutor?.email}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Phone:</strong> {selectedContract.tutor?.phone}
-                  </Typography>
-                </Box>
-              </Grid>
 
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
+                {/* Tutor Details */}
+                <Box sx={{ width: "30%" }}>
+                  <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                    Tutor Details
+                  </Typography>
+                  <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderRadius: 1, height: '20vh', overflowY: 'auto' }}>
+                    <Typography variant="body2">
+                      <strong>Name:</strong> {selectedContract?.tutor?.firstName}{" "}
+                      {selectedContract?.tutor?.lastName}
+                    </Typography>
+                    <Typography variant="body2">
+                      <strong>Email:</strong> {selectedContract?.tutor?.email}
+                    </Typography>
+                    <Typography variant="body2">
+                      <strong>Phone:</strong> {selectedContract?.tutor?.phone}
+                    </Typography>
+                  </Box>
+                </Box>
+
+              </Box>
 
               {/* Contract Info */}
-              <Grid item xs={12}>
+              <Box>
                 <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                   Contract Specification
                 </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Child Name
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{ textTransform: "capitalize" }}
-                    >
-                      {selectedContract.Offer?.childName}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Amount
-                    </Typography>
-                    <Typography variant="body1">
-                      {selectedContract.amount} {selectedContract.currency}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Plan Type
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{ textTransform: "capitalize" }}
-                    >
-                      {selectedContract.planType}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Start Date
-                    </Typography>
-                    <Typography variant="body1">
-                      {new Date(
-                        selectedContract.startDate
-                      ).toLocaleDateString()}
-                    </Typography>
-                  </Grid>
 
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Total Sessions
+                {/* First Row */}
+                <Box sx={{ display: "flex", gap: 2 }}>
+
+                  {/* Box 1 */}
+                  <Box
+                    sx={{
+                      width: "33.33%",
+                      p: 2,
+                      bgcolor: "#f8f9fa",
+                      borderRadius: 1,
+                      height: "25vh",
+                      overflowY: "auto",
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ display: "flex", gap: 1 }}>
+                      <strong>Child Name:</strong>
+                      <span style={{ textTransform: "capitalize" }}>
+                        {selectedContract?.Offer?.childName}
+                      </span>
                     </Typography>
-                    <Typography variant="body1">
-                      {selectedContract?.Offer?.sessions}
+
+                    <Typography variant="body2" sx={{ display: "flex", gap: 1 }}>
+                      <strong>Amount:</strong>
+                      <span>
+                        {selectedContract?.amount} {selectedContract?.currency}
+                      </span>
                     </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Completed Sessions
+
+                    <Typography variant="body2" sx={{ display: "flex", gap: 1 }}>
+                      <strong>Plan Type:</strong>
+                      <span style={{ textTransform: "capitalize" }}>
+                        {selectedContract?.planType}
+                      </span>
                     </Typography>
-                    <Typography variant="body1">
-                      {selectedContract.completedSessions}
+                  </Box>
+
+                  {/* Box 2 */}
+                  <Box
+                    sx={{
+                      width: "33.33%",
+                      p: 2,
+                      bgcolor: "#f8f9fa",
+                      borderRadius: 1,
+                      height: "25vh",
+                      overflowY: "auto",
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ display: "flex", gap: 1 }}>
+                      <strong>Start Date:</strong>
+                      <span>
+                        {new Date(selectedContract?.startDate).toLocaleDateString()}
+                      </span>
                     </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Tutoring Days
+
+                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                      <strong>Total Sessions:</strong>
+                      <span>
+                        {selectedContract?.Offer?.sessions}
+                      </span>
                     </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{ textTransform: "capitalize" }}
-                    >
-                      {selectedContract.Offer?.daysOfWeek?.join(", ") || "N/A"}
+
+                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                      <strong>Completed Sessions:</strong>
+                      <span>
+                        {selectedContract?.completedSessions}
+                      </span>
                     </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Cost Per Session
+                  </Box>
+
+                  {/* Box 3 */}
+                  <Box
+                    sx={{
+                      width: "33.33%",
+                      p: 2,
+                      bgcolor: "#f8f9fa",
+                      borderRadius: 1,
+                      height: "25vh",
+                      overflowY: "auto",
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                      <strong>Tutoring Days:</strong>
+                      <span style={{ textTransform: "capitalize" }}>
+                        {selectedContract?.Offer?.daysOfWeek?.join(", ") || "N/A"}
+                      </span>
                     </Typography>
-                    <Typography variant="body1">
-                      {selectedContract?.oneSessionCost}
+
+                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                      <strong>Cost Per Session:</strong>
+                      <span>
+                        {selectedContract?.oneSessionCost}
+                      </span>
                     </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <Typography variant="body2" color="textSecondary">
-                      Subjects
+
+                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                      <strong>Subjects:</strong>
+                      <span style={{ textTransform: 'capitalize' }}>
+                        {selectedContract?.Offer?.subject?.join(", ")}
+                      </span>
                     </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{ textTransform: "capitalize" }}
-                    >
-                      {selectedContract.Offer?.subject.join(", ")}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <Typography
-                      variant="body2"
-                      color="#d32f2f"
-                      fontWeight="500"
-                    >
-                      Refund Amount
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{ color: "#d32f2f", fontWeight: "bold" }}
-                    >
-                      {((selectedContract?.Offer?.sessions || 0) -
-                        (selectedContract?.completedSessions || 0)) *
-                        (selectedContract?.oneSessionCost || 0)}{" "}
-                      {selectedContract.currency}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
+                  </Box>
+                </Box>
+
+                {/* Refund Row */}
+                <Box
+                  sx={{
+                    mt: 2,
+                    p: 2,
+                    bgcolor: "#f8f9fa",
+                    borderRadius: 1,
+                    width: "33.33%",
+                  }}
+                >
+                  <Typography variant="body2" color="#d32f2f" fontWeight="500">
+                    Refund Amount
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "#d32f2f", fontWeight: "bold" }}>
+                    {((selectedContract?.Offer?.sessions || 0) -
+                      (selectedContract?.completedSessions || 0)) *
+                      (selectedContract?.oneSessionCost || 0)}{" "}
+                    {selectedContract?.currency}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
           )}
         </DialogContent>
         <DialogActions sx={{ p: 2, justifyContent: "space-between" }}>

@@ -122,6 +122,9 @@ const TransactionDashboard = () => {
     updatedAt: new Date(request.updatedAt).toLocaleDateString() || "N/A",
   }));
 
+  // console.log("PAYMENT+++++REQUEST^^^$$$$$$$$$", paymentRequests);
+  
+
   const handleCopy = async (text) => {
     if (text === undefined || text === null || text === "N/A") return;
     const value = String(text);
@@ -210,9 +213,9 @@ const TransactionDashboard = () => {
             <div className="col-12">
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
-                  <IconButton size="small" style={{ marginRight: "10px" }}>
+                  {/* <IconButton size="small" style={{ marginRight: "10px" }}>
                     <ArrowBackIcon />
-                  </IconButton>
+                  </IconButton> */}
                   <h4
                     className="mb-0 me-3"
                     style={{
@@ -223,7 +226,7 @@ const TransactionDashboard = () => {
                   >
                     Transaction
                   </h4>
-                  <div
+                  {/* <div
                     className="d-flex align-items-center text-muted"
                     style={{
                       fontSize: "14px",
@@ -237,7 +240,7 @@ const TransactionDashboard = () => {
                       style={{ fontSize: "16px", marginRight: "5px" }}
                     />
                     Updated Now
-                  </div>
+                  </div> */}
                 </div>
                 <div style={{ width: "300px" }}>
                   <TextField
