@@ -387,6 +387,43 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                           )}
                         </Typography>
                       </Grid>
+
+                      <Grid item xs={12} md={6}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            mb: 2,
+                          }}
+                        >
+                          <AccountBalanceIcon
+                            sx={{ color: "#1E9CBC", fontSize: "20px" }}
+                          />
+                          <Typography
+                            // variant="body2"
+                            sx={{
+                              color: "#666",
+                              fontWeight: 600,
+                              fontSize: "18px",
+                            }}
+                          >
+                            Current Balance
+                          </Typography>
+                        </Box>
+                        <Typography
+                          // variant="h4"
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: "16px",
+                            color: "#101219",
+                          }}
+                        >
+                          {formatAmount(
+                            selectedPaymentRequest.accountInfo.balance
+                          )}
+                        </Typography>
+                      </Grid>
                     </Grid>
                   </CardContent>
                 </Card>
@@ -548,41 +585,6 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                   </Box>
                   <Divider sx={{ mb: 2 }} />
 
-                  {/* <Box
-                    sx={{
-                      mb: 2,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                    }}
-                  >
-                    <Typography
-                      // variant="body2"
-                      sx={{
-                        color: "#666",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      User ID:
-                    </Typography>
-
-                    <Typography
-                      // variant="body1"
-                      sx={{
-                        color: "#101219",
-                        fontWeight: 500,
-                        fontSize: "14px",
-                        padding: "4px 8px",
-                        borderRadius: "4px",
-                        display: "inline-block",
-                      }}
-                    >
-                      {selectedPaymentRequest.paymentRequest.tutorId || "N/A"}
-                    </Typography>
-                  </Box> */}
-
                   <>
                     <Box
                       sx={{
@@ -718,7 +720,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        Bank Account Number
+                        Bank Account Number:
                       </Typography>
                       <Typography
                         sx={{
