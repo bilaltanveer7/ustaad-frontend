@@ -4,6 +4,7 @@ import SideNav from "../sidebar/sidenav";
 import { useAdminStore } from "../store/useAdminStore";
 import profileImg from "../assets/profile.PNG";
 import parentprofileImg from "../assets/parent_profile.PNG";
+import { formatDate } from "../utils/dateFormatter";
 import {
   Button,
   Table,
@@ -545,7 +546,6 @@ const PendingUsersDashboard = () => {
                       }}
                     >
                       User Details
-
                     </TableCell>
                     <TableCell
                       sx={{
@@ -560,7 +560,6 @@ const PendingUsersDashboard = () => {
                       }}
                     >
                       Contact Info
-
                     </TableCell>
                     <TableCell
                       sx={{
@@ -575,7 +574,6 @@ const PendingUsersDashboard = () => {
                       }}
                     >
                       Role
-
                     </TableCell>
                     <TableCell
                       sx={{
@@ -590,7 +588,6 @@ const PendingUsersDashboard = () => {
                       }}
                     >
                       Verification Status
-
                     </TableCell>
                     <TableCell
                       sx={{
@@ -605,7 +602,6 @@ const PendingUsersDashboard = () => {
                       }}
                     >
                       Joining Date
-
                     </TableCell>
                     <TableCell
                       sx={{
@@ -620,7 +616,6 @@ const PendingUsersDashboard = () => {
                       }}
                     >
                       Status
-
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -651,7 +646,8 @@ const PendingUsersDashboard = () => {
                         sx={{
                           cursor: "pointer",
                           height: "48px",
-                          backgroundColor: index % 2 === 0 ? "#F5F5F5" : "#FFFFFF",
+                          backgroundColor:
+                            index % 2 === 0 ? "#F5F5F5" : "#FFFFFF",
                         }}
                       >
                         <TableCell
@@ -675,8 +671,8 @@ const PendingUsersDashboard = () => {
                                 user?.image && user.image.trim() !== ""
                                   ? user.image
                                   : user?.role?.toLowerCase() === "parent"
-                                    ? parentprofileImg
-                                    : profileImg
+                                  ? parentprofileImg
+                                  : profileImg
                               }
                               sx={{ width: 40, height: 40 }}
                             />
@@ -762,8 +758,9 @@ const PendingUsersDashboard = () => {
                             size="small"
                             style={{
                               backgroundColor: getRoleColor(user.role).bg,
-                              border: `1px solid ${getRoleColor(user.role).border
-                                }`,
+                              border: `1px solid ${
+                                getRoleColor(user.role).border
+                              }`,
                               color: getRoleColor(user.role).color,
                               fontWeight: 500,
                               fontSize: "12px",
@@ -887,9 +884,10 @@ const PendingUsersDashboard = () => {
                               backgroundColor: getStatusColor(
                                 user.isOnBoard || "pending"
                               ).bg,
-                              border: `1px solid ${getStatusColor(user.isOnBoard || "pending")
-                                .border
-                                }`,
+                              border: `1px solid ${
+                                getStatusColor(user.isOnBoard || "pending")
+                                  .border
+                              }`,
                               color: getStatusColor(user.isOnBoard || "pending")
                                 .color,
                               fontWeight: 500,

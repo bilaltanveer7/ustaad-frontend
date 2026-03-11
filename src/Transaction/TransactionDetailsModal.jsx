@@ -31,12 +31,15 @@ import {
   Cancel as CancelIcon,
   Info as InfoIcon,
   PauseCircleFilled as PauseIcon,
+  Download as DownloadIcon,
+  AccountBalance as BankIcon,
 } from "@mui/icons-material";
 import { useAdminStore } from "../store/useAdminStore";
 import { capitalize } from "../utils/helpers";
 import { CiWallet } from "react-icons/ci";
+import { formatDateTime } from "../utils/dateFormatter";
 
-const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
+const TransactionDetailsModal = ({ open, handleClose, transaction }) => {
   const {
     selectedPaymentRequest,
     fetchPaymentRequestDetails,
@@ -55,12 +58,12 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
   const [updateSuccess, setUpdateSuccess] = useState("");
 
   useEffect(() => {
-    if (open && transactionId) {
-      fetchPaymentRequestDetails(transactionId);
+    if (open && transaction) {
+      fetchPaymentRequestDetails(transaction.id);
       setUpdateError("");
       setUpdateSuccess("");
     }
-  }, [open, transactionId, fetchPaymentRequestDetails]);
+  }, [open, transaction, fetchPaymentRequestDetails]);
 
   // Update local status when data loads
   useEffect(() => {
@@ -96,7 +99,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
         setUpdateSuccess("Status updated successfully!");
         // Refresh the details to get updated data
         setTimeout(() => {
-          fetchPaymentRequestDetails(transactionId);
+          fetchPaymentRequestDetails(transaction.id);
         }, 1000);
       } else {
         setUpdateError(result.error || "Failed to update status");
@@ -141,11 +144,6 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
     }
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleString();
-  };
-
   const formatAmount = (amount) => {
     if (!amount) return "$0.00";
     return `${parseFloat(amount).toFixed(2)}/- PKR`;
@@ -172,7 +170,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       maxWidth="md"
       fullWidth
       PaperProps={{
@@ -203,7 +201,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
         </Box>
         <IconButton
           aria-label="close"
-          onClick={onClose}
+          onClick={handleClose}
           sx={{
             color: (theme) => theme.palette.grey[500],
           }}
@@ -382,7 +380,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                             fontSize: "16px",
                           }}
                         >
-                          {formatDate(
+                          {formatDateTime(
                             selectedPaymentRequest.paymentRequest.createdAt
                           )}
                         </Typography>
@@ -777,7 +775,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
 
       <DialogActions sx={{ p: 3 }}>
         <Button
-          onClick={onClose}
+          onClick={handleClose}
           variant="outlined"
           sx={{
             borderColor: "#ddd",

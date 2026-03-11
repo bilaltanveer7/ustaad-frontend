@@ -3,7 +3,8 @@ import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useAdminStore } from "../store/useAdminStore";
 import TransactionDetailsModal from "./TransactionDetailsModal";
-import profileImg from "../assets/profile.PNG"
+import profileImg from "../assets/profile.PNG";
+import { formatDate } from "../utils/dateFormatter";
 import {
   CircularProgress,
   Alert,
@@ -92,11 +93,24 @@ const TransactionDashboard = () => {
     const delayDebounceFn = setTimeout(() => {
       const statusParam = selectedStatus === "ALL" ? "" : selectedStatus;
       // API expects 1-based index for page
-      fetchPaymentRequests(searchValue, statusParam, page + 1, rowsPerPage, selectedDate);
+      fetchPaymentRequests(
+        searchValue,
+        statusParam,
+        page + 1,
+        rowsPerPage,
+        selectedDate
+      );
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [fetchPaymentRequests, searchValue, selectedStatus, page, rowsPerPage, selectedDate]);
+  }, [
+    fetchPaymentRequests,
+    searchValue,
+    selectedStatus,
+    page,
+    rowsPerPage,
+    selectedDate,
+  ]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -118,12 +132,11 @@ const TransactionDashboard = () => {
       : "Unknown",
     email: request.User?.email || "N/A",
     phone: request.User?.phone || "N/A",
-    date: new Date(request.createdAt).toLocaleDateString() || "N/A",
-    updatedAt: new Date(request.updatedAt).toLocaleDateString() || "N/A",
+    date: formatDate(request.createdAt),
+    updatedAt: formatDate(request.updatedAt),
   }));
 
   // console.log("PAYMENT+++++REQUEST^^^$$$$$$$$$", paymentRequests);
-
 
   const handleCopy = async (text) => {
     if (text === undefined || text === null || text === "N/A") return;
@@ -492,7 +505,8 @@ const TransactionDashboard = () => {
                               selected={isItemSelected}
                               sx={{
                                 height: "48px",
-                                backgroundColor: index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
+                                backgroundColor:
+                                  index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
                                 "&:hover": {
                                   backgroundColor: "#F1F3F7",
                                 },
@@ -661,29 +675,29 @@ const TransactionDashboard = () => {
                                   )}
                                   {(row.status === "IN_REVIEW" ||
                                     row.status === "REQUESTED") && (
-                                      <div
+                                    <div
+                                      style={{
+                                        // backgroundColor: "#EEF3FF",
+                                        color: "#235DFF",
+                                        // border:'1px solid #235DFF',
+                                        display: "flex",
+                                        alignItems: "center",
+                                        padding: "0px 4px",
+                                        borderRadius: "6px",
+                                        fontWeight: 500,
+                                        fontSize: "14px",
+                                        // textTransform:''
+                                      }}
+                                    >
+                                      <InfoIcon
                                         style={{
-                                          // backgroundColor: "#EEF3FF",
-                                          color: "#235DFF",
-                                          // border:'1px solid #235DFF',
-                                          display: "flex",
-                                          alignItems: "center",
-                                          padding: "0px 4px",
-                                          borderRadius: "6px",
-                                          fontWeight: 500,
-                                          fontSize: "14px",
-                                          // textTransform:''
+                                          fontSize: "18px",
+                                          marginRight: 4,
                                         }}
-                                      >
-                                        <InfoIcon
-                                          style={{
-                                            fontSize: "18px",
-                                            marginRight: 4,
-                                          }}
-                                        />
-                                        {row.status}
-                                      </div>
-                                    )}
+                                      />
+                                      {row.status}
+                                    </div>
+                                  )}
                                 </div>
                               </TableCell>
 

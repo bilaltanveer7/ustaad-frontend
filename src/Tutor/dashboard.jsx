@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useTutorStore } from "../store/useTutorStore";
+import { formatDate } from "../utils/dateFormatter";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import profileImg from "../assets/profile.PNG";
@@ -93,7 +94,7 @@ const TutorDashboard = () => {
         : tutor.User?.firstName || tutor.User?.lastName || "N/A",
     email: tutor.User?.email || "N/A",
     phone: tutor.User?.phone || "N/A",
-    date: new Date(tutor.createdAt).toLocaleDateString() || "N/A",
+    date: formatDate(tutor.createdAt),
   }));
 
   const handleSelectAll = (event) => {
@@ -530,7 +531,8 @@ const TutorDashboard = () => {
                             selected={isItemSelected}
                             sx={{
                               height: "48px",
-                              backgroundColor: index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
+                              backgroundColor:
+                                index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
                               "&:hover": {
                                 backgroundColor: "#F1F3F7",
                               },
@@ -556,7 +558,7 @@ const TutorDashboard = () => {
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
-                                    textAlign: 'center'
+                                    textAlign: "center",
                                   }}
                                 >
                                   {row.userId}
@@ -577,7 +579,8 @@ const TutorDashboard = () => {
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <div
-                                  className="d-flex align-items-center" style={{ marginLeft: '5px' }}
+                                  className="d-flex align-items-center"
+                                  style={{ marginLeft: "5px" }}
                                   onClick={() =>
                                     navigate(`/tutor-profile/${row.id}`)
                                   }
@@ -632,8 +635,8 @@ const TutorDashboard = () => {
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
-                                    textAlign: 'center',
-                                    marginLeft: '5px'
+                                    textAlign: "center",
+                                    marginLeft: "5px",
                                   }}
                                 >
                                   {row.email}
@@ -647,7 +650,11 @@ const TutorDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "16px", color: "#666", marginRight: '5px' }}
+                                    style={{
+                                      fontSize: "16px",
+                                      color: "#666",
+                                      marginRight: "5px",
+                                    }}
                                   />
                                 </IconButton>
                               </div>
@@ -674,7 +681,7 @@ const TutorDashboard = () => {
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
-                                    marginLeft: '5px'
+                                    marginLeft: "5px",
                                   }}
                                 >
                                   {"+" + row.phone}
@@ -688,7 +695,11 @@ const TutorDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "16px", color: "#666", marginRight: '5px' }}
+                                    style={{
+                                      fontSize: "16px",
+                                      color: "#666",
+                                      marginRight: "5px",
+                                    }}
                                   />
                                 </IconButton>
                               </div>
@@ -707,7 +718,8 @@ const TutorDashboard = () => {
                             >
                               <div
                                 className="d-flex align-items-center justify-content-between"
-                                style={{ marginLeft: '10px' }} >
+                                style={{ marginLeft: "10px" }}
+                              >
                                 {row.date}
                               </div>
                             </TableCell>

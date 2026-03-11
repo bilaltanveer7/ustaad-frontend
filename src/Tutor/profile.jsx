@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useTutorStore } from "../store/useTutorStore";
 import { useAdminStore } from "../store/useAdminStore";
+import { formatDate } from "../utils/dateFormatter";
 import DocumentModal from "../components/DocumentModal";
 import DeleteUserDialog from "../components/DeleteUserDialog";
 import profileImg from "../assets/profile.PNG";
@@ -96,9 +97,7 @@ const TutorsProfile = () => {
           typeof timesHired === "number"
             ? timesHired.toString()
             : prev.noOfHires,
-        joiningDate: tutor?.createdAt
-          ? new Date(tutor.createdAt).toLocaleDateString()
-          : "N/A",
+        joiningDate: tutor?.createdAt ? formatDate(tutor.createdAt) : "N/A",
         experienceYears: totalExperience
           ? Math.round(totalExperience).toString()
           : "0",
@@ -317,82 +316,114 @@ const TutorsProfile = () => {
     totalExperience,
     transactions,
     documents,
+    notes = [],
   } = tutorDetails || {};
 
   // Transform API data for display
   const experienceData =
     experience?.length > 0
-      ? experience?.map((exp) => {
-          const startYear = exp.startDate
-            ? new Date(exp.startDate).getFullYear()
-            : null;
-          const endYear =
-            exp.endDate === "Present"
-              ? new Date().getFullYear()
-              : exp.endDate
-              ? new Date(exp.endDate).getFullYear()
+      ? experience
+          ?.map((exp) => {
+            const startYear = exp.startDate
+              ? new Date(exp.startDate).getFullYear()
               : null;
-          const totalYears =
-            startYear !== null && endYear !== null
-              ? (endYear - startYear).toString()
-              : "N/A";
-
-          return {
-            id: exp.id,
-            company: exp.company || "N/A",
-            title: exp.description || "N/A", // API uses 'description' for job title/role
-            designation: exp.designation || "N/A",
-            startYear: startYear ? startYear.toString() : "N/A",
-            endYear:
+            const endYear =
               exp.endDate === "Present"
-                ? "Present"
-                : endYear
-                ? endYear.toString()
-                : "N/A",
-            totalYears,
-          };
-        })
+                ? new Date().getFullYear()
+                : exp.endDate
+                ? new Date(exp.endDate).getFullYear()
+                : null;
+            const totalYears =
+              startYear !== null && endYear !== null
+                ? (endYear - startYear).toString()
+                : "N/A";
+
+            return {
+              id: exp.id,
+              company: exp.company || "N/A",
+              title: exp.description || "N/A", // API uses 'description' for job title/role
+              designation: exp.designation || "N/A",
+              startYear: startYear ? startYear.toString() : "N/A",
+              endYear:
+                exp.endDate === "Present"
+                  ? "Present"
+                  : endYear
+                  ? endYear.toString()
+                  : "N/A",
+              totalYears,
+            };
+          })
+          .filter((exp) => {
+            if (activeTab !== 1 || !searchTerm) return true;
+            const term = searchTerm.toLowerCase();
+            return (
+              exp.company.toLowerCase().includes(term) ||
+              exp.title.toLowerCase().includes(term) ||
+              exp.designation.toLowerCase().includes(term)
+            );
+          })
       : [];
 
   const educationData =
     education?.length > 0
-      ? education?.map((edu) => {
-          const startYear = edu.startDate
-            ? new Date(edu.startDate).getFullYear()
-            : null;
-          const endYear =
-            edu.endDate === "Present"
-              ? new Date().getFullYear()
-              : edu.endDate
-              ? new Date(edu.endDate).getFullYear()
+      ? education
+          ?.map((edu) => {
+            const startYear = edu.startDate
+              ? new Date(edu.startDate).getFullYear()
               : null;
-          const totalYears =
-            startYear !== null && endYear !== null
-              ? (endYear - startYear).toString()
-              : "N/A";
-
-          return {
-            id: edu.id,
-            institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-            degree: edu.degree || "N/A",
-            description: edu.description || "N/A",
-            startDate: startYear ? startYear.toString() : "N/A",
-            endDate:
+            const endYear =
               edu.endDate === "Present"
-                ? "Present"
-                : endYear
-                ? endYear.toString()
-                : "N/A",
-            totalYears,
-          };
-        })
+                ? new Date().getFullYear()
+                : edu.endDate
+                ? new Date(edu.endDate).getFullYear()
+                : null;
+            const totalYears =
+              startYear !== null && endYear !== null
+                ? (endYear - startYear).toString()
+                : "N/A";
+
+            return {
+              id: edu.id,
+              institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
+              degree: edu.degree || "N/A",
+              description: edu.description || "N/A",
+              startDate: startYear ? startYear.toString() : "N/A",
+              endDate:
+                edu.endDate === "Present"
+                  ? "Present"
+                  : endYear
+                  ? endYear.toString()
+                  : "N/A",
+              totalYears,
+            };
+          })
+          .filter((edu) => {
+            if (activeTab !== 3 || !searchTerm) return true;
+            const term = searchTerm.toLowerCase();
+            return (
+              edu.institution.toLowerCase().includes(term) ||
+              edu.degree.toLowerCase().includes(term) ||
+              edu.description.toLowerCase().includes(term)
+            );
+          })
       : [];
 
   // Transform API transactions data for display
   const transactionsData = transactions
     ? // Handle both single object and array cases
-      (Array.isArray(transactions) ? transactions : [transactions]).map(
-        (tx) => ({
+      (Array.isArray(transactions) ? transactions : [transactions])
+        .filter((tx) => {
+          if (activeTab !== 0 || !searchTerm) return true;
+          const term = searchTerm.toLowerCase();
+          const parentName = tx?.parent?.name || "";
+          const invoiceId = tx?.parentTransactions?.[0]?.invoiceId || "";
+          return (
+            parentName.toLowerCase().includes(term) ||
+            invoiceId.toLowerCase().includes(term) ||
+            (tx.amount && tx.amount.toString().includes(term))
+          );
+        })
+        .map((tx) => ({
           id: tx.id,
           payment: {
             name: tutor?.User?.fullName || "Unknown",
@@ -409,12 +440,9 @@ const TutorsProfile = () => {
             type: "bank",
             accountNumber: tutor?.accountNumber || "N/A",
           },
-          transactionDate: tx.createdAt
-            ? new Date(tx.createdAt).toLocaleDateString()
-            : "N/A",
+          transactionDate: tx.createdAt ? formatDate(tx.createdAt) : "N/A",
           status: tx.status || "UNKNOWN",
-        })
-      )
+        }))
     : [];
 
   // Transform API documents data for display
@@ -456,7 +484,49 @@ const TutorsProfile = () => {
           uploadDate: "N/A", // Upload date not available in API
           status: documents.idBack ? "Available" : "Missing",
         },
-      ].filter((doc) => doc.url)
+      ]
+        .filter((doc) => doc.url)
+        .filter((doc) => {
+          if (activeTab !== 2 || !searchTerm) return true;
+          const term = searchTerm.toLowerCase();
+          return (
+            doc.name.toLowerCase().includes(term) ||
+            doc.type.toLowerCase().includes(term) ||
+            doc.status.toLowerCase().includes(term)
+          );
+        })
+    : [];
+
+  // Transform API notes data for display
+  const notesData = notes
+    ? notes
+        .filter((note) => {
+          if (activeTab !== 4 || !searchTerm) return true;
+          const term = searchTerm.toLowerCase();
+          const author =
+            note.author ||
+            (note.User
+              ? `${note.User.firstName || ""} ${note.User.lastName || ""}`
+              : "Admin");
+          return (
+            author.toLowerCase().includes(term) ||
+            (note.note && note.note.toLowerCase().includes(term)) ||
+            (note.description && note.description.toLowerCase().includes(term))
+          );
+        })
+        .map((note, index) => ({
+          id: note.id || index,
+          author:
+            note.author ||
+            (note.User
+              ? `${note.User.firstName || ""} ${
+                  note.User.lastName || ""
+                }`.trim()
+              : "Admin"),
+          avatar: note.User?.image || profileImg,
+          note: note.note || note.description || note.content || "N/A",
+          date: note.createdAt ? formatDate(note.createdAt) : "N/A",
+        }))
     : [];
 
   const childrenData = [
@@ -1535,6 +1605,183 @@ const TutorsProfile = () => {
           </TableContainer>
         );
 
+      case 4:
+        return (
+          <TableContainer
+            component={Paper}
+            style={{
+              boxShadow: "none",
+              border: "1px solid #E0E3EB",
+              borderRadius: "8px",
+            }}
+          >
+            <Table style={{ border: "1px solid #E0E3EB" }}>
+              <TableHead
+                sx={{
+                  backgroundColor: "#1E9CBC",
+                  "& .MuiTableCell-root": {
+                    height: 32,
+                    py: 0,
+                    px: 2,
+                    color: "#FFFFFF",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    borderBottom: "none",
+                  },
+                }}
+              >
+                <TableRow
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "#FFFFFF",
+                  }}
+                >
+                  <TableCell onClick={() => handleSort("author")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Author {getSortIcon("author")}
+                    </Box>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("note")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Note {getSortIcon("note")}
+                    </Box>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("date")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Date {getSortIcon("date")}
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {notesData.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={3}
+                      style={{
+                        textAlign: "center",
+                        padding: "40px",
+                        color: "#666",
+                      }}
+                    >
+                      No notes found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  notesData.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      style={{ borderBottom: "1px solid #E0E3EB" }}
+                    >
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          paddingLeft: "15px",
+                          height: "42px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <Avatar
+                            src={row.avatar}
+                            sx={{ width: 24, height: 24 }}
+                          />
+                          <span>{row.author}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          paddingLeft: "15px",
+                          height: "42px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: "24px",
+                              height: "24px",
+                              backgroundColor: "#1E9CBC",
+                              borderRadius: "4px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: "white",
+                                fontSize: "12px",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              N
+                            </span>
+                          </div>
+                          <Tooltip title={row.note} arrow>
+                            <span
+                              style={{
+                                maxWidth: "300px",
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {row.note}
+                            </span>
+                          </Tooltip>
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#4D5874",
+                          paddingLeft: "15px",
+                          height: "42px",
+                        }}
+                      >
+                        {row.date}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        );
+
       default:
         return null;
     }
@@ -2001,6 +2248,7 @@ const TutorsProfile = () => {
                     <Tab label={`Experience (${experienceData.length})`} />
                     <Tab label={`Documents (${documentsData.length})`} />
                     <Tab label={`Education (${educationData.length})`} />
+                    <Tab label={`Notes (${notesData.length})`} />
                   </Tabs>
                 </Box>
 
@@ -2035,11 +2283,11 @@ const TutorsProfile = () => {
                             />
                           </InputAdornment>
                         ),
-                        endAdornment: searchValue && (
+                        endAdornment: searchTerm && (
                           <InputAdornment position="end">
                             <IconButton
                               size="small"
-                              onClick={() => setSearchValue("")}
+                              onClick={() => setSearchTerm("")}
                             >
                               <CloseIcon style={{ fontSize: "18px" }} />
                             </IconButton>

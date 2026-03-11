@@ -45,6 +45,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { capitalize } from "../utils/helpers";
+import { formatDate } from "../utils/dateFormatter";
 
 const drawerWidth = 260;
 
@@ -102,8 +103,9 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${page + 1
-      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
+    const query = `?page=${
+      page + 1
+    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
     fetchDisputedContracts(query);
   }, [
     fetchDisputedContracts,
@@ -124,8 +126,9 @@ const ContractDashboard = () => {
         handleCloseDetailsModal();
         // Refresh the list
         const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-        const query = `?page=${page + 1
-          }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        const query = `?page=${
+          page + 1
+        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
         fetchDisputedContracts(query);
       }
     }
@@ -565,9 +568,7 @@ const ContractDashboard = () => {
                               <Tooltip
                                 title={
                                   row.startDate
-                                    ? new Date(
-                                      row.startDate
-                                    ).toLocaleDateString()
+                                    ? formatDate(row.startDate)
                                     : "N/A"
                                 }
                                 arrow
@@ -584,9 +585,7 @@ const ContractDashboard = () => {
                                     whiteSpace: "nowrap",
                                   }}
                                 >
-                                  {new Date(
-                                    row.startDate
-                                  ).toLocaleDateString() || "N/A"}
+                                  {formatDate(row.startDate)}
                                 </div>
                               </Tooltip>
                             </div>
@@ -1048,8 +1047,7 @@ const ContractDashboard = () => {
           {/* Center */}
           {selectedContract?.disputedAt && (
             <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              Disputed At:{" "}
-              {new Date(selectedContract.disputedAt).toLocaleDateString()}
+              Disputed At: {formatDate(selectedContract.disputedAt)}
             </Typography>
           )}
 
@@ -1061,7 +1059,7 @@ const ContractDashboard = () => {
               variant="outlined"
               color={
                 selectedContract.status?.toUpperCase() === "CANCELLED" ||
-                  selectedContract.status?.toUpperCase() === "DISPUTE"
+                selectedContract.status?.toUpperCase() === "DISPUTE"
                   ? "error"
                   : "success"
               }
@@ -1080,13 +1078,24 @@ const ContractDashboard = () => {
                 </Alert>
               )}
               <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
-
                 {/* Reason Box */}
                 <Box sx={{ width: "40%" }}>
-                  <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    gutterBottom
+                  >
                     Reason
                   </Typography>
-                  <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderRadius: 1, height: '20vh', overflowY: 'auto' }}>
+                  <Box
+                    sx={{
+                      p: 2,
+                      bgcolor: "#f8f9fa",
+                      borderRadius: 1,
+                      height: "20vh",
+                      overflowY: "auto",
+                    }}
+                  >
                     <Typography variant="body1">
                       {selectedContract?.disputeReason}
                     </Typography>
@@ -1095,12 +1104,25 @@ const ContractDashboard = () => {
 
                 {/* Parent Details */}
                 <Box sx={{ width: "30%" }}>
-                  <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    gutterBottom
+                  >
                     Parent Details
                   </Typography>
-                  <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderRadius: 1, height: '20vh', overflowY: 'auto' }}>
+                  <Box
+                    sx={{
+                      p: 2,
+                      bgcolor: "#f8f9fa",
+                      borderRadius: 1,
+                      height: "20vh",
+                      overflowY: "auto",
+                    }}
+                  >
                     <Typography variant="body2">
-                      <strong>Name:</strong> {selectedContract?.parent?.firstName}{" "}
+                      <strong>Name:</strong>{" "}
+                      {selectedContract?.parent?.firstName}{" "}
                       {selectedContract?.parent?.lastName}
                     </Typography>
                     <Typography variant="body2">
@@ -1114,12 +1136,25 @@ const ContractDashboard = () => {
 
                 {/* Tutor Details */}
                 <Box sx={{ width: "30%" }}>
-                  <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    gutterBottom
+                  >
                     Tutor Details
                   </Typography>
-                  <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderRadius: 1, height: '20vh', overflowY: 'auto' }}>
+                  <Box
+                    sx={{
+                      p: 2,
+                      bgcolor: "#f8f9fa",
+                      borderRadius: 1,
+                      height: "20vh",
+                      overflowY: "auto",
+                    }}
+                  >
                     <Typography variant="body2">
-                      <strong>Name:</strong> {selectedContract?.tutor?.firstName}{" "}
+                      <strong>Name:</strong>{" "}
+                      {selectedContract?.tutor?.firstName}{" "}
                       {selectedContract?.tutor?.lastName}
                     </Typography>
                     <Typography variant="body2">
@@ -1130,7 +1165,6 @@ const ContractDashboard = () => {
                     </Typography>
                   </Box>
                 </Box>
-
               </Box>
 
               {/* Contract Info */}
@@ -1141,7 +1175,6 @@ const ContractDashboard = () => {
 
                 {/* First Row */}
                 <Box sx={{ display: "flex", gap: 2 }}>
-
                   {/* Box 1 */}
                   <Box
                     sx={{
@@ -1153,21 +1186,30 @@ const ContractDashboard = () => {
                       overflowY: "auto",
                     }}
                   >
-                    <Typography variant="body2" sx={{ display: "flex", gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex", gap: 1 }}
+                    >
                       <strong>Child Name:</strong>
                       <span style={{ textTransform: "capitalize" }}>
                         {selectedContract?.Offer?.childName}
                       </span>
                     </Typography>
 
-                    <Typography variant="body2" sx={{ display: "flex", gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex", gap: 1 }}
+                    >
                       <strong>Amount:</strong>
                       <span>
                         {selectedContract?.amount} {selectedContract?.currency}
                       </span>
                     </Typography>
 
-                    <Typography variant="body2" sx={{ display: "flex", gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex", gap: 1 }}
+                    >
                       <strong>Plan Type:</strong>
                       <span style={{ textTransform: "capitalize" }}>
                         {selectedContract?.planType}
@@ -1186,25 +1228,28 @@ const ContractDashboard = () => {
                       overflowY: "auto",
                     }}
                   >
-                    <Typography variant="body2" sx={{ display: "flex", gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex", gap: 1 }}
+                    >
                       <strong>Start Date:</strong>
-                      <span>
-                        {new Date(selectedContract?.startDate).toLocaleDateString()}
-                      </span>
+                      <span>{formatDate(selectedContract?.startDate)}</span>
                     </Typography>
 
-                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex", gap: 1 }}
+                    >
                       <strong>Total Sessions:</strong>
-                      <span>
-                        {selectedContract?.Offer?.sessions}
-                      </span>
+                      <span>{selectedContract?.Offer?.sessions}</span>
                     </Typography>
 
-                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex", gap: 1 }}
+                    >
                       <strong>Completed Sessions:</strong>
-                      <span>
-                        {selectedContract?.completedSessions}
-                      </span>
+                      <span>{selectedContract?.completedSessions}</span>
                     </Typography>
                   </Box>
 
@@ -1219,23 +1264,31 @@ const ContractDashboard = () => {
                       overflowY: "auto",
                     }}
                   >
-                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex", gap: 1 }}
+                    >
                       <strong>Tutoring Days:</strong>
                       <span style={{ textTransform: "capitalize" }}>
-                        {selectedContract?.Offer?.daysOfWeek?.join(", ") || "N/A"}
+                        {selectedContract?.Offer?.daysOfWeek?.join(", ") ||
+                          "N/A"}
                       </span>
                     </Typography>
 
-                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex", gap: 1 }}
+                    >
                       <strong>Cost Per Session:</strong>
-                      <span>
-                        {selectedContract?.oneSessionCost}
-                      </span>
+                      <span>{selectedContract?.oneSessionCost}</span>
                     </Typography>
 
-                    <Typography variant="body2" sx={{ display: 'flex', gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ display: "flex", gap: 1 }}
+                    >
                       <strong>Subjects:</strong>
-                      <span style={{ textTransform: 'capitalize' }}>
+                      <span style={{ textTransform: "capitalize" }}>
                         {selectedContract?.Offer?.subject?.join(", ")}
                       </span>
                     </Typography>
@@ -1255,7 +1308,10 @@ const ContractDashboard = () => {
                   <Typography variant="body2" color="#d32f2f" fontWeight="500">
                     Refund Amount
                   </Typography>
-                  <Typography variant="body1" sx={{ color: "#d32f2f", fontWeight: "bold" }}>
+                  <Typography
+                    variant="body1"
+                    sx={{ color: "#d32f2f", fontWeight: "bold" }}
+                  >
                     {((selectedContract?.Offer?.sessions || 0) -
                       (selectedContract?.completedSessions || 0)) *
                       (selectedContract?.oneSessionCost || 0)}{" "}
