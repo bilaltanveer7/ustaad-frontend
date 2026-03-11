@@ -34,6 +34,7 @@ import {
 } from "@mui/icons-material";
 import { useAdminStore } from "../store/useAdminStore";
 import { capitalize } from "../utils/helpers";
+import { CiWallet } from "react-icons/ci";
 
 const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
   const {
@@ -248,12 +249,12 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
 
             {(selectedPaymentRequest.paymentRequest.status === "PAID" ||
               selectedPaymentRequest.paymentRequest.status === "REJECTED") && (
-              <Alert severity="info" sx={{ mb: 2 }}>
-                This transaction is finalized (
-                {selectedPaymentRequest.paymentRequest.status}). The status
-                cannot be changed.
-              </Alert>
-            )}
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  This transaction is finalized (
+                  {selectedPaymentRequest.paymentRequest.status}). The status
+                  cannot be changed.
+                </Alert>
+              )}
 
             {/* Transaction Overview Card */}
             <Box
@@ -304,11 +305,10 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                             color: getStatusColor(
                               selectedPaymentRequest.paymentRequest.status
                             ).color,
-                            border: `1px solid ${
-                              getStatusColor(
-                                selectedPaymentRequest.paymentRequest.status
-                              ).border
-                            }`,
+                            border: `1px solid ${getStatusColor(
+                              selectedPaymentRequest.paymentRequest.status
+                            ).border
+                              }`,
                             fontWeight: 500,
                           }}
                         />
@@ -411,7 +411,7 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                             Current Balance
                           </Typography>
                         </Box>
-                        <Typography
+                        {/* <Typography
                           // variant="h4"
                           sx={{
                             fontWeight: 600,
@@ -422,7 +422,35 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                           {formatAmount(
                             selectedPaymentRequest.accountInfo.balance
                           )}
-                        </Typography>
+                        </Typography> */}
+                        <Button
+                          variant="contained"
+                          size="small"
+                          startIcon={
+                            <CiWallet
+                              style={{
+                                color: "white",
+                                fontWeight: 900,
+                                fontSize: "20px",
+                              }}
+                            />
+                          }
+                          sx={{
+                            backgroundColor: "#121217",
+                            borderRadius: "8px",
+                            color: "white",
+                            textTransform: "none",
+                            fontSize: "14px",
+                            height: 35,
+                            px: 2,
+                            whiteSpace: "nowrap",
+                            "&:hover": {
+                              backgroundColor: "#121217",
+                            },
+                          }}
+                        >
+                          Rs {formatAmount(selectedPaymentRequest?.accountInfo?.balance)}
+                        </Button>
                       </Grid>
                     </Grid>
                   </CardContent>
@@ -478,9 +506,9 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                               isUpdating ||
                               isUpdatingPaymentRequest ||
                               selectedPaymentRequest.paymentRequest.status ===
-                                "PAID" ||
+                              "PAID" ||
                               selectedPaymentRequest.paymentRequest.status ===
-                                "REJECTED"
+                              "REJECTED"
                             }
                             sx={{
                               height: "37px",
@@ -523,9 +551,9 @@ const TransactionDetailsModal = ({ open, onClose, transactionId }) => {
                             !localStatus ||
                             localStatus === selectedPaymentRequest.status ||
                             selectedPaymentRequest.paymentRequest.status ===
-                              "PAID" ||
+                            "PAID" ||
                             selectedPaymentRequest.paymentRequest.status ===
-                              "REJECTED"
+                            "REJECTED"
                           }
                           sx={{
                             backgroundColor: "#1E9CBC",

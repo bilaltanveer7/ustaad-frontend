@@ -507,9 +507,8 @@ const UserDetail = () => {
         size="medium"
         sx={{
           backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
-          border: `1px solid ${
-            getStatusColor(user?.isOnBoard || "pending").border
-          }`,
+          border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border
+            }`,
           color: getStatusColor(user?.isOnBoard || "pending").color,
           fontWeight: 500,
           fontSize: "14px",
@@ -629,7 +628,7 @@ const UserDetail = () => {
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <List>
-              <ListItem>
+              {/* <ListItem>
                 <ListItemIcon>
                   <SchoolIcon sx={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
@@ -684,7 +683,7 @@ const UserDetail = () => {
                       : "N/A"
                   }
                 />
-              </ListItem>
+              </ListItem> */}
               <ListItem>
                 <ListItemIcon>
                   <SchoolIcon sx={{ color: "#1E9CBC" }} />
@@ -694,28 +693,6 @@ const UserDetail = () => {
                   secondary={tutor.grade ? capitalize(tutor.grade) : "N/A"}
                 />
               </ListItem>
-            </List>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <List>
-              {/* Work Experience */}
-              {/* <ListItem alignItems="flex-start">
-                <ListItemIcon>
-                  <PersonIcon sx={{color:'#1E9CBC'}} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Work Experience"
-                  secondary={
-                    experience.length > 0
-                      ? experience
-                          .map((exp) => `${exp.description} at ${exp.company}`)
-                          .join(", ")
-                      : "N/A"
-                  }
-                />
-              </ListItem> */}
-
-              {/* Profile Created */}
               <ListItem>
                 <ListItemIcon>
                   <CalendarIcon sx={{ color: "#1E9CBC" }} />
@@ -731,11 +708,19 @@ const UserDetail = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Bank Details"
-                  secondary={`${tutor.bankName || "N/A"} - ${
-                    tutor.accountNumber || "N/A"
-                  }`}
+                  secondary={`${tutor.bankName || "N/A"} - ${tutor.accountNumber || "N/A"
+                    }`}
                 />
               </ListItem>
+            </List>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <List>
+              {/* Work Experience */}
+
+
+              {/* Profile Created */}
+
 
               {/* Subjects */}
               <ListItem>
@@ -962,11 +947,10 @@ const UserDetail = () => {
                           </Typography>
                         </Box>
                         <Chip
-                          label={`${formatDate(edu.startDate)} - ${
-                            edu.endDate === "Present"
+                          label={`${formatDate(edu.startDate)} - ${edu.endDate === "Present"
                               ? "Present"
                               : formatDate(edu.endDate)
-                          }`}
+                            }`}
                           size="small"
                           sx={{
                             backgroundColor: "transparent",
@@ -1039,11 +1023,10 @@ const UserDetail = () => {
                         </Typography>
                       </Box>
                       <Chip
-                        label={`${formatDate(exp.startDate)} - ${
-                          exp.endDate === "Present"
+                        label={`${formatDate(exp.startDate)} - ${exp.endDate === "Present"
                             ? "Present"
                             : formatDate(exp.endDate)
-                        }`}
+                          }`}
                         size="small"
                         sx={{
                           backgroundColor: "transparent",
@@ -1329,8 +1312,8 @@ const UserDetail = () => {
                 {user?.isOnBoard === "approved"
                   ? "Approved"
                   : isApprovingUser
-                  ? "Approving..."
-                  : "Approve User"}
+                    ? "Approving..."
+                    : "Approve User"}
               </Button>
             </Box>
           </Box>

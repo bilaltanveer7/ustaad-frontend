@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import parentprofileImg from "../assets/parent_profile.PNG";
 import profileImg from "../assets/profile.PNG";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
   Avatar,
   Button,
@@ -340,13 +341,12 @@ const ParentsProfile = () => {
   const childrenData = children.map((child) => {
     const subscriptionSessionInfo = child.subscriptions?.length
       ? child.subscriptions
-          .map(
-            (sub) =>
-              `${sub.Offer?.sessions || 0} / ${
-                sub.tutorSessionsDetailCount || 0
-              }`
-          )
-          .join(", ")
+        .map(
+          (sub) =>
+            `${sub.Offer?.sessions || 0} / ${sub.tutorSessionsDetailCount || 0
+            }`
+        )
+        .join(", ")
       : null;
 
     return {
@@ -358,10 +358,10 @@ const ParentsProfile = () => {
       curriculum: child.curriculum || "N/A",
       subjects: child.subscriptions?.length
         ? [
-            ...new Set(
-              child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
-            ),
-          ].join(", ") || "N/A"
+          ...new Set(
+            child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
+          ),
+        ].join(", ") || "N/A"
         : child.subjects?.join(", ") || "N/A",
       tutorHired:
         subscriptionSessionInfo ||
@@ -1174,20 +1174,24 @@ const ParentsProfile = () => {
             }}
           >
             <Table style={{ border: "1px solid #E0E3EB" }}>
-              <TableHead style={{ backgroundColor: "#1E9CBC" }}>
+              <TableHead
+                sx={{
+                  backgroundColor: "#1E9CBC",
+                  "& .MuiTableCell-root": {
+                    height: 32,
+                    py: 0,
+                    px: 2,
+                    color: "#FFFFFF",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    borderBottom: "none",
+                  },
+                }}>
                 <TableRow
                   sx={{
-                    "& th": {
-                      height: "32px",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      lineHeight: "32px",
-                      backgroundColor: "#1E9CBC",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      border: "1px solid #4db6ac",
-                    },
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("name")}>
@@ -1271,12 +1275,16 @@ const ParentsProfile = () => {
                   </TableRow>
                 ) : (
                   docs.map((doc) => (
-                    <TableRow key={doc.id}>
+                    <TableRow key={doc.id}
+                      style={{ borderBottom: "1px solid #E0E3EB" }}>
                       <TableCell
                         style={{
                           fontSize: "16px",
                           color: "#101219",
                           fontWeight: 400,
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
                           border: "1px solid #E0E3EB",
                         }}
                       >
@@ -1287,7 +1295,11 @@ const ParentsProfile = () => {
                           fontSize: "16px",
                           color: "#101219",
                           fontWeight: 400,
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
                           border: "1px solid #E0E3EB",
+                          padding: "0 8px",
                         }}
                       >
                         {doc.type}
@@ -1295,12 +1307,32 @@ const ParentsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#388e3c",
-                          fontWeight: "500",
+                          color: "#101219",
+                          fontWeight: 400,
                           border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
                         }}
                       >
-                        {doc.status}
+                        <Chip
+                          label={doc.status}
+                          size="small"
+                          style={{
+                            backgroundColor:
+                              doc.status === "Available" ? "#EEFBF4" : "#EEFBF4",
+                            border:
+                              doc.status === "Available"
+                                ? "1px solid #B2EECC"
+                                : "1px solid #B2EECC",
+                            color:
+                              doc.status === "Available"
+                                ? "#17663A"
+                                : "#17663A",
+                            fontWeight: 500,
+                            fontSize: "12px",
+                          }}
+                        />
                       </TableCell>
                       <TableCell
                         style={{
@@ -1308,16 +1340,18 @@ const ParentsProfile = () => {
                           color: "#101219",
                           fontWeight: 400,
                           border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
                         }}
                       >
-                        <Button
-                          variant="text"
+                        <IconButton
                           size="small"
                           onClick={() => handleDocumentView(doc)}
-                          sx={{ color: "#1E9CBC", textTransform: "none" }}
+                          sx={{ color: "#1E9CBC" }}
                         >
-                          View
-                        </Button>
+                          <VisibilityIcon />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   ))
@@ -1331,6 +1365,7 @@ const ParentsProfile = () => {
         return null;
     }
   };
+
   return (
     <>
       <SideNav />
@@ -1356,7 +1391,7 @@ const ParentsProfile = () => {
                 }}
               >
                 <IconButton
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate('/parent-dashboard')}
                   style={{
                     marginRight: "10px",
                     color: "#A6ADBF",
@@ -1697,7 +1732,7 @@ const ParentsProfile = () => {
                         // width:'100%',
                         fontSize: "14px",
                         fontWeight: 400,
-                        color: "#30417D",
+                        color: "#80878A",
                         borderRadius: "8px",
                         backgroundColor: "#FFFFFF",
                         lineHeight: "1.5",
@@ -1761,10 +1796,9 @@ const ParentsProfile = () => {
                     <Tab label={`Children (${children.length})`} />
                     <Tab label={`Notes by Tutors (${childNotes.length})`} />
                     <Tab
-                      label={`Documents (${
-                        (parent?.idFrontUrl ? 1 : 0) +
+                      label={`Documents (${(parent?.idFrontUrl ? 1 : 0) +
                         (parent?.idBackUrl ? 1 : 0)
-                      })`}
+                        })`}
                     />
                   </Tabs>
                 </Box>

@@ -11,6 +11,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  Snackbar,
   TableRow,
   Paper,
   TextField,
@@ -60,6 +61,7 @@ const PendingUsersDashboard = () => {
   const [roleFilter, setRoleFilter] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openMessage, setOpenMessage] = useState(false);
 
   // Fetch pending users on component mount
   useEffect(() => {
@@ -201,17 +203,21 @@ const PendingUsersDashboard = () => {
     return new Date(dateString).toLocaleDateString();
   };
 
-  console.log(
-    "All Roles^^^^^^^^^^:",
-    pendingUsers.map((user) => user.role)
-  );
-
 
   // const getDefaultAvatar = () => {
   //   if (user?.role === "TUTOR") return profileImg;
   //   if (user?.role === "PARENT") return parentprofileImg;
   //   return parentprofileImg; // fallback safety
   // };
+
+  const handleProfileClick = (user) => {
+    if (user.isOnBoard?.toLowerCase() === "required") {
+      setOpenMessage(true);
+      return;
+    }
+
+    handleUserClick(user.profileId, user.role);
+  };
 
 
   return (
@@ -649,9 +655,10 @@ const PendingUsersDashboard = () => {
                         }}
                       >
                         <TableCell
-                          onClick={() =>
-                            handleUserClick(user.profileId, user.role)
-                          }
+                          // onClick={() =>
+                          //   handleUserClick(user.profileId, user.role)
+                          // }
+                          onClick={() => handleProfileClick(user)}
                         >
                           <div
                             style={{
@@ -896,6 +903,16 @@ const PendingUsersDashboard = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Snackbar
+              open={openMessage}
+              autoHideDuration={3000}
+              onClose={() => setOpenMessage(false)}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert severity="warning" variant="filled">
+                On boarding is required
+              </Alert>
+            </Snackbar>
 
             {/* Pagination */}
             {pendingUsersPagination &&

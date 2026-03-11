@@ -13,7 +13,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  FormControl,
+  Select,
+  MenuItem,
   Checkbox,
   Avatar,
   Button,
@@ -214,6 +216,11 @@ const ParentDashboard = () => {
     page * rowsPerPage + rowsPerPage
   );
 
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <>
       <SideNav />
@@ -376,21 +383,43 @@ const ParentDashboard = () => {
                 >
                   Add New
                 </Button> */}
-                <div style={{ marginBottom: "12px" }}>
-                  <input
-                    type="date"
-                    // placeholder="MM/DD/YYYY"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    style={{
-                      padding: "8px 12px",
-                      fontSize: "14px",
-                      borderRadius: "16px",
-                      border: "1px solid #ccc",
-                      backgroundColor: 'transparent'
-                      // width:'90%'
-                    }}
-                  />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div>
+                    <input
+                      type="date"
+                      // placeholder="MM/DD/YYYY"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      style={{
+                        padding: "8px 12px",
+                        fontSize: "14px",
+                        borderRadius: "16px",
+                        border: "1px solid #ccc",
+                        backgroundColor: 'transparent'
+                        // width:'90%'
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <FormControl size="small" style={{ minWidth: "80px" }}>
+                      <Select
+                        value={rowsPerPage}
+                        onChange={handleRowsPerPageChange}
+                        displayEmpty
+                        sx={{
+                          borderRadius: "16px",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderRadius: "16px",
+                          },
+                        }}
+                      >
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={25}>25</MenuItem>
+                        <MenuItem value={50}>50</MenuItem>
+                        <MenuItem value={100}>100</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
                 </div>
               </div>
             </div>
@@ -720,46 +749,8 @@ const ParentDashboard = () => {
                       })}
                     </TableBody>
                   </Table>
-                  {/* <TablePagination
-                    component="div"
-                    count={tableData.length}
-                    page={page}
-                    onPageChange={(event, newPage) => setPage(newPage)}
-                    rowsPerPage={rowsPerPage}
-                    rowsPerPageOptions={[10]}
-                    sx={{
-                      width: "100%",
-                      position: "relative",
-
-                      "& .MuiTablePagination-toolbar": {
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minHeight: "48px",
-                      },
-
-                      /* CENTER THE TEXT
-                      "& .MuiTablePagination-displayedRows": {
-                        position: "absolute",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        margin: 0,
-                      },
-
-                      
-                      "& .MuiTablePagination-actions": {
-                        position: "absolute",
-                        right: 16,
-                      },
-
-                      
-                      "& .MuiTablePagination-spacer": {
-                        display: "none",
-                      },
-                    }}
-                  /> */}
                 </TableContainer>
-                {pagination && (
+                {/* {pagination && (
                   <TablePagination
                     rowsPerPageOptions={[5, 10, 20]}
                     component="div"
@@ -789,7 +780,46 @@ const ParentDashboard = () => {
                       },
                     }}
                   />
-                )}
+                )} */}
+                <TablePagination
+                  component="div"
+                  count={pagination.total || 0}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  rowsPerPageOptions={[]}
+                  labelRowsPerPage=""
+                  onRowsPerPageChange={() => { }}
+                  sx={{
+                    width: "100%",
+
+                    "& .MuiTablePagination-selectLabel": {
+                      display: "none",
+                    },
+
+                    "& .MuiTablePagination-input": {
+                      display: "none",
+                    },
+
+                    "& .MuiTablePagination-toolbar": {
+                      position: "relative",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                    },
+
+                    "& .MuiTablePagination-displayedRows": {
+                      position: "absolute",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      margin: 0,
+                      whiteSpace: "nowrap",
+                    },
+
+                    "& .MuiTablePagination-actions": {
+                      marginLeft: "auto",
+                    },
+                  }}
+                />
               </div>
             </div>
           )}

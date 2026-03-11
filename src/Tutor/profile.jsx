@@ -1393,8 +1393,8 @@ const TutorsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
+                        fontWeight: 500,
+                        fontSize: "14px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -1564,7 +1564,7 @@ const TutorsProfile = () => {
                 }}
               >
                 <IconButton
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate('/tutor-dashboard')}
                   style={{
                     marginRight: "10px",
                     color: "#A6ADBF",
@@ -1675,7 +1675,7 @@ const TutorsProfile = () => {
                           style={{
                             fontSize: "14px",
                             fontWeight: 400,
-                            color: "#4D5874",
+                            color: "#666",
                           }}
                         >
                           Curriculum: {formatArray(tutor.curriculum)}

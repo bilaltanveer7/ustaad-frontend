@@ -27,6 +27,8 @@ import {
   Typography,
   Divider,
   TablePagination,
+  FormControl,
+  Select,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -182,60 +184,10 @@ const ContractDashboard = () => {
 
   const tableData = disputedContracts || [];
 
-  const dummyTableData = [
-    {
-      id: 1,
-      parent_name: "Ali Khan",
-      child_name: "Ayaan Khan",
-      tutor_name: "Sara Ahmed",
-      budget: "25,000 PKR",
-      start_date: "01-02-2025",
-      sessions: 20,
-      subjects: "Math, Science",
-      days: "Mon, Wed, Fri",
-      description: "Evening tuition sessions",
-      status: "Active",
-    },
-    {
-      id: 2,
-      parent_name: "Usman Raza",
-      child_name: "Hiba Raza",
-      tutor_name: "Adeel Hassan",
-      budget: "30,000 PKR",
-      start_date: "05-02-2025",
-      sessions: 24,
-      subjects: "English, History",
-      days: "Tue, Thu",
-      description: "Weekend focus classes",
-      status: "Disputed",
-    },
-    {
-      id: 3,
-      parent_name: "Fatima Noor",
-      child_name: "Zain Noor",
-      tutor_name: "Maryam Iqbal",
-      budget: "20,000 PKR",
-      start_date: "10-02-2025",
-      sessions: 16,
-      subjects: "Physics",
-      days: "Mon, Thu",
-      description: "Concept clearing sessions",
-      status: "Cancelled",
-    },
-    {
-      id: 4,
-      parent_name: "Ahmed Ali",
-      child_name: "Hassan Ali",
-      tutor_name: "Bilal Khan",
-      budget: "28,000 PKR",
-      start_date: "15-02-2025",
-      sessions: 18,
-      subjects: "Chemistry, Biology",
-      days: "Wed, Sat",
-      description: "Exam preparation",
-      status: "Refund",
-    },
-  ];
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
     <>
@@ -359,21 +311,43 @@ const ContractDashboard = () => {
                   />
                 ))}
               </Box>
-              <div>
-                <input
-                  type="date"
-                  // placeholder="MM/DD/YYYY"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  style={{
-                    padding: "8px 12px",
-                    fontSize: "14px",
-                    borderRadius: "16px",
-                    border: "1px solid #ccc",
-                    backgroundColor: "transparent",
-                    // width:'90%'
-                  }}
-                />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div>
+                  <input
+                    type="date"
+                    // placeholder="MM/DD/YYYY"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    style={{
+                      padding: "8px 12px",
+                      fontSize: "14px",
+                      borderRadius: "16px",
+                      border: "1px solid #ccc",
+                      backgroundColor: "transparent",
+                      // width:'90%'
+                    }}
+                  />
+                </div>
+                <div>
+                  <FormControl size="small" style={{ minWidth: "80px" }}>
+                    <Select
+                      value={rowsPerPage}
+                      onChange={handleRowsPerPageChange}
+                      displayEmpty
+                      sx={{
+                        borderRadius: "16px",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderRadius: "16px",
+                        },
+                      }}
+                    >
+                      <MenuItem value={10}>10</MenuItem>
+                      <MenuItem value={25}>25</MenuItem>
+                      <MenuItem value={50}>50</MenuItem>
+                      <MenuItem value={100}>100</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
               </div>
             </div>
             <TableContainer style={{ marginTop: "1rem" }}>
@@ -1002,30 +976,41 @@ const ContractDashboard = () => {
 
             {/* Pagination */}
             {disputedContractsPagination && (
+
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
                 component="div"
                 count={disputedContractsPagination.total || 0}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[]}
+                labelRowsPerPage=""
+                onRowsPerPageChange={() => { }}
                 sx={{
                   width: "100%",
-                  "& .MuiTablePagination-toolbar": {
-                    display: "flex",
-                    alignItems: "center",
-                  },
-                  "& .MuiTablePagination-spacer": {
-                    flex: "0 0 auto",
-                  },
+
                   "& .MuiTablePagination-selectLabel": {
-                    margin: 0,
+                    display: "none",
                   },
+
+                  "& .MuiTablePagination-input": {
+                    display: "none",
+                  },
+
+                  "& .MuiTablePagination-toolbar": {
+                    position: "relative",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  },
+
                   "& .MuiTablePagination-displayedRows": {
-                    margin: "0 auto",
+                    position: "absolute",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    margin: 0,
                     whiteSpace: "nowrap",
                   },
+
                   "& .MuiTablePagination-actions": {
                     marginLeft: "auto",
                   },

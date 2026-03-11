@@ -123,7 +123,7 @@ const TransactionDashboard = () => {
   }));
 
   // console.log("PAYMENT+++++REQUEST^^^$$$$$$$$$", paymentRequests);
-  
+
 
   const handleCopy = async (text) => {
     if (text === undefined || text === null || text === "N/A") return;
@@ -187,6 +187,11 @@ const TransactionDashboard = () => {
     setSelectedTransactionId(null);
     // Refresh the payment requests list to get updated data
     fetchPaymentRequests();
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
   return (
     <>
@@ -340,21 +345,43 @@ const TransactionDashboard = () => {
                     {tableData.length} Results
                   </span>
                 </div>
-                <div style={{ marginBottom: "12px" }}>
-                  <input
-                    type="date"
-                    placeholder="dd/mm/yyyy"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    style={{
-                      padding: "8px 12px",
-                      fontSize: "14px",
-                      borderRadius: "16px",
-                      border: "1px solid #ccc",
-                      backgroundColor: 'transparent'
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div>
+                    <input
+                      type="date"
+                      placeholder="dd/mm/yyyy"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      style={{
+                        padding: "8px 12px",
+                        fontSize: "14px",
+                        borderRadius: "16px",
+                        border: "1px solid #ccc",
+                        backgroundColor: 'transparent'
 
-                    }}
-                  />
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <FormControl size="small" style={{ minWidth: "80px" }}>
+                      <Select
+                        value={rowsPerPage}
+                        onChange={handleRowsPerPageChange}
+                        displayEmpty
+                        sx={{
+                          borderRadius: "16px",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderRadius: "16px",
+                          },
+                        }}
+                      >
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={25}>25</MenuItem>
+                        <MenuItem value={50}>50</MenuItem>
+                        <MenuItem value={100}>100</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
                 </div>
               </div>
             </div>
@@ -730,39 +757,78 @@ const TransactionDashboard = () => {
                   </Table>
                 </TableContainer>
                 {paymentRequestsPagination && (
+                  // <TablePagination
+                  //   rowsPerPageOptions={[5, 10, 25]}
+                  //   component="div"
+                  //   count={paymentRequestsPagination.total || 0}
+                  //   rowsPerPage={rowsPerPage}
+                  //   page={page}
+                  //   onPageChange={handleChangePage}
+                  //   onRowsPerPageChange={handleChangeRowsPerPage}
+                  //   sx={{
+                  //     width: "100%",
+
+                  //     "& .MuiTablePagination-toolbar": {
+                  //       display: "flex",
+                  //       alignItems: "center",
+                  //     },
+
+                  //     /* Remove spacer completely */
+                  //     "& .MuiTablePagination-spacer": {
+                  //       flex: "0 0 auto",
+                  //     },
+
+                  //     /* Left side */
+                  //     "& .MuiTablePagination-selectLabel": {
+                  //       margin: 0,
+                  //     },
+
+                  //     /* Center properly using flex grow */
+                  //     "& .MuiTablePagination-displayedRows": {
+                  //       margin: "0 auto",
+                  //       whiteSpace: "nowrap",
+                  //     },
+
+                  //     /* Right side arrows */
+                  //     "& .MuiTablePagination-actions": {
+                  //       marginLeft: "auto",
+                  //     },
+                  //   }}
+                  // />
                   <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
                     component="div"
                     count={paymentRequestsPagination.total || 0}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    rowsPerPageOptions={[]}
+                    labelRowsPerPage=""
+                    onRowsPerPageChange={() => { }}
                     sx={{
                       width: "100%",
 
-                      "& .MuiTablePagination-toolbar": {
-                        display: "flex",
-                        alignItems: "center",
-                      },
-
-                      /* Remove spacer completely */
-                      "& .MuiTablePagination-spacer": {
-                        flex: "0 0 auto",
-                      },
-
-                      /* Left side */
                       "& .MuiTablePagination-selectLabel": {
-                        margin: 0,
+                        display: "none",
                       },
 
-                      /* Center properly using flex grow */
+                      "& .MuiTablePagination-input": {
+                        display: "none",
+                      },
+
+                      "& .MuiTablePagination-toolbar": {
+                        position: "relative",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      },
+
                       "& .MuiTablePagination-displayedRows": {
-                        margin: "0 auto",
+                        position: "absolute",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        margin: 0,
                         whiteSpace: "nowrap",
                       },
 
-                      /* Right side arrows */
                       "& .MuiTablePagination-actions": {
                         marginLeft: "auto",
                       },
