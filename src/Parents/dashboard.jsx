@@ -52,7 +52,9 @@ const ParentDashboard = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState(""); // yyyy-mm-dd for API
+  const [dateInput, setDateInput] = useState(""); // dd/mm/yyyy for display
+  const datePickerRef = useRef(null);
   const isFirstRender = useRef(true);
 
   // Fetch parents on component mount and when page changes
@@ -388,7 +390,7 @@ const ParentDashboard = () => {
                 >
                   Add New
                 </Button> */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div>
                     <input
                       type="date"
@@ -400,7 +402,7 @@ const ParentDashboard = () => {
                         fontSize: "14px",
                         borderRadius: "16px",
                         border: "1px solid #ccc",
-                        backgroundColor: 'transparent'
+                        backgroundColor: "transparent",
                         // width:'90%'
                       }}
                     />
@@ -802,7 +804,7 @@ const ParentDashboard = () => {
                   onPageChange={handleChangePage}
                   rowsPerPageOptions={[]}
                   labelRowsPerPage=""
-                  onRowsPerPageChange={() => { }}
+                  onRowsPerPageChange={() => {}}
                   sx={{
                     width: "100%",
 
