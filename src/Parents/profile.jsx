@@ -309,70 +309,92 @@ const ParentsProfile = () => {
   };
 
   // Transform API data for display
-  const transactionsData = transactions.map((tx) => ({
-    id: tx.id,
-    payment: {
-      recipient:
-        tx.childName ||
-        (parent?.User?.firstName && parent?.User?.lastName
-          ? `${parent.User.firstName} ${parent.User.lastName}`
-          : parent?.User?.firstName || parent?.User?.lastName || "N/A"),
-      cost: `${tx.amount?.toFixed(2) || "0.00"}`,
-    },
-    tutorName: tx.tutor.name || "N/A",
-    child: {
-      name: tx.childName || "N/A",
-      avatar: "/placeholder.svg?height=32&width=32",
-    },
-    invoiceId: tx.invoiceId || "N/A",
-    paymentMethod: {
-      type: "stripe",
-      accountNumber: tx.invoiceId || "N/A",
-    },
-    transactionDate: tx.createdAt
-      ? new Date(tx.createdAt).toLocaleDateString()
-      : "N/A",
-    status: tx.status || "unknown",
-  }));
+  const transactionsData = transactions
+    .filter((tx) => {
+      if (activeTab !== 0 || !searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      return (
+        (tx.tutor?.name && tx.tutor.name.toLowerCase().includes(term)) ||
+        (tx.invoiceId && tx.invoiceId.toLowerCase().includes(term)) ||
+        (tx.amount && tx.amount.toString().includes(term))
+      );
+    })
+    .map((tx) => ({
+      id: tx.id,
+      payment: {
+        recipient:
+          tx.childName ||
+          (parent?.User?.firstName && parent?.User?.lastName
+            ? `${parent.User.firstName} ${parent.User.lastName}`
+            : parent?.User?.firstName || parent?.User?.lastName || "N/A"),
+        cost: `${tx.amount?.toFixed(2) || "0.00"}`,
+      },
+      tutorName: tx.tutor.name || "N/A",
+      child: {
+        name: tx.childName || "N/A",
+        avatar: "/placeholder.svg?height=32&width=32",
+      },
+      invoiceId: tx.invoiceId || "N/A",
+      paymentMethod: {
+        type: "stripe",
+        accountNumber: tx.invoiceId || "N/A",
+      },
+      transactionDate: tx.createdAt
+        ? new Date(tx.createdAt).toLocaleDateString()
+        : "N/A",
+      status: tx.status || "unknown",
+    }));
 
   // console.log("transactionsData", children);
 
-  const childrenData = children.map((child) => {
-    const subscriptionSessionInfo = child.subscriptions?.length
-      ? child.subscriptions
-          .map(
-            (sub) =>
-              `${sub.Offer?.sessions || 0} / ${
-                sub.tutorSessionsDetailCount || 0
-              }`
-          )
-          .join(", ")
-      : null;
+  const childrenData = children
+    .filter((child) => {
+      if (activeTab !== 1 || !searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      const childName = (child.firstName + " " + child.lastName).toLowerCase();
+      return (
+        childName.includes(term) ||
+        (child.grade && child.grade.toLowerCase().includes(term)) ||
+        (child.curriculum && child.curriculum.toLowerCase().includes(term)) ||
+        (child.gender && child.gender.toLowerCase().includes(term))
+      );
+    })
+    .map((child) => {
+      const subscriptionSessionInfo = child.subscriptions?.length
+        ? child.subscriptions
+            .map(
+              (sub) =>
+                `${sub.Offer?.sessions || 0} / ${
+                  sub.tutorSessionsDetailCount || 0
+                }`
+            )
+            .join(", ")
+        : null;
 
-    return {
-      id: child.id,
-      childName: child.firstName + " " + child.lastName || "N/A",
-      grade: child.grade || "N/A",
-      age: child.age || "N/A",
-      gender: child.gender || "N/A",
-      curriculum: child.curriculum || "N/A",
-      subjects: child.subscriptions?.length
-        ? [
-            ...new Set(
-              child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
-            ),
-          ].join(", ") || "N/A"
-        : child.subjects?.join(", ") || "N/A",
-      tutorHired:
-        subscriptionSessionInfo ||
-        (subscriptions.some((sub) => sub.status === "active") ? "Yes" : "No"),
-      currentTutors:
-        subscriptions
-          .filter((sub) => sub.status === "active")
-          .map((sub) => sub.tutor?.name || "Unknown")
-          .join(", ") || "-",
-    };
-  });
+      return {
+        id: child.id,
+        childName: child.firstName + " " + child.lastName || "N/A",
+        grade: child.grade || "N/A",
+        age: child.age || "N/A",
+        gender: child.gender || "N/A",
+        curriculum: child.curriculum || "N/A",
+        subjects: child.subscriptions?.length
+          ? [
+              ...new Set(
+                child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
+              ),
+            ].join(", ") || "N/A"
+          : child.subjects?.join(", ") || "N/A",
+        tutorHired:
+          subscriptionSessionInfo ||
+          (subscriptions.some((sub) => sub.status === "active") ? "Yes" : "No"),
+        currentTutors:
+          subscriptions
+            .filter((sub) => sub.status === "active")
+            .map((sub) => sub.tutor?.name || "Unknown")
+            .join(", ") || "-",
+      };
+    });
 
   // Map childNotes to the structure expected by the table
   const notesByTutorsData =
@@ -1800,11 +1822,11 @@ const ParentsProfile = () => {
                             />
                           </InputAdornment>
                         ),
-                        endAdornment: searchValue && (
+                        endAdornment: searchTerm && (
                           <InputAdornment position="end">
                             <IconButton
                               size="small"
-                              onClick={() => setSearchValue("")}
+                              onClick={() => setSearchTerm("")}
                             >
                               <CloseIcon style={{ fontSize: "18px" }} />
                             </IconButton>

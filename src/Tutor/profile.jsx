@@ -317,6 +317,7 @@ const TutorsProfile = () => {
     totalExperience,
     transactions,
     documents,
+    notes = [],
   } = tutorDetails || {};
 
   // Transform API data for display
@@ -391,8 +392,19 @@ const TutorsProfile = () => {
   // Transform API transactions data for display
   const transactionsData = transactions
     ? // Handle both single object and array cases
-      (Array.isArray(transactions) ? transactions : [transactions]).map(
-        (tx) => ({
+      (Array.isArray(transactions) ? transactions : [transactions])
+        .filter((tx) => {
+          if (activeTab !== 0 || !searchTerm) return true;
+          const term = searchTerm.toLowerCase();
+          const parentName = tx?.parent?.name || "";
+          const invoiceId = tx?.parentTransactions?.[0]?.invoiceId || "";
+          return (
+            parentName.toLowerCase().includes(term) ||
+            invoiceId.toLowerCase().includes(term) ||
+            (tx.amount && tx.amount.toString().includes(term))
+          );
+        })
+        .map((tx) => ({
           id: tx.id,
           payment: {
             name: tutor?.User?.fullName || "Unknown",
@@ -413,8 +425,7 @@ const TutorsProfile = () => {
             ? new Date(tx.createdAt).toLocaleDateString()
             : "N/A",
           status: tx.status || "UNKNOWN",
-        })
-      )
+        }))
     : [];
 
   // Transform API documents data for display
@@ -457,6 +468,40 @@ const TutorsProfile = () => {
           status: documents.idBack ? "Available" : "Missing",
         },
       ].filter((doc) => doc.url)
+    : [];
+
+  // Transform API notes data for display
+  const notesData = notes
+    ? notes
+        .filter((note) => {
+          if (activeTab !== 4 || !searchTerm) return true;
+          const term = searchTerm.toLowerCase();
+          const author =
+            note.author ||
+            (note.User
+              ? `${note.User.firstName || ""} ${note.User.lastName || ""}`
+              : "Admin");
+          return (
+            author.toLowerCase().includes(term) ||
+            (note.note && note.note.toLowerCase().includes(term)) ||
+            (note.description && note.description.toLowerCase().includes(term))
+          );
+        })
+        .map((note, index) => ({
+          id: note.id || index,
+          author:
+            note.author ||
+            (note.User
+              ? `${note.User.firstName || ""} ${
+                  note.User.lastName || ""
+                }`.trim()
+              : "Admin"),
+          avatar: note.User?.image || profileImg,
+          note: note.note || note.description || note.content || "N/A",
+          date: note.createdAt
+            ? new Date(note.createdAt).toLocaleDateString()
+            : "N/A",
+        }))
     : [];
 
   const childrenData = [
@@ -1535,6 +1580,183 @@ const TutorsProfile = () => {
           </TableContainer>
         );
 
+      case 4:
+        return (
+          <TableContainer
+            component={Paper}
+            style={{
+              boxShadow: "none",
+              border: "1px solid #E0E3EB",
+              borderRadius: "8px",
+            }}
+          >
+            <Table style={{ border: "1px solid #E0E3EB" }}>
+              <TableHead
+                sx={{
+                  backgroundColor: "#1E9CBC",
+                  "& .MuiTableCell-root": {
+                    height: 32,
+                    py: 0,
+                    px: 2,
+                    color: "#FFFFFF",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    borderBottom: "none",
+                  },
+                }}
+              >
+                <TableRow
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "#FFFFFF",
+                  }}
+                >
+                  <TableCell onClick={() => handleSort("author")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Author {getSortIcon("author")}
+                    </Box>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("note")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Note {getSortIcon("note")}
+                    </Box>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("date")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Date {getSortIcon("date")}
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {notesData.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={3}
+                      style={{
+                        textAlign: "center",
+                        padding: "40px",
+                        color: "#666",
+                      }}
+                    >
+                      No notes found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  notesData.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      style={{ borderBottom: "1px solid #E0E3EB" }}
+                    >
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          paddingLeft: "15px",
+                          height: "42px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <Avatar
+                            src={row.avatar}
+                            sx={{ width: 24, height: 24 }}
+                          />
+                          <span>{row.author}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          paddingLeft: "15px",
+                          height: "42px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: "24px",
+                              height: "24px",
+                              backgroundColor: "#1E9CBC",
+                              borderRadius: "4px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: "white",
+                                fontSize: "12px",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              N
+                            </span>
+                          </div>
+                          <Tooltip title={row.note} arrow>
+                            <span
+                              style={{
+                                maxWidth: "300px",
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {row.note}
+                            </span>
+                          </Tooltip>
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#4D5874",
+                          paddingLeft: "15px",
+                          height: "42px",
+                        }}
+                      >
+                        {row.date}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        );
+
       default:
         return null;
     }
@@ -2001,6 +2223,7 @@ const TutorsProfile = () => {
                     <Tab label={`Experience (${experienceData.length})`} />
                     <Tab label={`Documents (${documentsData.length})`} />
                     <Tab label={`Education (${educationData.length})`} />
+                    <Tab label={`Notes (${notesData.length})`} />
                   </Tabs>
                 </Box>
 
@@ -2035,11 +2258,11 @@ const TutorsProfile = () => {
                             />
                           </InputAdornment>
                         ),
-                        endAdornment: searchValue && (
+                        endAdornment: searchTerm && (
                           <InputAdornment position="end">
                             <IconButton
                               size="small"
-                              onClick={() => setSearchValue("")}
+                              onClick={() => setSearchTerm("")}
                             >
                               <CloseIcon style={{ fontSize: "18px" }} />
                             </IconButton>
