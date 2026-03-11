@@ -416,7 +416,7 @@ const UserDetail = () => {
                         borderRadius: "4px",
                       }}
                     >
-                      {user?.id}
+                      {user?.userId}
                     </Typography>
                   }
                 />
@@ -488,8 +488,9 @@ const UserDetail = () => {
         size="medium"
         sx={{
           backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
-          border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border
-            }`,
+          border: `1px solid ${
+            getStatusColor(user?.isOnBoard || "pending").border
+          }`,
           color: getStatusColor(user?.isOnBoard || "pending").color,
           fontWeight: 500,
           fontSize: "14px",
@@ -689,8 +690,9 @@ const UserDetail = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Bank Details"
-                  secondary={`${tutor.bankName || "N/A"} - ${tutor.accountNumber || "N/A"
-                    }`}
+                  secondary={`${tutor.bankName || "N/A"} - ${
+                    tutor.accountNumber || "N/A"
+                  }`}
                 />
               </ListItem>
             </List>
@@ -699,9 +701,7 @@ const UserDetail = () => {
             <List>
               {/* Work Experience */}
 
-
               {/* Profile Created */}
-
 
               {/* Subjects */}
               <ListItem>
@@ -928,10 +928,11 @@ const UserDetail = () => {
                           </Typography>
                         </Box>
                         <Chip
-                          label={`${formatDate(edu.startDate)} - ${edu.endDate === "Present"
+                          label={`${formatDate(edu.startDate)} - ${
+                            edu.endDate === "Present"
                               ? "Present"
                               : formatDate(edu.endDate)
-                            }`}
+                          }`}
                           size="small"
                           sx={{
                             backgroundColor: "transparent",
@@ -1004,10 +1005,11 @@ const UserDetail = () => {
                         </Typography>
                       </Box>
                       <Chip
-                        label={`${formatDate(exp.startDate)} - ${exp.endDate === "Present"
+                        label={`${formatDate(exp.startDate)} - ${
+                          exp.endDate === "Present"
                             ? "Present"
                             : formatDate(exp.endDate)
-                          }`}
+                        }`}
                         size="small"
                         sx={{
                           backgroundColor: "transparent",
@@ -1293,8 +1295,8 @@ const UserDetail = () => {
                 {user?.isOnBoard === "approved"
                   ? "Approved"
                   : isApprovingUser
-                    ? "Approving..."
-                    : "Approve User"}
+                  ? "Approving..."
+                  : "Approve User"}
               </Button>
             </Box>
           </Box>

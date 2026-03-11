@@ -86,6 +86,8 @@ const ContractDashboard = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedDate, setSelectedDate] = useState("");
+  const [dateInput, setDateInput] = useState("");
+  const datePickerRef = useRef(null);
 
   const open = Boolean(anchorEl);
 
@@ -314,22 +316,99 @@ const ContractDashboard = () => {
                   />
                 ))}
               </Box>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    border: "1px solid #ccc",
+                    borderRadius: "16px",
+                    padding: "4px 10px",
+                    backgroundColor: "transparent",
+                  }}
+                >
                   <input
+                    ref={datePickerRef}
                     type="date"
-                    // placeholder="MM/DD/YYYY"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
                     style={{
-                      padding: "8px 12px",
-                      fontSize: "14px",
-                      borderRadius: "16px",
-                      border: "1px solid #ccc",
-                      backgroundColor: "transparent",
-                      // width:'90%'
+                      position: "absolute",
+                      opacity: 0,
+                      pointerEvents: "none",
+                      width: 0,
+                      height: 0,
+                    }}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val) {
+                        const [yyyy, mm, dd] = val.split("-");
+                        setDateInput(`${dd}/${mm}/${yyyy}`);
+                        setSelectedDate(val);
+                      }
                     }}
                   />
+                  <input
+                    type="text"
+                    placeholder="dd/mm/yyyy"
+                    value={dateInput}
+                    maxLength={10}
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/[^\d/]/g, "");
+                      if (val.length === 2 && dateInput.length === 1)
+                        val += "/";
+                      else if (val.length === 5 && dateInput.length === 4)
+                        val += "/";
+                      setDateInput(val);
+                      if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
+                        const [dd, mm, yyyy] = val.split("/");
+                        setSelectedDate(`${yyyy}-${mm}-${dd}`);
+                      } else {
+                        setSelectedDate("");
+                      }
+                    }}
+                    style={{
+                      fontSize: "14px",
+                      border: "none",
+                      outline: "none",
+                      backgroundColor: "transparent",
+                      width: "100px",
+                    }}
+                  />
+                  <button
+                    onClick={() => datePickerRef.current?.showPicker()}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: "0",
+                      display: "flex",
+                      alignItems: "center",
+                      color: "#888",
+                    }}
+                    title="Open calendar"
+                  >
+                    📅
+                  </button>
+                  {dateInput && (
+                    <button
+                      onClick={() => {
+                        setDateInput("");
+                        setSelectedDate("");
+                      }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: "14px",
+                        color: "#aaa",
+                        padding: "0",
+                        lineHeight: 1,
+                      }}
+                      title="Clear date"
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
                 <div>
                   <FormControl size="small" style={{ minWidth: "80px" }}>
@@ -658,7 +737,13 @@ const ContractDashboard = () => {
                                   cursor: "pointer",
                                 }}
                               >
-                                {row.Offer?.subject?.join(", ") || "-"}
+                                {row.Offer?.subject
+                                  ?.map(
+                                    (s) =>
+                                      s.charAt(0).toUpperCase() +
+                                      s.slice(1).toLowerCase()
+                                  )
+                                  .join(", ") || ""}
                               </div>
                             </Tooltip>
                           </TableCell>
@@ -975,7 +1060,6 @@ const ContractDashboard = () => {
 
             {/* Pagination */}
             {disputedContractsPagination && (
-
               <TablePagination
                 component="div"
                 count={disputedContractsPagination.total || 0}
@@ -984,7 +1068,7 @@ const ContractDashboard = () => {
                 onPageChange={handleChangePage}
                 rowsPerPageOptions={[]}
                 labelRowsPerPage=""
-                onRowsPerPageChange={() => { }}
+                onRowsPerPageChange={() => {}}
                 sx={{
                   width: "100%",
 

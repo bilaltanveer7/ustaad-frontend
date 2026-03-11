@@ -39,7 +39,7 @@ import { capitalize } from "../utils/helpers";
 import { CiWallet } from "react-icons/ci";
 import { formatDateTime } from "../utils/dateFormatter";
 
-const TransactionDetailsModal = ({ open, handleClose, transaction }) => {
+const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
   const {
     selectedPaymentRequest,
     fetchPaymentRequestDetails,
@@ -58,12 +58,12 @@ const TransactionDetailsModal = ({ open, handleClose, transaction }) => {
   const [updateSuccess, setUpdateSuccess] = useState("");
 
   useEffect(() => {
-    if (open && transaction) {
-      fetchPaymentRequestDetails(transaction.id);
+    if (open && transactionId) {
+      fetchPaymentRequestDetails(transactionId);
       setUpdateError("");
       setUpdateSuccess("");
     }
-  }, [open, transaction, fetchPaymentRequestDetails]);
+  }, [open, transactionId, fetchPaymentRequestDetails]);
 
   // Update local status when data loads
   useEffect(() => {
@@ -99,7 +99,7 @@ const TransactionDetailsModal = ({ open, handleClose, transaction }) => {
         setUpdateSuccess("Status updated successfully!");
         // Refresh the details to get updated data
         setTimeout(() => {
-          fetchPaymentRequestDetails(transaction.id);
+          fetchPaymentRequestDetails(transactionId);
         }, 1000);
       } else {
         setUpdateError(result.error || "Failed to update status");
@@ -247,12 +247,12 @@ const TransactionDetailsModal = ({ open, handleClose, transaction }) => {
 
             {(selectedPaymentRequest.paymentRequest.status === "PAID" ||
               selectedPaymentRequest.paymentRequest.status === "REJECTED") && (
-                <Alert severity="info" sx={{ mb: 2 }}>
-                  This transaction is finalized (
-                  {selectedPaymentRequest.paymentRequest.status}). The status
-                  cannot be changed.
-                </Alert>
-              )}
+              <Alert severity="info" sx={{ mb: 2 }}>
+                This transaction is finalized (
+                {selectedPaymentRequest.paymentRequest.status}). The status
+                cannot be changed.
+              </Alert>
+            )}
 
             {/* Transaction Overview Card */}
             <Box
@@ -303,10 +303,11 @@ const TransactionDetailsModal = ({ open, handleClose, transaction }) => {
                             color: getStatusColor(
                               selectedPaymentRequest.paymentRequest.status
                             ).color,
-                            border: `1px solid ${getStatusColor(
-                              selectedPaymentRequest.paymentRequest.status
-                            ).border
-                              }`,
+                            border: `1px solid ${
+                              getStatusColor(
+                                selectedPaymentRequest.paymentRequest.status
+                              ).border
+                            }`,
                             fontWeight: 500,
                           }}
                         />
@@ -447,7 +448,10 @@ const TransactionDetailsModal = ({ open, handleClose, transaction }) => {
                             },
                           }}
                         >
-                          Rs {formatAmount(selectedPaymentRequest?.accountInfo?.balance)}
+                          Rs{" "}
+                          {formatAmount(
+                            selectedPaymentRequest?.accountInfo?.balance
+                          )}
                         </Button>
                       </Grid>
                     </Grid>
@@ -504,9 +508,9 @@ const TransactionDetailsModal = ({ open, handleClose, transaction }) => {
                               isUpdating ||
                               isUpdatingPaymentRequest ||
                               selectedPaymentRequest.paymentRequest.status ===
-                              "PAID" ||
+                                "PAID" ||
                               selectedPaymentRequest.paymentRequest.status ===
-                              "REJECTED"
+                                "REJECTED"
                             }
                             sx={{
                               height: "37px",
@@ -549,9 +553,9 @@ const TransactionDetailsModal = ({ open, handleClose, transaction }) => {
                             !localStatus ||
                             localStatus === selectedPaymentRequest.status ||
                             selectedPaymentRequest.paymentRequest.status ===
-                            "PAID" ||
+                              "PAID" ||
                             selectedPaymentRequest.paymentRequest.status ===
-                            "REJECTED"
+                              "REJECTED"
                           }
                           sx={{
                             backgroundColor: "#1E9CBC",

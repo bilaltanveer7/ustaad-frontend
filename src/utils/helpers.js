@@ -6,6 +6,7 @@
 export const capitalize = (value) => {
   if (value === null || value === undefined) return "N/A";
   const str = String(value);
+  console.log("str", str);
   if (str.length === 0) return str;
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
