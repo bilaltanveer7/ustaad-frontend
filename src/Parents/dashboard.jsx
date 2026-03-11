@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useParentStore } from "../store/useParentStore";
+import { formatDate } from "../utils/dateFormatter";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import profileImg from "../assets/parent_profile.PNG";
@@ -21,7 +22,7 @@ import {
   InputAdornment,
   IconButton,
   Chip,
-  TablePagination
+  TablePagination,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -94,7 +95,7 @@ const ParentDashboard = () => {
     email: parent.User?.email || "N/A",
     phone: parent.User?.phone || "N/A",
     address: "N/A", // Address not provided in API response
-    date: new Date(parent.createdAt).toLocaleDateString() || "N/A",
+    date: formatDate(parent.createdAt),
     customerId: parent.customerId,
   }));
 
@@ -162,9 +163,13 @@ const ParentDashboard = () => {
   const getSortIcon = (columnKey) => {
     if (sortConfig.key === columnKey) {
       return sortConfig.direction === "asc" ? (
-        <ArrowUpwardIcon style={{ fontSize: "18px", marginLeft: "4px", color: '#4D5874' }} />
+        <ArrowUpwardIcon
+          style={{ fontSize: "18px", marginLeft: "4px", color: "#4D5874" }}
+        />
       ) : (
-        <ArrowDownwardIcon style={{ fontSize: "18px", marginLeft: "4px", color: '#4D5874' }} />
+        <ArrowDownwardIcon
+          style={{ fontSize: "18px", marginLeft: "4px", color: "#4D5874" }}
+        />
       );
     }
     return (
@@ -387,7 +392,7 @@ const ParentDashboard = () => {
                       fontSize: "14px",
                       borderRadius: "16px",
                       border: "1px solid #ccc",
-                      backgroundColor: 'transparent'
+                      backgroundColor: "transparent",
                       // width:'90%'
                     }}
                   />
@@ -449,7 +454,8 @@ const ParentDashboard = () => {
                         sx={{
                           height: "32px",
                           bgcolor: "#FFFFFF",
-                        }}>
+                        }}
+                      >
                         {/* <TableCell padding="checkbox" sx={{ py: 0, height: 32 }}>
                         <Checkbox
                           indeterminate={
@@ -513,7 +519,8 @@ const ParentDashboard = () => {
                             selected={isItemSelected}
                             sx={{
                               height: "48px",
-                              backgroundColor: index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
+                              backgroundColor:
+                                index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
                               "&:hover": {
                                 backgroundColor: "#F1F3F7",
                               },
@@ -549,7 +556,7 @@ const ParentDashboard = () => {
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
-                                    textAlign: 'center'
+                                    textAlign: "center",
                                   }}
                                 >
                                   {row.userId}
@@ -570,7 +577,8 @@ const ParentDashboard = () => {
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <div
-                                  className="d-flex align-items-center" style={{ marginLeft: '5px' }}
+                                  className="d-flex align-items-center"
+                                  style={{ marginLeft: "5px" }}
                                   onClick={() =>
                                     navigate(`/parent-profile/${row.id}`)
                                   }
@@ -615,8 +623,7 @@ const ParentDashboard = () => {
                                 // height: 48,
                               }}
                             >
-                              <div className="d-flex align-items-center justify-content-between"
-                              >
+                              <div className="d-flex align-items-center justify-content-between">
                                 <Tooltip title={row.email} arrow>
                                   <div
                                     style={{
@@ -628,8 +635,8 @@ const ParentDashboard = () => {
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
-                                      textAlign: 'center',
-                                      marginLeft: '5px'
+                                      textAlign: "center",
+                                      marginLeft: "5px",
                                     }}
                                   >
                                     {row.email}
@@ -644,7 +651,11 @@ const ParentDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "16px", color: "#666", marginRight: '5px' }}
+                                    style={{
+                                      fontSize: "16px",
+                                      color: "#666",
+                                      marginRight: "5px",
+                                    }}
                                   />
                                 </IconButton>
                               </div>
@@ -672,7 +683,7 @@ const ParentDashboard = () => {
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
-                                      marginLeft: '5px'
+                                      marginLeft: "5px",
                                     }}
                                   >
                                     +{row.phone || "N/A"}
@@ -691,7 +702,7 @@ const ParentDashboard = () => {
                                       style={{
                                         fontSize: "16px",
                                         color: "#666",
-                                        marginRight: '5px'
+                                        marginRight: "5px",
                                       }}
                                     />
                                   </IconButton>
@@ -710,8 +721,10 @@ const ParentDashboard = () => {
                                 // height: 48,
                               }}
                             >
-                              <div className="d-flex align-items-center justify-content-between"
-                                style={{ marginLeft: '10px' }}>
+                              <div
+                                className="d-flex align-items-center justify-content-between"
+                                style={{ marginLeft: "10px" }}
+                              >
                                 {row.date}
                               </div>
                             </TableCell>

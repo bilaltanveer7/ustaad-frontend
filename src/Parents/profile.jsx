@@ -40,6 +40,7 @@ import {
 } from "@mui/icons-material";
 import { useParentStore } from "../store/useParentStore";
 import { useAdminStore } from "../store/useAdminStore";
+import { formatDate } from "../utils/dateFormatter";
 import DocumentModal from "../components/DocumentModal";
 import DeleteUserDialog from "../components/DeleteUserDialog";
 import config from "../utils/config";
@@ -89,9 +90,7 @@ const ParentsProfile = () => {
 
       setProfileData({
         noOfHires: subscriptions?.length?.toString() || "0",
-        joiningDate: parent?.createdAt
-          ? new Date(parent.createdAt).toLocaleDateString()
-          : "",
+        joiningDate: parent?.createdAt ? formatDate(parent.createdAt) : "",
         children: children?.length?.toString() || "0",
         amountSpent: `${totalAmount.toFixed(2)}`,
         description: parent?.description || "No description available",
@@ -339,9 +338,7 @@ const ParentsProfile = () => {
         type: "stripe",
         accountNumber: tx.invoiceId || "N/A",
       },
-      transactionDate: tx.createdAt
-        ? new Date(tx.createdAt).toLocaleDateString()
-        : "N/A",
+      transactionDate: tx.createdAt ? formatDate(tx.createdAt) : "N/A",
       status: tx.status || "unknown",
     }));
 
@@ -416,9 +413,7 @@ const ParentsProfile = () => {
         name: note.childName || "Unknown",
         avatar: "/placeholder.svg?height=32&width=32", // Child avatar not in provided data
       },
-      date: note.createdAt
-        ? new Date(note.createdAt).toLocaleDateString()
-        : "N/A",
+      date: note.createdAt ? formatDate(note.createdAt) : "N/A",
     })) || [];
 
   const handleTabChange = (event, newValue) => {

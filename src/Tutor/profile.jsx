@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useTutorStore } from "../store/useTutorStore";
 import { useAdminStore } from "../store/useAdminStore";
+import { formatDate } from "../utils/dateFormatter";
 import DocumentModal from "../components/DocumentModal";
 import DeleteUserDialog from "../components/DeleteUserDialog";
 import profileImg from "../assets/profile.PNG";
@@ -96,9 +97,7 @@ const TutorsProfile = () => {
           typeof timesHired === "number"
             ? timesHired.toString()
             : prev.noOfHires,
-        joiningDate: tutor?.createdAt
-          ? new Date(tutor.createdAt).toLocaleDateString()
-          : "N/A",
+        joiningDate: tutor?.createdAt ? formatDate(tutor.createdAt) : "N/A",
         experienceYears: totalExperience
           ? Math.round(totalExperience).toString()
           : "0",
@@ -323,70 +322,90 @@ const TutorsProfile = () => {
   // Transform API data for display
   const experienceData =
     experience?.length > 0
-      ? experience?.map((exp) => {
-          const startYear = exp.startDate
-            ? new Date(exp.startDate).getFullYear()
-            : null;
-          const endYear =
-            exp.endDate === "Present"
-              ? new Date().getFullYear()
-              : exp.endDate
-              ? new Date(exp.endDate).getFullYear()
+      ? experience
+          ?.map((exp) => {
+            const startYear = exp.startDate
+              ? new Date(exp.startDate).getFullYear()
               : null;
-          const totalYears =
-            startYear !== null && endYear !== null
-              ? (endYear - startYear).toString()
-              : "N/A";
-
-          return {
-            id: exp.id,
-            company: exp.company || "N/A",
-            title: exp.description || "N/A", // API uses 'description' for job title/role
-            designation: exp.designation || "N/A",
-            startYear: startYear ? startYear.toString() : "N/A",
-            endYear:
+            const endYear =
               exp.endDate === "Present"
-                ? "Present"
-                : endYear
-                ? endYear.toString()
-                : "N/A",
-            totalYears,
-          };
-        })
+                ? new Date().getFullYear()
+                : exp.endDate
+                ? new Date(exp.endDate).getFullYear()
+                : null;
+            const totalYears =
+              startYear !== null && endYear !== null
+                ? (endYear - startYear).toString()
+                : "N/A";
+
+            return {
+              id: exp.id,
+              company: exp.company || "N/A",
+              title: exp.description || "N/A", // API uses 'description' for job title/role
+              designation: exp.designation || "N/A",
+              startYear: startYear ? startYear.toString() : "N/A",
+              endYear:
+                exp.endDate === "Present"
+                  ? "Present"
+                  : endYear
+                  ? endYear.toString()
+                  : "N/A",
+              totalYears,
+            };
+          })
+          .filter((exp) => {
+            if (activeTab !== 1 || !searchTerm) return true;
+            const term = searchTerm.toLowerCase();
+            return (
+              exp.company.toLowerCase().includes(term) ||
+              exp.title.toLowerCase().includes(term) ||
+              exp.designation.toLowerCase().includes(term)
+            );
+          })
       : [];
 
   const educationData =
     education?.length > 0
-      ? education?.map((edu) => {
-          const startYear = edu.startDate
-            ? new Date(edu.startDate).getFullYear()
-            : null;
-          const endYear =
-            edu.endDate === "Present"
-              ? new Date().getFullYear()
-              : edu.endDate
-              ? new Date(edu.endDate).getFullYear()
+      ? education
+          ?.map((edu) => {
+            const startYear = edu.startDate
+              ? new Date(edu.startDate).getFullYear()
               : null;
-          const totalYears =
-            startYear !== null && endYear !== null
-              ? (endYear - startYear).toString()
-              : "N/A";
-
-          return {
-            id: edu.id,
-            institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-            degree: edu.degree || "N/A",
-            description: edu.description || "N/A",
-            startDate: startYear ? startYear.toString() : "N/A",
-            endDate:
+            const endYear =
               edu.endDate === "Present"
-                ? "Present"
-                : endYear
-                ? endYear.toString()
-                : "N/A",
-            totalYears,
-          };
-        })
+                ? new Date().getFullYear()
+                : edu.endDate
+                ? new Date(edu.endDate).getFullYear()
+                : null;
+            const totalYears =
+              startYear !== null && endYear !== null
+                ? (endYear - startYear).toString()
+                : "N/A";
+
+            return {
+              id: edu.id,
+              institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
+              degree: edu.degree || "N/A",
+              description: edu.description || "N/A",
+              startDate: startYear ? startYear.toString() : "N/A",
+              endDate:
+                edu.endDate === "Present"
+                  ? "Present"
+                  : endYear
+                  ? endYear.toString()
+                  : "N/A",
+              totalYears,
+            };
+          })
+          .filter((edu) => {
+            if (activeTab !== 3 || !searchTerm) return true;
+            const term = searchTerm.toLowerCase();
+            return (
+              edu.institution.toLowerCase().includes(term) ||
+              edu.degree.toLowerCase().includes(term) ||
+              edu.description.toLowerCase().includes(term)
+            );
+          })
       : [];
 
   // Transform API transactions data for display
@@ -421,9 +440,7 @@ const TutorsProfile = () => {
             type: "bank",
             accountNumber: tutor?.accountNumber || "N/A",
           },
-          transactionDate: tx.createdAt
-            ? new Date(tx.createdAt).toLocaleDateString()
-            : "N/A",
+          transactionDate: tx.createdAt ? formatDate(tx.createdAt) : "N/A",
           status: tx.status || "UNKNOWN",
         }))
     : [];
@@ -467,7 +484,17 @@ const TutorsProfile = () => {
           uploadDate: "N/A", // Upload date not available in API
           status: documents.idBack ? "Available" : "Missing",
         },
-      ].filter((doc) => doc.url)
+      ]
+        .filter((doc) => doc.url)
+        .filter((doc) => {
+          if (activeTab !== 2 || !searchTerm) return true;
+          const term = searchTerm.toLowerCase();
+          return (
+            doc.name.toLowerCase().includes(term) ||
+            doc.type.toLowerCase().includes(term) ||
+            doc.status.toLowerCase().includes(term)
+          );
+        })
     : [];
 
   // Transform API notes data for display
@@ -498,9 +525,7 @@ const TutorsProfile = () => {
               : "Admin"),
           avatar: note.User?.image || profileImg,
           note: note.note || note.description || note.content || "N/A",
-          date: note.createdAt
-            ? new Date(note.createdAt).toLocaleDateString()
-            : "N/A",
+          date: note.createdAt ? formatDate(note.createdAt) : "N/A",
         }))
     : [];
 
