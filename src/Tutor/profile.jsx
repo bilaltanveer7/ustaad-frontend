@@ -566,7 +566,7 @@ const TutorsProfile = () => {
 
   const renderTableContent = () => {
     switch (activeTab) {
-      case 0:
+      case 0: //transactions
         return (
           <TableContainer
             component={Paper}
@@ -853,7 +853,7 @@ const TutorsProfile = () => {
           </TableContainer>
         );
 
-      case 1:
+      case 1: //experience
         return (
           <TableContainer
             component={Paper}
@@ -987,7 +987,7 @@ const TutorsProfile = () => {
                 {experienceData.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={4}
+                      colSpan={6}
                       style={{
                         textAlign: "center",
                         padding: "40px",
@@ -1480,7 +1480,7 @@ const TutorsProfile = () => {
                 {educationData.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={5}
+                      colSpan={6}
                       style={{
                         textAlign: "center",
                         padding: "40px",
@@ -2181,7 +2181,7 @@ const TutorsProfile = () => {
                       style: {
                         fontSize: "14px",
                         fontWeight: 400,
-                        color: "#30417D",
+                        color: "#80878A",
                         borderRadius: "8px",
                         backgroundColor: "#FFFFFF",
                         lineHeight: "1.5",
@@ -2248,7 +2248,7 @@ const TutorsProfile = () => {
                     <Tab label={`Experience (${experienceData.length})`} />
                     <Tab label={`Documents (${documentsData.length})`} />
                     <Tab label={`Education (${educationData.length})`} />
-                    <Tab label={`Notes (${notesData.length})`} />
+                    {/* <Tab label={`Notes (${notesData.length})`} /> */}
                   </Tabs>
                 </Box>
 

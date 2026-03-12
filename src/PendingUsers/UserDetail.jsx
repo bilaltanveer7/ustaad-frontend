@@ -366,7 +366,7 @@ const UserDetail = () => {
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
-            <Box sx={{ alignItems: "center" }}>
+            {/* <Box sx={{ alignItems: "center" }}>
               <Avatar
                 src={
                   user?.image && user.image.trim() !== ""
@@ -396,6 +396,51 @@ const UserDetail = () => {
                 }}
               />
               <br />
+            </Box> */}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <Avatar
+                src={
+                  user?.image && user.image.trim() !== ""
+                    ? user.image
+                    : getDefaultAvatar()
+                }
+                onError={(e) => {
+                  e.currentTarget.src = getDefaultAvatar();
+                }}
+                sx={{ width: 80, height: 80, mb: 2 }}
+              />
+
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 600,
+                  mb: 1,
+                  wordBreak: "break-word",
+                }}
+              >
+                {user?.firstName && user?.lastName
+                  ? `${user.firstName} ${user.lastName}`
+                  : user?.firstName || user?.lastName || "N/A"}
+              </Typography>
+
+              <Chip
+                label={user?.role || "USER"}
+                size="medium"
+                sx={{
+                  backgroundColor: getRoleColor(user?.role).bg,
+                  border: `1px solid ${getRoleColor(user?.role).border}`,
+                  color: getRoleColor(user?.role).color,
+                  fontWeight: 500,
+                  fontSize: "14px",
+                }}
+              />
             </Box>
           </Grid>
           <Grid item xs={12} md={8}>
@@ -488,9 +533,8 @@ const UserDetail = () => {
         size="medium"
         sx={{
           backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
-          border: `1px solid ${
-            getStatusColor(user?.isOnBoard || "pending").border
-          }`,
+          border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border
+            }`,
           color: getStatusColor(user?.isOnBoard || "pending").color,
           fontWeight: 500,
           fontSize: "14px",
@@ -690,9 +734,8 @@ const UserDetail = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary="Bank Details"
-                  secondary={`${tutor.bankName || "N/A"} - ${
-                    tutor.accountNumber || "N/A"
-                  }`}
+                  secondary={`${tutor.bankName || "N/A"} - ${tutor.accountNumber || "N/A"
+                    }`}
                 />
               </ListItem>
             </List>
@@ -928,11 +971,10 @@ const UserDetail = () => {
                           </Typography>
                         </Box>
                         <Chip
-                          label={`${formatDate(edu.startDate)} - ${
-                            edu.endDate === "Present"
-                              ? "Present"
-                              : formatDate(edu.endDate)
-                          }`}
+                          label={`${formatDate(edu.startDate)} - ${edu.endDate === "Present"
+                            ? "Present"
+                            : formatDate(edu.endDate)
+                            }`}
                           size="small"
                           sx={{
                             backgroundColor: "transparent",
@@ -1005,11 +1047,10 @@ const UserDetail = () => {
                         </Typography>
                       </Box>
                       <Chip
-                        label={`${formatDate(exp.startDate)} - ${
-                          exp.endDate === "Present"
-                            ? "Present"
-                            : formatDate(exp.endDate)
-                        }`}
+                        label={`${formatDate(exp.startDate)} - ${exp.endDate === "Present"
+                          ? "Present"
+                          : formatDate(exp.endDate)
+                          }`}
                         size="small"
                         sx={{
                           backgroundColor: "transparent",
@@ -1052,32 +1093,71 @@ const UserDetail = () => {
             <Typography>No documents uploaded yet</Typography>
           </Box>
         ) : (
-          <TableContainer sx={{ border: "1px solid #E0E3EB" }}>
-            <Table>
-              <TableHead sx={{ backgroundColor: "#1E9CBC" }}>
-                <TableRow>
+          <TableContainer style={{
+            boxShadow: "none",
+            border: "1px solid #E0E3EB",
+            borderRadius: "8px",
+          }}>
+            <Table style={{ border: "1px solid #E0E3EB" }}>
+              <TableHead sx={{
+                backgroundColor: "#1E9CBC",
+                "& .MuiTableCell-root": {
+                  height: 32,
+                  py: 0,
+                  px: 2,
+                  color: "#FFFFFF",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  borderBottom: "none",
+                },
+              }}>
+                <TableRow sx={{
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  color: "#FFFFFF",
+                }}>
                   <TableCell
-                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
                   >
                     Document Name
                   </TableCell>
                   <TableCell
-                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
                   >
                     Category
                   </TableCell>
                   <TableCell
-                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
                   >
                     Type
                   </TableCell>
                   <TableCell
-                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
                   >
                     Uploaded
                   </TableCell>
                   <TableCell
-                    sx={{ fontWeight: 600, color: "#fff", fontSize: "16px" }}
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
                   >
                     Actions
                   </TableCell>
@@ -1087,14 +1167,14 @@ const UserDetail = () => {
                 {documents.map((doc) => (
                   <TableRow key={doc.id}>
                     <TableCell
-                      sx={{
-                        fontSize: "14px",
-                        color: "#000",
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
                         fontWeight: 400,
-                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
                       }}
                     >
                       <Box
@@ -1103,8 +1183,8 @@ const UserDetail = () => {
                         <DocumentIcon sx={{ color: "#666", fontSize: 20 }} />
                         <Typography
                           sx={{
-                            fontSize: "14px",
-                            color: "#000",
+                            fontSize: "16px",
+                            color: "#101219",
                             fontWeight: 400,
                           }}
                         >
@@ -1113,14 +1193,14 @@ const UserDetail = () => {
                       </Box>
                     </TableCell>
                     <TableCell
-                      sx={{
-                        fontSize: "14px",
-                        color: "#000",
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
                         fontWeight: 400,
-                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
                       }}
                     >
                       <Chip
@@ -1134,40 +1214,40 @@ const UserDetail = () => {
                       />
                     </TableCell>
                     <TableCell
-                      sx={{
-                        fontSize: "14px",
-                        color: "#000",
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
                         fontWeight: 400,
-                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
                       }}
                     >
                       {doc.type}
                     </TableCell>
                     <TableCell
-                      sx={{
-                        fontSize: "14px",
-                        color: "#000",
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
                         fontWeight: 400,
-                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
                       }}
                     >
                       {formatDate(doc.uploadedAt)}
                     </TableCell>
                     <TableCell
-                      sx={{
-                        fontSize: "14px",
-                        color: "#000",
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
                         fontWeight: 400,
-                        border: "1px solid #E0E3EB",
                         padding: "0 8px",
-                        height: "30px",
-                        lineHeight: "30px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
                       }}
                     >
                       <Box sx={{ display: "flex", gap: 1 }}>
@@ -1295,8 +1375,8 @@ const UserDetail = () => {
                 {user?.isOnBoard === "approved"
                   ? "Approved"
                   : isApprovingUser
-                  ? "Approving..."
-                  : "Approve User"}
+                    ? "Approving..."
+                    : "Approve User"}
               </Button>
             </Box>
           </Box>
