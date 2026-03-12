@@ -1,9 +1,14 @@
 import invoke from "../utils/invoke";
 
 // Get all tutors with pagination
-export const getAllTutors = async (page = 1, limit = 20, search = "") => {
+export const getAllTutors = async (
+  page = 1,
+  limit = 20,
+  search = "",
+  date = ""
+) => {
   const data = await invoke({
-    url: `/admin/tutors?page=${page}&limit=${limit}&search=${search}`,
+    url: `/admin/tutors?page=${page}&limit=${limit}&search=${search}&date=${date}`,
     method: "GET",
   });
   return data;

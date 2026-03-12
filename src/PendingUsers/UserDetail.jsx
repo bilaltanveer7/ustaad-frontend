@@ -4,6 +4,14 @@ import SideNav from "../sidebar/sidenav";
 import DocumentModal from "../components/DocumentModal";
 import { useAdminStore } from "../store/useAdminStore";
 import config from "../utils/config";
+import { capitalize, formatArray } from "../utils/helpers";
+import profileImg from "../assets/profile.PNG";
+import parentprofileImg from "../assets/parent_profile.PNG";
+import { formatDate, formatDateTime } from "../utils/dateFormatter";
+import { MdOutlineSubject } from "react-icons/md";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { SiLinuxprofessionalinstitute } from "react-icons/si";
+import { SiAltiumdesigner } from "react-icons/si";
 import {
   Button,
   Card,
@@ -123,26 +131,6 @@ const UserDetail = () => {
     setShowSuccessMessage(false);
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const formatDateTime = (dateString) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "pending":
@@ -152,7 +140,7 @@ const UserDetail = () => {
       case "rejected":
         return { bg: "#FEECEC", color: "#F31616", border: "#FFCDD2" };
       default:
-        return { bg: "#F5F5F5", color: "#666", border: "#E0E0E0" };
+        return { bg: "#F5F5F5", color: "#666", border: "#E0E3EB" };
     }
   };
 
@@ -165,7 +153,7 @@ const UserDetail = () => {
       case "ADMIN":
         return { bg: "#FFF3E0", color: "#F57C00", border: "#FFCC02" };
       default:
-        return { bg: "#F5F5F5", color: "#666", border: "#E0E0E0" };
+        return { bg: "#F5F5F5", color: "#666", border: "#E0E3EB" };
     }
   };
 
@@ -263,7 +251,14 @@ const UserDetail = () => {
     );
   }
 
-  const user = userData?.user;
+  const capitalize = (value) => {
+    if (value === null || value === undefined) return "N/A";
+
+    return String(value).toUpperCase().replace(/,/g, ", ");
+  };
+
+  const user =
+    userData?.user || userData?.tutor?.User || userData?.parent?.User;
   const tutorProfile = userData?.tutor;
   const parentProfile = userData?.parent;
 
@@ -275,25 +270,25 @@ const UserDetail = () => {
     if (userData?.tutor) {
       const tutor = userData.tutor;
 
-      if (tutor.idBackUrl) {
-        const extension = tutor.idBackUrl.split(".").pop().toLowerCase();
+      if (tutor.idFrontUrl) {
+        const extension = tutor.idFrontUrl.split(".").pop().toLowerCase();
         docs.push({
           id: "id-front",
           name: "ID Front",
           type: extension === "pdf" ? "application/pdf" : "image/png",
-          url: `${config.tutorDocumentUrl}${tutor.idBackUrl}`,
+          url: `${config.tutorDocumentUrl}${tutor.idFrontUrl}`,
           uploadedAt: tutor.createdAt,
           category: "Identity",
         });
       }
 
-      if (tutor.idFrontUrl) {
-        const extension = tutor.idFrontUrl.split(".").pop().toLowerCase();
+      if (tutor.idBackUrl) {
+        const extension = tutor.idBackUrl.split(".").pop().toLowerCase();
         docs.push({
           id: "id-back",
           name: "ID Back",
           type: extension === "pdf" ? "application/pdf" : "image/png",
-          url: `${config.tutorDocumentUrl}${tutor.idFrontUrl}`,
+          url: `${config.tutorDocumentUrl}${tutor.idBackUrl}`,
           uploadedAt: tutor.createdAt,
           category: "Identity",
         });
@@ -347,22 +342,42 @@ const UserDetail = () => {
   const documents = getDocuments();
 
   console.log("documents", documents);
+  console.log("user role------+++++++", role);
+
+  const getDefaultAvatar = () => {
+    if (user?.role === "TUTOR") return profileImg;
+    if (user?.role === "PARENT") return parentprofileImg;
+    return parentprofileImg; // fallback safety
+  };
 
   const renderBasicInfo = () => (
-    <Card sx={{ mb: 3, bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
+    <Card
+      sx={{
+        mb: 2,
+        bgcolor: "#EEFBFD",
+        border: "1px solid #D1D1DB",
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
       <CardContent>
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
           Basic Information
         </Typography>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
-            <Box sx={{ textAlign: "center" }}>
+            {/* <Box sx={{ alignItems: "center" }}>
               <Avatar
-                src={user?.image}
-                sx={{ width: 120, height: 120, mx: "auto", mb: 2 }}
-              >
-                {user?.firstName?.charAt(0).toUpperCase()}
-              </Avatar>
+                src={
+                  user?.image && user.image.trim() !== ""
+                    ? user.image
+                    : getDefaultAvatar()
+                }
+                onError={(e) => {
+                  e.currentTarget.src = getDefaultAvatar();
+                }}
+                sx={{ width: 80, height: 80, mx: "auto", mb: 2 }}
+              />
               <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
                 {user?.firstName && user?.lastName
                   ? `${user.firstName} ${user.lastName}`
@@ -377,20 +392,51 @@ const UserDetail = () => {
                   color: getRoleColor(user?.role).color,
                   fontWeight: 500,
                   fontSize: "14px",
-                  mb: 1,
+                  ml: 1,
                 }}
               />
               <br />
+            </Box> */}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <Avatar
+                src={
+                  user?.image && user.image.trim() !== ""
+                    ? user.image
+                    : getDefaultAvatar()
+                }
+                onError={(e) => {
+                  e.currentTarget.src = getDefaultAvatar();
+                }}
+                sx={{ width: 80, height: 80, mb: 2 }}
+              />
+
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 600,
+                  mb: 1,
+                  wordBreak: "break-word",
+                }}
+              >
+                {user?.firstName && user?.lastName
+                  ? `${user.firstName} ${user.lastName}`
+                  : user?.firstName || user?.lastName || "N/A"}
+              </Typography>
+
               <Chip
-                label={user?.isOnBoard?.toUpperCase() || "PENDING"}
+                label={user?.role || "USER"}
                 size="medium"
                 sx={{
-                  backgroundColor: getStatusColor(user?.isOnBoard || "pending")
-                    .bg,
-                  border: `1px solid ${
-                    getStatusColor(user?.isOnBoard || "pending").border
-                  }`,
-                  color: getStatusColor(user?.isOnBoard || "pending").color,
+                  backgroundColor: getRoleColor(user?.role).bg,
+                  border: `1px solid ${getRoleColor(user?.role).border}`,
+                  color: getRoleColor(user?.role).color,
                   fontWeight: 500,
                   fontSize: "14px",
                 }}
@@ -401,7 +447,7 @@ const UserDetail = () => {
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <PersonIcon style={{color:'#1E9CBC'}} />
+                  <PersonIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="User ID"
@@ -409,20 +455,20 @@ const UserDetail = () => {
                     <Typography
                       component="span"
                       sx={{
-                        fontFamily: "monospace",
-                        backgroundColor: "#f5f5f5",
-                        padding: "2px 6px",
+                        // fontFamily: "monospace",
+                        // backgroundColor: "#f5f5f5",
+                        // padding: "0px 6px",
                         borderRadius: "4px",
                       }}
                     >
-                      {user?.id}
+                      {user?.userId}
                     </Typography>
                   }
                 />
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <EmailIcon style={{color:'#1E9CBC'}} />
+                  <EmailIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Email"
@@ -442,13 +488,13 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <PhoneIcon style={{color:'#1E9CBC'}} />
+                  <PhoneIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Phone"
                   secondary={
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {user?.phone || "N/A"}
+                      +{user?.phone || "N/A"}
                       {user?.isPhoneVerified ? (
                         <CheckCircleIcon
                           sx={{ color: "#38BC5C", fontSize: 16 }}
@@ -462,16 +508,16 @@ const UserDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <CalendarIcon style={{color:'#1E9CBC'}} />
+                  <CalendarIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Registration Date"
+                  primary="Joining Date"
                   secondary={formatDate(user?.createdAt)}
                 />
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <CalendarIcon style={{color:'#1E9CBC'}} />
+                  <CalendarIcon style={{ color: "#1E9CBC" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Last Updated"
@@ -482,6 +528,20 @@ const UserDetail = () => {
           </Grid>
         </Grid>
       </CardContent>
+      <Chip
+        label={user?.isOnBoard?.toUpperCase() || "PENDING"}
+        size="medium"
+        sx={{
+          backgroundColor: getStatusColor(user?.isOnBoard || "pending").bg,
+          border: `1px solid ${getStatusColor(user?.isOnBoard || "pending").border
+            }`,
+          color: getStatusColor(user?.isOnBoard || "pending").color,
+          fontWeight: 500,
+          fontSize: "14px",
+          marginTop: "1rem",
+          marginRight: "1rem",
+        }}
+      />
     </Card>
   );
 
@@ -579,119 +639,188 @@ const UserDetail = () => {
     const totalExperience = tutor.totalExperience || 0;
 
     return (
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-            Tutor Information
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <List>
-                <ListItem>
-                  <ListItemIcon>
-                    <SchoolIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Education"
-                    secondary={
-                      education
-                        .map((edu) => `${edu.description} at ${edu.institute}`)
-                        .join(", ") || "N/A"
-                    }
+      <Card
+        sx={{
+          mb: 3,
+          bgcolor: "#EEFBFD",
+          border: "1px solid #D1D1DB",
+          p: 2,
+        }}
+      >
+        {/* <CardContent> */}
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Tutor Information
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <List>
+              {/* <ListItem>
+                <ListItemIcon>
+                  <SchoolIcon sx={{ color: "#1E9CBC" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Education"
+                  secondary={
+                    education
+                      .map((edu) => `${edu.description} at ${edu.institute}`)
+                      .join(", ") || "N/A"
+                  }
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <WorkIcon sx={{ color: "#1E9CBC" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Work Experience"
+                  secondary={
+                    totalExperience > 0
+                      ? `${Math.round(totalExperience)} years`
+                      : "N/A"
+                  }
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <SiLinuxprofessionalinstitute
+                    style={{ color: "#1E9CBC", height: 20, width: 20 }}
                   />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <WorkIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Experience"
-                    secondary={
-                      totalExperience > 0
-                        ? `${Math.round(totalExperience)} years`
-                        : "N/A"
-                    }
+                </ListItemIcon>
+                <ListItemText
+                  primary="Institute"
+                  secondary={
+                    totalExperience > 0
+                      ? `${Math.round(totalExperience)} years`
+                      : "N/A"
+                  }
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <SiAltiumdesigner
+                    style={{ color: "#1E9CBC", height: 20, width: 20 }}
                   />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <BankIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Bank Details"
-                    secondary={`${tutor.bankName || "N/A"} - ${
-                      tutor.accountNumber || "N/A"
+                </ListItemIcon>
+                <ListItemText
+                  primary="Designation"
+                  secondary={
+                    totalExperience > 0
+                      ? `${Math.round(totalExperience)} years`
+                      : "N/A"
+                  }
+                />
+              </ListItem> */}
+              <ListItem>
+                <ListItemIcon>
+                  <SchoolIcon sx={{ color: "#1E9CBC" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Grade"
+                  secondary={tutor.grade ? capitalize(tutor.grade) : "N/A"}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <CalendarIcon sx={{ color: "#1E9CBC" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Profile Created"
+                  secondary={formatDate(tutor.createdAt)}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <BankIcon sx={{ color: "#1E9CBC" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Bank Details"
+                  secondary={`${tutor.bankName || "N/A"} - ${tutor.accountNumber || "N/A"
                     }`}
-                  />
-                </ListItem>
-                <ListItem>
+                />
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <List>
+              {/* Work Experience */}
+
+              {/* Profile Created */}
+
+              {/* Subjects */}
+              <ListItem>
+                <ListItemIcon>
+                  <MdOutlineSubject size={22} style={{ color: "#1E9CBC" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Subjects"
+                  secondary={
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      {(tutor.subjects || ["N/A"]).map((subject, index) => (
+                        <Chip
+                          key={index}
+                          label={capitalize(subject)}
+                          size="small"
+                          sx={{
+                            backgroundColor: "transparent",
+                            color: "#1E9CBC",
+                            border: "1px solid #1E9CBC",
+                          }}
+                        />
+                      ))}
+                    </Box>
+                  }
+                />
+              </ListItem>
+
+              {/* Curriculum */}
+              {tutor.curriculum && (
+                <ListItem alignItems="flex-start">
                   <ListItemIcon>
-                    <SchoolIcon />
+                    <SchoolIcon sx={{ color: "#1E9CBC" }} />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Grade Level"
-                    secondary={tutor.grade || "N/A"}
-                  />
-                </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <List>
-                <ListItem>
-                  <ListItemIcon>
-                    <PersonIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Work Experience"
+                    primary="Curriculum"
                     secondary={
-                      experience.length > 0
-                        ? experience
-                            .map(
-                              (exp) => `${exp.description} at ${exp.company}`
-                            )
-                            .join(", ")
-                        : "N/A"
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          flexWrap: "wrap",
+                          // mt: 1,
+                        }}
+                      >
+                        {(tutor.curriculum || ["N/A"]).map((item, index) => (
+                          <Chip
+                            key={index}
+                            label={capitalize(item)}
+                            size="small"
+                            sx={{
+                              backgroundColor: "transparent",
+                              color: "#1E9CBC",
+                              border: "1px solid #1E9CBC",
+                            }}
+                          />
+                        ))}
+                      </Box>
                     }
                   />
                 </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <CalendarIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Profile Created"
-                    secondary={formatDate(tutor.createdAt)}
-                  />
-                </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
-                Subjects:
-              </Typography>
-              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
-                {(tutor.subjects || ["N/A"]).map((subject, index) => (
-                  <Chip
-                    key={index}
-                    label={subject}
-                    size="small"
-                    sx={{
-                      backgroundColor: "#EEF3FF",
-                      color: "#235DFF",
-                      border: "1px solid #BBDEFB",
-                    }}
-                  />
-                ))}
-              </Box>
-              <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
-                About:
-              </Typography>
-              <Typography variant="body2" sx={{ color: "#666" }}>
-                {tutor.about || "No description available."}
-              </Typography>
-            </Grid>
+              )}
+
+              {/* About */}
+              <ListItem alignItems="flex-start">
+                <ListItemIcon>
+                  <InfoOutlinedIcon sx={{ color: "#1E9CBC" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="About"
+                  secondary={tutor.about || "No description available."}
+                />
+              </ListItem>
+            </List>
           </Grid>
-        </CardContent>
+        </Grid>
+        {/* </CardContent> */}
       </Card>
     );
   };
@@ -702,17 +831,17 @@ const UserDetail = () => {
     const parent = userData.parent;
 
     return (
-      <Card sx={{ mb: 3 }}>
+      <Card sx={{ mb: 3, bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
         <CardContent>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Parent Information
           </Typography>
-          <Grid container spacing={3}>
+          <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
               <List>
                 <ListItem>
                   <ListItemIcon>
-                    <PersonIcon />
+                    <PersonIcon sx={{ color: "#1E9CBC" }} />
                   </ListItemIcon>
                   <ListItemText
                     primary="Parent ID"
@@ -720,8 +849,8 @@ const UserDetail = () => {
                       <Typography
                         component="span"
                         sx={{
-                          fontFamily: "monospace",
-                          backgroundColor: "#f5f5f5",
+                          // fontFamily: "monospace",
+                          // backgroundColor: "#f5f5f5",
                           padding: "2px 6px",
                           borderRadius: "4px",
                         }}
@@ -733,20 +862,16 @@ const UserDetail = () => {
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
-                    <CalendarIcon />
+                    <CalendarIcon sx={{ color: "#1E9CBC" }} />
                   </ListItemIcon>
                   <ListItemText
                     primary="Profile Created"
                     secondary={formatDate(parent.createdAt)}
                   />
                 </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <List>
                 <ListItem>
                   <ListItemIcon>
-                    <CalendarIcon />
+                    <CalendarIcon sx={{ color: "#1E9CBC" }} />
                   </ListItemIcon>
                   <ListItemText
                     primary="Last Updated"
@@ -756,7 +881,7 @@ const UserDetail = () => {
                 {parent.customerId && (
                   <ListItem>
                     <ListItemIcon>
-                      <CardIcon />
+                      <CardIcon sx={{ color: "#1E9CBC" }} />
                     </ListItemIcon>
                     <ListItemText
                       primary="Customer ID"
@@ -764,6 +889,24 @@ const UserDetail = () => {
                     />
                   </ListItem>
                 )}
+                <ListItem>
+                  <ListItemIcon>
+                    <BankIcon sx={{ color: "#1E9CBC" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Bank Name"
+                    secondary={parent.bankName || "N/A"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <CardIcon sx={{ color: "#1E9CBC" }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Account Number"
+                    secondary={parent.accountNumber || "N/A"}
+                  />
+                </ListItem>
               </List>
             </Grid>
           </Grid>
@@ -781,7 +924,7 @@ const UserDetail = () => {
     return (
       <>
         {/* Education Section */}
-        <Card sx={{ mb: 3 }}>
+        <Card sx={{ mb: 3, bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Education History
@@ -795,60 +938,59 @@ const UserDetail = () => {
               <Grid container spacing={3}>
                 {education.map((edu, index) => (
                   <Grid item xs={12} key={edu.id || index}>
-                    <Card
-                      variant="outlined"
+                    <Box
                       sx={{
-                        border: "1px solid #E0E3EB",
+                        border: "1px solid #1E9CBC",
                         borderRadius: "8px",
+                        p: 1,
                         "&:hover": {
                           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                         },
                       }}
                     >
-                      <CardContent>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 2,
-                          }}
-                        >
-                          <Box sx={{ flex: 1 }}>
-                            <Typography
-                              variant="h6"
-                              sx={{ fontWeight: 600, color: "#101219" }}
-                            >
-                              {edu.degree || "N/A"}
-                            </Typography>
-                            <Typography
-                              variant="body1"
-                              sx={{ color: "#1976D2", mb: 1 }}
-                            >
-                              {edu.institute || "N/A"}
-                            </Typography>
-                          </Box>
-                          <Chip
-                            label={`${formatDate(edu.startDate)} - ${
-                              edu.endDate === "Present"
-                                ? "Present"
-                                : formatDate(edu.endDate)
-                            }`}
-                            size="small"
-                            sx={{
-                              backgroundColor: "#EEF3FF",
-                              color: "#235DFF",
-                              fontWeight: 500,
-                            }}
-                          />
-                        </Box>
-                        {edu.description && (
-                          <Typography variant="body2" sx={{ color: "#666" }}>
-                            {edu.description}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          mb: 2,
+                        }}
+                      >
+                        <Box>
+                          <Typography
+                            variant="h6"
+                            sx={{ fontWeight: 600, color: "#101219" }}
+                          >
+                            {edu.degree || "N/A"}
                           </Typography>
-                        )}
-                      </CardContent>
-                    </Card>
+                          <Typography
+                            variant="body1"
+                            sx={{ color: "#1E9CBC", mb: 1 }}
+                          >
+                            {edu.institute || "N/A"}
+                          </Typography>
+                        </Box>
+                        <Chip
+                          label={`${formatDate(edu.startDate)} - ${edu.endDate === "Present"
+                            ? "Present"
+                            : formatDate(edu.endDate)
+                            }`}
+                          size="small"
+                          sx={{
+                            backgroundColor: "transparent",
+                            color: "#1E9CBC",
+                            border: "1px solid #1E9CBC",
+                            fontWeight: 500,
+                            // mb:15
+                          }}
+                        />
+                      </Box>
+                      {edu.description && (
+                        <Typography variant="body2" sx={{ color: "#666" }}>
+                          {edu.description}
+                        </Typography>
+                      )}
+                    </Box>
                   </Grid>
                 ))}
               </Grid>
@@ -857,86 +999,84 @@ const UserDetail = () => {
         </Card>
 
         {/* Experience Section */}
-        <Card>
-          <CardContent>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Work Experience
-            </Typography>
-            {experience.length === 0 ? (
-              <Box sx={{ textAlign: "center", py: 4, color: "#666" }}>
-                <WorkIcon sx={{ fontSize: 48, mb: 2, opacity: 0.5 }} />
-                <Typography>No work experience records found</Typography>
-              </Box>
-            ) : (
-              <Grid container spacing={3}>
-                {experience.map((exp, index) => (
-                  <Grid item xs={12} key={exp.id || index}>
-                    <Card
-                      variant="outlined"
+        <Box sx={{ p: 2, border: "1px solid #D1D1DB", bgcolor: "#EEFBFD" }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Work Experience
+          </Typography>
+          {experience.length === 0 ? (
+            <Box sx={{ textAlign: "center", py: 4, color: "#666" }}>
+              <WorkIcon sx={{ fontSize: 48, mb: 2, opacity: 0.5 }} />
+              <Typography>No work experience records found</Typography>
+            </Box>
+          ) : (
+            <Grid container spacing={3}>
+              {experience.map((exp, index) => (
+                <Grid item xs={12} key={exp.id || index}>
+                  <Box
+                    variant="outlined"
+                    sx={{
+                      border: "1px solid #1E9CBC",
+                      borderRadius: "8px",
+                      p: 1,
+                      "&:hover": {
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                      },
+                    }}
+                  >
+                    <Box
                       sx={{
-                        border: "1px solid #E0E3EB",
-                        borderRadius: "8px",
-                        "&:hover": {
-                          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                        },
+                        flex: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        mb: 2,
                       }}
                     >
-                      <CardContent>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 2,
-                          }}
+                      <Box sx={{ flex: 1 }}>
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 600, color: "#101219" }}
                         >
-                          <Box sx={{ flex: 1 }}>
-                            <Typography
-                              variant="h6"
-                              sx={{ fontWeight: 600, color: "#101219" }}
-                            >
-                              {exp.designation || "N/A"}
-                            </Typography>
-                            <Typography
-                              variant="body1"
-                              sx={{ color: "#7B1FA2", mb: 1 }}
-                            >
-                              {exp.company || "N/A"}
-                            </Typography>
-                          </Box>
-                          <Chip
-                            label={`${formatDate(exp.startDate)} - ${
-                              exp.endDate === "Present"
-                                ? "Present"
-                                : formatDate(exp.endDate)
-                            }`}
-                            size="small"
-                            sx={{
-                              backgroundColor: "#F3E5F5",
-                              color: "#7B1FA2",
-                              fontWeight: 500,
-                            }}
-                          />
-                        </Box>
-                        {exp.description && (
-                          <Typography variant="body2" sx={{ color: "#666" }}>
-                            {exp.description}
-                          </Typography>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            )}
-          </CardContent>
-        </Card>
+                          {exp.designation || "N/A"}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{ color: "#1E9CBC", mb: 1 }}
+                        >
+                          {exp.company || "N/A"}
+                        </Typography>
+                      </Box>
+                      <Chip
+                        label={`${formatDate(exp.startDate)} - ${exp.endDate === "Present"
+                          ? "Present"
+                          : formatDate(exp.endDate)
+                          }`}
+                        size="small"
+                        sx={{
+                          backgroundColor: "transparent",
+                          border: "1px solid #1E9CBC",
+                          color: "#1E9CBC",
+                          fontWeight: 500,
+                        }}
+                      />
+                    </Box>
+                    {exp.description && (
+                      <Typography variant="body2" sx={{ color: "#666" }}>
+                        {exp.description}
+                      </Typography>
+                    )}
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Box>
       </>
     );
   };
 
   const renderDocuments = () => (
-    <Card>
+    <Card sx={{ bgcolor: "#EEFBFD", border: "1px solid #D1D1DB" }}>
       <CardContent>
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
           Documents ({documents.length})
@@ -953,59 +1093,169 @@ const UserDetail = () => {
             <Typography>No documents uploaded yet</Typography>
           </Box>
         ) : (
-          <TableContainer
-            component={Paper}
-            sx={{ border: "1px solid #E0E3EB" }}
-          >
-            <Table>
-              <TableHead sx={{ backgroundColor: "#F5F5F5" }}>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 600 }}>Document Name</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Type</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Uploaded</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
+          <TableContainer style={{
+            boxShadow: "none",
+            border: "1px solid #E0E3EB",
+            borderRadius: "8px",
+          }}>
+            <Table style={{ border: "1px solid #E0E3EB" }}>
+              <TableHead sx={{
+                backgroundColor: "#1E9CBC",
+                "& .MuiTableCell-root": {
+                  height: 32,
+                  py: 0,
+                  px: 2,
+                  color: "#FFFFFF",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  borderBottom: "none",
+                },
+              }}>
+                <TableRow sx={{
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  color: "#FFFFFF",
+                }}>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Document Name
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Category
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Type
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Uploaded
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "14px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {documents.map((doc) => (
                   <TableRow key={doc.id}>
-                    <TableCell>
+                    <TableCell
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
+                        fontWeight: 400,
+                        padding: "0 8px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
+                      }}
+                    >
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
                         <DocumentIcon sx={{ color: "#666", fontSize: 20 }} />
-                        {doc.name}
+                        <Typography
+                          sx={{
+                            fontSize: "16px",
+                            color: "#101219",
+                            fontWeight: 400,
+                          }}
+                        >
+                          {doc.name}
+                        </Typography>
                       </Box>
                     </TableCell>
-                    <TableCell>
+                    <TableCell
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
+                        fontWeight: 400,
+                        padding: "0 8px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
+                      }}
+                    >
                       <Chip
                         label={doc.category}
                         size="small"
                         sx={{
-                          backgroundColor: "#F0F2F5",
-                          color: "#7D879C",
+                          border: "1px solid #F0F2F5",
+                          color: "#000",
                           fontSize: "12px",
                         }}
                       />
                     </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" sx={{ color: "#666" }}>
-                        {doc.type}
-                      </Typography>
+                    <TableCell
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
+                        fontWeight: 400,
+                        padding: "0 8px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
+                      }}
+                    >
+                      {doc.type}
                     </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" sx={{ color: "#666" }}>
-                        {formatDate(doc.uploadedAt)}
-                      </Typography>
+                    <TableCell
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
+                        fontWeight: 400,
+                        padding: "0 8px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
+                      }}
+                    >
+                      {formatDate(doc.uploadedAt)}
                     </TableCell>
-                    <TableCell>
+                    <TableCell
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
+                        fontWeight: 400,
+                        padding: "0 8px",
+                        height: "42px",
+                        lineHeight: "42px",
+                        border: "1px solid #E0E3EB",
+                      }}
+                    >
                       <Box sx={{ display: "flex", gap: 1 }}>
                         <Tooltip title="View Document">
                           <IconButton
                             size="small"
                             onClick={() => handleDocumentView(doc)}
-                            sx={{ color: "#1976D2" }}
+                            sx={{ color: "#1E9CBC" }}
                           >
                             <ViewIcon />
                           </IconButton>
@@ -1125,8 +1375,8 @@ const UserDetail = () => {
                 {user?.isOnBoard === "approved"
                   ? "Approved"
                   : isApprovingUser
-                  ? "Approving..."
-                  : "Approve User"}
+                    ? "Approving..."
+                    : "Approve User"}
               </Button>
             </Box>
           </Box>
@@ -1134,12 +1384,21 @@ const UserDetail = () => {
           {/* Tabs */}
           <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
             <Tabs value={activeTab} onChange={handleTabChange}>
-              <Tab label="Overview" />
-              <Tab label="Documents" />
+              <Tab label="Overview" sx={{ textTransform: "capitalize" }} />
+              <Tab
+                label={`Documents (${documents.length})`}
+                sx={{ textTransform: "capitalize" }}
+              />
               <Tab
                 label={`${user?.role === "TUTOR" ? "Tutor" : "Parent"} Profile`}
+                sx={{ textTransform: "capitalize" }}
               />
-              {user?.role === "TUTOR" && <Tab label="Education & Experience" />}
+              {user?.role === "TUTOR" && (
+                <Tab
+                  label="Education & Experience"
+                  sx={{ textTransform: "capitalize" }}
+                />
+              )}
             </Tabs>
           </Box>
 

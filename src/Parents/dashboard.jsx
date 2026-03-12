@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useParentStore } from "../store/useParentStore";
+import { formatDate } from "../utils/dateFormatter";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import profileImg from '../assets/profile.PNG';
+import profileImg from "../assets/parent_profile.PNG";
 import {
   Box,
   Table,
@@ -13,7 +14,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  FormControl,
+  Select,
+  MenuItem,
   Checkbox,
   Avatar,
   Button,
@@ -21,6 +24,7 @@ import {
   InputAdornment,
   IconButton,
   Chip,
+  TablePagination,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -46,13 +50,18 @@ const ParentDashboard = () => {
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedDate, setSelectedDate] = useState(""); // yyyy-mm-dd for API
+  const [dateInput, setDateInput] = useState(""); // dd/mm/yyyy for display
+  const datePickerRef = useRef(null);
   const isFirstRender = useRef(true);
 
   // Fetch parents on component mount and when page changes
   useEffect(() => {
-    fetchParents(currentPage, 20, searchValue);
-  }, [fetchParents, currentPage]);
+    // API expects 1-based index
+    fetchParents(page + 1, rowsPerPage, searchValue, selectedDate);
+  }, [fetchParents, page, rowsPerPage, selectedDate]);
 
   // Debounced search effect
   useEffect(() => {
@@ -61,20 +70,27 @@ const ParentDashboard = () => {
       return;
     }
     const timer = setTimeout(() => {
-      if (currentPage !== 1) {
-        setCurrentPage(1);
-      } else {
-        fetchParents(1, 20, searchValue);
-      }
+      setPage(0);
+      fetchParents(1, rowsPerPage, searchValue, selectedDate);
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchValue, fetchParents]);
+  }, [searchValue, fetchParents, rowsPerPage]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   // Transform API data to match table format
   const tableData = parents.map((parent) => ({
     id: parent.id,
     image: parent.User?.image,
+    userId: parent?.User?.userId,
     clientId: parent.userId.substring(0, 8).toUpperCase(),
     name:
       parent.User?.firstName && parent.User?.lastName
@@ -83,7 +99,7 @@ const ParentDashboard = () => {
     email: parent.User?.email || "N/A",
     phone: parent.User?.phone || "N/A",
     address: "N/A", // Address not provided in API response
-    date: new Date(parent.createdAt).toLocaleDateString() || "N/A",
+    date: formatDate(parent.createdAt),
     customerId: parent.customerId,
   }));
 
@@ -151,14 +167,18 @@ const ParentDashboard = () => {
   const getSortIcon = (columnKey) => {
     if (sortConfig.key === columnKey) {
       return sortConfig.direction === "asc" ? (
-        <ArrowUpwardIcon style={{ fontSize: "16px", marginLeft: "4px" }} />
+        <ArrowUpwardIcon
+          style={{ fontSize: "18px", marginLeft: "4px", color: "#4D5874" }}
+        />
       ) : (
-        <ArrowDownwardIcon style={{ fontSize: "16px", marginLeft: "4px" }} />
+        <ArrowDownwardIcon
+          style={{ fontSize: "18px", marginLeft: "4px", color: "#4D5874" }}
+        />
       );
     }
     return (
       <UnfoldMoreIcon
-        style={{ fontSize: "16px", marginLeft: "4px", color: "#ccc" }}
+        style={{ fontSize: "18px", marginLeft: "4px", color: "#4D5874" }}
       />
     );
   };
@@ -193,6 +213,21 @@ const ParentDashboard = () => {
       console.warn("Copy failed:", err);
     }
   };
+
+  // const rowsPerPage = 10;
+
+  // const [page, setPage] = useState(0);
+
+  const paginatedData = tableData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <>
       <SideNav />
@@ -219,9 +254,9 @@ const ParentDashboard = () => {
             <div className="col-12">
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
-                  <IconButton size="small" style={{ marginRight: "10px" }}>
+                  {/* <IconButton size="small" style={{ marginRight: "10px" }}>
                     <ArrowBackIcon />
-                  </IconButton>
+                  </IconButton> */}
                   <h4
                     className="mb-0 me-3"
                     style={{
@@ -232,7 +267,7 @@ const ParentDashboard = () => {
                   >
                     Parents
                   </h4>
-                  <div
+                  {/* <div
                     className="d-flex align-items-center text-muted"
                     style={{
                       fontSize: "14px",
@@ -246,7 +281,7 @@ const ParentDashboard = () => {
                       style={{ fontSize: "16px", marginRight: "5px" }}
                     />
                     Updated Now
-                  </div>
+                  </div> */}
                 </div>
                 <div style={{ width: "300px" }}>
                   <TextField
@@ -355,6 +390,125 @@ const ParentDashboard = () => {
                 >
                   Add New
                 </Button> */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      border: "1px solid #ccc",
+                      borderRadius: "16px",
+                      padding: "4px 10px",
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    {/* Hidden native date picker — opened via calendar icon */}
+                    <input
+                      ref={datePickerRef}
+                      type="date"
+                      style={{
+                        position: "absolute",
+                        opacity: 0,
+                        pointerEvents: "none",
+                        width: 0,
+                        height: 0,
+                      }}
+                      onChange={(e) => {
+                        const val = e.target.value; // yyyy-mm-dd
+                        if (val) {
+                          const [yyyy, mm, dd] = val.split("-");
+                          setDateInput(`${dd}/${mm}/${yyyy}`);
+                          setSelectedDate(val);
+                        }
+                      }}
+                    />
+                    {/* Visible text input — always dd/mm/yyyy regardless of locale */}
+                    <input
+                      type="text"
+                      placeholder="dd/mm/yyyy"
+                      value={dateInput}
+                      maxLength={10}
+                      onChange={(e) => {
+                        let val = e.target.value.replace(/[^\d/]/g, "");
+                        if (val.length === 2 && dateInput.length === 1)
+                          val += "/";
+                        else if (val.length === 5 && dateInput.length === 4)
+                          val += "/";
+                        setDateInput(val);
+                        if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
+                          const [dd, mm, yyyy] = val.split("/");
+                          setSelectedDate(`${yyyy}-${mm}-${dd}`);
+                        } else {
+                          setSelectedDate("");
+                        }
+                      }}
+                      style={{
+                        fontSize: "14px",
+                        border: "none",
+                        outline: "none",
+                        backgroundColor: "transparent",
+                        width: "100px",
+                      }}
+                    />
+                    {/* Calendar icon — opens hidden picker */}
+                    <button
+                      onClick={() => datePickerRef.current?.showPicker()}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "0",
+                        display: "flex",
+                        alignItems: "center",
+                        color: "#888",
+                      }}
+                      title="Open calendar"
+                    >
+                      📅
+                    </button>
+                    {/* Clear button */}
+                    {dateInput && (
+                      <button
+                        onClick={() => {
+                          setDateInput("");
+                          setSelectedDate("");
+                        }}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "14px",
+                          color: "#aaa",
+                          padding: "0",
+                          lineHeight: 1,
+                        }}
+                        title="Clear date"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                  <div>
+                    <FormControl size="small" style={{ minWidth: "80px" }}>
+                      <Select
+                        value={rowsPerPage}
+                        onChange={handleRowsPerPageChange}
+                        displayEmpty
+                        sx={{
+                          borderRadius: "16px",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderRadius: "16px",
+                          },
+                        }}
+                      >
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={25}>25</MenuItem>
+                        <MenuItem value={50}>50</MenuItem>
+                        <MenuItem value={100}>100</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -405,10 +559,15 @@ const ParentDashboard = () => {
           {!isLoading && !error && tableData && tableData.length > 0 && (
             <div className="row">
               <div className="col-12">
-                <TableContainer component={Paper}>
+                <TableContainer>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
+                      <TableRow
+                        sx={{
+                          height: "32px",
+                          bgcolor: "#FFFFFF",
+                        }}
+                      >
                         {/* <TableCell padding="checkbox" sx={{ py: 0, height: 32 }}>
                         <Checkbox
                           indeterminate={
@@ -435,13 +594,14 @@ const ParentDashboard = () => {
                           <TableCell
                             key={key}
                             sx={{
-                              fontSize: "16px",
-                              fontWeight: 600,
-                              color: "#FFFFFF",
-                              whiteSpace: 'nowrap'
-                              // cursor: "pointer",
-                              // py: 0,
-                              // height: 32,
+                              height: "32px",
+                              py: 0,
+                              px: 2,
+                              fontSize: "14px",
+                              fontWeight: 500,
+                              color: "#4D5874",
+                              whiteSpace: "nowrap",
+                              verticalAlign: "middle",
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -461,7 +621,7 @@ const ParentDashboard = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {tableData.map((row, index) => {
+                      {paginatedData.map((row, index) => {
                         const isItemSelected = isSelected(row.id);
                         return (
                           <TableRow
@@ -470,59 +630,71 @@ const ParentDashboard = () => {
                             onClick={() => handleSelectRow(row.id)}
                             selected={isItemSelected}
                             sx={{
-                              height: '30px',
-                              backgroundColor: 'transparent'
+                              height: "48px",
+                              backgroundColor:
+                                index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
+                              "&:hover": {
+                                backgroundColor: "#F1F3F7",
+                              },
                             }}
                           >
                             {/* <TableCell
                             padding="checkbox"
                             style={{
-                              border: "1px solid #e0e0e0",
+                              border: "1px solid #E0E3EB",
                               py: 0,
                               height: 48,
                             }}
                           >
                             <Checkbox checked={isItemSelected} size="small" />
                           </TableCell> */}
-                            <TableCell sx={{
-                              padding: '0 8px',
-                              height: '30px',
-                              lineHeight: '30px',
-                              border: "1px solid #e0e0e0",
-                            }}
+                            <TableCell
+                              sx={{
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
+                              }}
                             >
-                              <Tooltip title={row.clientId} arrow>
+                              <Tooltip title={row.userId} arrow>
                                 <div
                                   style={{
-                                    fontWeight: 600,
-                                    fontSize: "14px",
-                                    color: "#000",
+                                    fontWeight: 400,
+                                    fontSize: "16px",
+                                    color: "#4D5874",
                                     // height: 48,
                                     cursor: "pointer",
                                     maxWidth: "80px",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
+                                    textAlign: "center",
                                   }}
                                 >
-                                  PA-{row.clientId}
+                                  {row.userId}
                                 </div>
                               </Tooltip>
                             </TableCell>
 
                             <TableCell
                               style={{
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
-                                border: "1px solid #e0e0e0",
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                               onClick={() =>
                                 navigate(`/parent-profile/${row.id}`)
                               }
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center">
+                                <div
+                                  className="d-flex align-items-center"
+                                  style={{ marginLeft: "5px" }}
+                                  onClick={() =>
+                                    navigate(`/parent-profile/${row.id}`)
+                                  }
+                                >
                                   <Avatar
                                     src={row.image ? row.image : profileImg}
                                     style={{
@@ -535,8 +707,8 @@ const ParentDashboard = () => {
                                     <div
                                       style={{
                                         fontWeight: 400,
-                                        fontSize: "14px",
-                                        color: "#000",
+                                        fontSize: "16px",
+                                        color: "#101219",
                                         cursor: "pointer",
                                         maxWidth: "100px",
                                         overflow: "hidden",
@@ -553,13 +725,13 @@ const ParentDashboard = () => {
 
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
+                                fontSize: "16px",
+                                color: "#101219",
                                 fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                border: "1px solid #E0E3EB",
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
                                 // height: 48,
                               }}
                             >
@@ -568,13 +740,15 @@ const ParentDashboard = () => {
                                   <div
                                     style={{
                                       fontWeight: 400,
-                                      fontSize: "14px",
-                                      color: "#000",
+                                      fontSize: "16px",
+                                      color: "#101219",
                                       cursor: "pointer",
                                       maxWidth: "140px",
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
+                                      textAlign: "center",
+                                      marginLeft: "5px",
                                     }}
                                   >
                                     {row.email}
@@ -589,20 +763,24 @@ const ParentDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "16px", color: "#666" }}
+                                    style={{
+                                      fontSize: "16px",
+                                      color: "#666",
+                                      marginRight: "5px",
+                                    }}
                                   />
                                 </IconButton>
                               </div>
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
+                                fontSize: "16px",
+                                color: "#101219",
                                 fontWeight: 400,
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
-                                border: "1px solid #e0e0e0",
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
@@ -610,13 +788,14 @@ const ParentDashboard = () => {
                                   <div
                                     style={{
                                       fontWeight: 400,
-                                      fontSize: "14px",
-                                      color: "#000",
+                                      fontSize: "16px",
+                                      color: "#101219",
                                       cursor: "pointer",
                                       maxWidth: "120px",
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       whiteSpace: "nowrap",
+                                      marginLeft: "5px",
                                     }}
                                   >
                                     +{row.phone || "N/A"}
@@ -635,6 +814,7 @@ const ParentDashboard = () => {
                                       style={{
                                         fontSize: "16px",
                                         color: "#666",
+                                        marginRight: "5px",
                                       }}
                                     />
                                   </IconButton>
@@ -643,17 +823,20 @@ const ParentDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                fontSize: "14px",
-                                color: "#000",
+                                fontSize: "16px",
+                                color: "#4D5874",
                                 fontWeight: 400,
-                                border: "1px solid #e0e0e0",
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
+                                border: "1px solid #E0E3EB",
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
                                 // height: 48,
                               }}
                             >
-                              <div className="d-flex align-items-center justify-content-between">
+                              <div
+                                className="d-flex align-items-center justify-content-between"
+                                style={{ marginLeft: "10px" }}
+                              >
                                 {row.date}
                               </div>
                             </TableCell>
@@ -663,11 +846,81 @@ const ParentDashboard = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
+                {/* {pagination && (
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 20]}
+                    component="div"
+                    count={pagination.total || 0}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    sx={{
+                      width: "100%",
+                      "& .MuiTablePagination-toolbar": {
+                        display: "flex",
+                        alignItems: "center",
+                      },
+                      "& .MuiTablePagination-spacer": {
+                        flex: "0 0 auto",
+                      },
+                      "& .MuiTablePagination-selectLabel": {
+                        margin: 0,
+                      },
+                      "& .MuiTablePagination-displayedRows": {
+                        margin: "0 auto",
+                        whiteSpace: "nowrap",
+                      },
+                      "& .MuiTablePagination-actions": {
+                        marginLeft: "auto",
+                      },
+                    }}
+                  />
+                )} */}
+                <TablePagination
+                  component="div"
+                  count={pagination.total || 0}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  rowsPerPageOptions={[]}
+                  labelRowsPerPage=""
+                  onRowsPerPageChange={() => {}}
+                  sx={{
+                    width: "100%",
+
+                    "& .MuiTablePagination-selectLabel": {
+                      display: "none",
+                    },
+
+                    "& .MuiTablePagination-input": {
+                      display: "none",
+                    },
+
+                    "& .MuiTablePagination-toolbar": {
+                      position: "relative",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                    },
+
+                    "& .MuiTablePagination-displayedRows": {
+                      position: "absolute",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      margin: 0,
+                      whiteSpace: "nowrap",
+                    },
+
+                    "& .MuiTablePagination-actions": {
+                      marginLeft: "auto",
+                    },
+                  }}
+                />
               </div>
             </div>
           )}
         </div>
-      </div >
+      </div>
     </>
   );
 };

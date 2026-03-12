@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useTutorStore } from "../store/useTutorStore";
+import { formatDate } from "../utils/dateFormatter";
 import { CircularProgress, Alert, Tooltip } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import profileImg from '../assets/profile.PNG';
+import profileImg from "../assets/profile.PNG";
 import {
   Box,
   Table,
@@ -14,6 +15,9 @@ import {
   TableHead,
   TableRow,
   Paper,
+  FormControl,
+  Select,
+  MenuItem,
   Checkbox,
   Avatar,
   Button,
@@ -21,6 +25,7 @@ import {
   InputAdornment,
   IconButton,
   Chip,
+  TablePagination,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -41,17 +46,20 @@ const drawerWidth = 260;
 const TutorDashboard = () => {
   const navigate = useNavigate();
   const { tutors, fetchTutors, isLoading, error, pagination } = useTutorStore();
-
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(0); // 0-indexed for MUI
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [dateInput, setDateInput] = useState("");
+  const datePickerRef = useRef(null);
   const isFirstRender = useRef(true);
 
   // Fetch tutors on component mount and when page changes
   useEffect(() => {
-    fetchTutors(currentPage, 20, searchValue);
-  }, [fetchTutors, currentPage]);
+    fetchTutors(page + 1, rowsPerPage, searchValue, selectedDate);
+  }, [fetchTutors, page, rowsPerPage, selectedDate]);
 
   // Debounced search effect
   useEffect(() => {
@@ -60,19 +68,26 @@ const TutorDashboard = () => {
       return;
     }
     const timer = setTimeout(() => {
-      if (currentPage !== 1) {
-        setCurrentPage(1);
-      } else {
-        fetchTutors(1, 20, searchValue);
-      }
+      setPage(0);
+      fetchTutors(1, rowsPerPage, searchValue, selectedDate);
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchValue, fetchTutors]);
+  }, [searchValue, fetchTutors, rowsPerPage]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   // Transform API data to match table format
   const tableData = tutors.map((tutor) => ({
     id: tutor.id,
+    userId: tutor?.User?.userId,
     image: tutor.User?.image,
     clientId: tutor.userId.substring(0, 8).toUpperCase(),
     name:
@@ -81,7 +96,7 @@ const TutorDashboard = () => {
         : tutor.User?.firstName || tutor.User?.lastName || "N/A",
     email: tutor.User?.email || "N/A",
     phone: tutor.User?.phone || "N/A",
-    date: new Date(tutor.createdAt).toLocaleDateString() || "N/A",
+    date: formatDate(tutor.createdAt),
   }));
 
   const handleSelectAll = (event) => {
@@ -191,6 +206,31 @@ const TutorDashboard = () => {
     }
   };
 
+  const paginatedData = tableData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const convertMMDDYYYYtoISO = (dateStr) => {
+    if (!dateStr || typeof dateStr !== "string") return "";
+
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) return "";
+
+    const [month, day, year] = parts;
+
+    if (!month || !day || !year) return "";
+
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  };
+
+  const filteredTableData = tableData;
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <>
       <SideNav />
@@ -217,9 +257,9 @@ const TutorDashboard = () => {
             <div className="col-12">
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
-                  <IconButton size="small" style={{ marginRight: "10px" }}>
+                  {/* <IconButton size="small" style={{ marginRight: "10px" }}>
                     <ArrowBackIcon />
-                  </IconButton>
+                  </IconButton> */}
                   <h4
                     className="mb-0 me-3"
                     style={{
@@ -230,7 +270,7 @@ const TutorDashboard = () => {
                   >
                     Tutor
                   </h4>
-                  <div
+                  {/* <div
                     className="d-flex align-items-center text-muted"
                     style={{
                       fontSize: "14px",
@@ -244,7 +284,7 @@ const TutorDashboard = () => {
                       style={{ fontSize: "16px", marginRight: "5px" }}
                     />
                     Updated Now
-                  </div>
+                  </div> */}
                 </div>
                 <div style={{ width: "300px" }}>
                   <TextField
@@ -353,6 +393,121 @@ const TutorDashboard = () => {
                                 >
                                     Add New
                                 </Button> */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      border: "1px solid #ccc",
+                      borderRadius: "16px",
+                      padding: "4px 10px",
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    <input
+                      ref={datePickerRef}
+                      type="date"
+                      style={{
+                        position: "absolute",
+                        opacity: 0,
+                        pointerEvents: "none",
+                        width: 0,
+                        height: 0,
+                      }}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val) {
+                          const [yyyy, mm, dd] = val.split("-");
+                          setDateInput(`${dd}/${mm}/${yyyy}`);
+                          setSelectedDate(val);
+                        }
+                      }}
+                    />
+                    <input
+                      type="text"
+                      placeholder="dd/mm/yyyy"
+                      value={dateInput}
+                      maxLength={10}
+                      onChange={(e) => {
+                        let val = e.target.value.replace(/[^\d/]/g, "");
+                        if (val.length === 2 && dateInput.length === 1)
+                          val += "/";
+                        else if (val.length === 5 && dateInput.length === 4)
+                          val += "/";
+                        setDateInput(val);
+                        if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
+                          const [dd, mm, yyyy] = val.split("/");
+                          setSelectedDate(`${yyyy}-${mm}-${dd}`);
+                        } else {
+                          setSelectedDate("");
+                        }
+                      }}
+                      style={{
+                        fontSize: "14px",
+                        border: "none",
+                        outline: "none",
+                        backgroundColor: "transparent",
+                        width: "100px",
+                      }}
+                    />
+                    <button
+                      onClick={() => datePickerRef.current?.showPicker()}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "0",
+                        display: "flex",
+                        alignItems: "center",
+                        color: "#888",
+                      }}
+                      title="Open calendar"
+                    >
+                      📅
+                    </button>
+                    {dateInput && (
+                      <button
+                        onClick={() => {
+                          setDateInput("");
+                          setSelectedDate("");
+                        }}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "14px",
+                          color: "#aaa",
+                          padding: "0",
+                          lineHeight: 1,
+                        }}
+                        title="Clear date"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                  <div>
+                    <FormControl size="small" style={{ minWidth: "80px" }}>
+                      <Select
+                        value={rowsPerPage}
+                        onChange={handleRowsPerPageChange}
+                        displayEmpty
+                        sx={{
+                          borderRadius: "16px",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderRadius: "16px",
+                          },
+                        }}
+                      >
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={25}>25</MenuItem>
+                        <MenuItem value={50}>50</MenuItem>
+                        <MenuItem value={100}>100</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -404,10 +559,10 @@ const TutorDashboard = () => {
           {!isLoading && !error && tableData && tableData.length > 0 && (
             <div className="row">
               <div className="col-12">
-                <TableContainer component={Paper}>
+                <TableContainer>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
+                      <TableRow sx={{ height: 32, bgcolor: "#FFFFFF" }}>
                         {[
                           { label: "Tutor ID", key: "clientId" },
                           { label: "Tutor Name", key: "name" },
@@ -418,10 +573,14 @@ const TutorDashboard = () => {
                           <TableCell
                             key={key}
                             sx={{
-                              fontSize: "16px",
-                              fontWeight: 600,
-                              color: "#FFFFFF",
-                              whiteSpace: 'nowrap'
+                              height: "32px",
+                              py: 0,
+                              px: 2,
+                              fontSize: "14px",
+                              fontWeight: 500,
+                              color: "#4D5874",
+                              whiteSpace: "nowrap",
+                              verticalAlign: "middle",
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -441,7 +600,7 @@ const TutorDashboard = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {tableData.map((row, index) => {
+                      {filteredTableData.map((row, index) => {
                         const isItemSelected = isSelected(row.id);
                         return (
                           <TableRow
@@ -449,54 +608,64 @@ const TutorDashboard = () => {
                             hover
                             onClick={() => handleSelectRow(row.id)}
                             selected={isItemSelected}
-                            style={{
-                              height: '40px',
-                              backgroundColor: 'transparent'
+                            sx={{
+                              height: "48px",
+                              backgroundColor:
+                                index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
+                              "&:hover": {
+                                backgroundColor: "#F1F3F7",
+                              },
                             }}
                           >
-                            <TableCell sx={{
-                              padding: '0 8px',
-                              height: '30px',
-                              lineHeight: '30px',
-                              border: "1px solid #e0e0e0",
-                            }}
+                            <TableCell
+                              sx={{
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
+                              }}
                             >
-                              <Tooltip title={row.clientId} arrow>
+                              <Tooltip title={row.userId} arrow>
                                 <div
                                   style={{
-                                    fontWeight: 600,
-                                    fontSize: "14px",
-                                    color: "#000",
-                                    // border: "1px solid #e0e0e0",
+                                    fontWeight: 400,
+                                    fontSize: "16px",
+                                    color: "#4D5874",
+                                    // height: 48,
                                     cursor: "pointer",
                                     maxWidth: "80px",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
+                                    textAlign: "center",
                                   }}
                                 >
-                                  TU-{row.clientId}
+                                  {row.userId}
                                 </div>
                               </Tooltip>
                             </TableCell>
 
                             <TableCell
                               style={{
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
-                                border: "1px solid #e0e0e0",
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                               onClick={() =>
                                 navigate(`/tutor-profile/${row.id}`)
                               }
                             >
                               <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center">
+                                <div
+                                  className="d-flex align-items-center"
+                                  style={{ marginLeft: "5px" }}
+                                  onClick={() =>
+                                    navigate(`/tutor-profile/${row.id}`)
+                                  }
+                                >
                                   <Avatar
-                                    src={
-                                      row.image ? row.image : profileImg
-                                    }
+                                    src={row.image ? row.image : profileImg}
                                     style={{
                                       width: 25,
                                       height: 25,
@@ -507,14 +676,13 @@ const TutorDashboard = () => {
                                     <div
                                       style={{
                                         fontWeight: 400,
-                                        fontSize: "14px",
-                                        color: "#000",
+                                        fontSize: "16px",
+                                        color: "#101219",
                                         cursor: "pointer",
-                                        maxWidth: "160px",
+                                        maxWidth: "100px",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
-                                        marginLeft: '6px'
                                       }}
                                     >
                                       {row.name}
@@ -525,57 +693,32 @@ const TutorDashboard = () => {
                             </TableCell>
                             <TableCell
                               style={{
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
-                                border: "1px solid #e0e0e0",
+                                fontSize: "16px",
+                                color: "#101219",
+                                fontWeight: 400,
+                                border: "1px solid #E0E3EB",
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                // height: 48,
                               }}
                             >
                               <div className="d-flex align-items-center justify-content-between">
                                 <span
                                   style={{
-                                    fontSize: "14px",
-                                    color: "#000",
                                     fontWeight: 400,
-                                  }}
-                                >
-                                  {row.hourlyRate}
-                                </span>
-                                <IconButton
-                                  size="small"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleCopy(row.subjects);
-                                  }}
-                                  style={{ padding: "2px" }}
-                                >
-                                  <ContentCopyIcon
-                                    style={{ fontSize: "16px", color: "#666" }}
-                                  />
-                                </IconButton>
-                              </div>
-                            </TableCell>
-                            <TableCell
-                              style={{
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
-                                border: "1px solid #e0e0e0",
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between">
-                                <span
-                                  style={{
-                                    maxWidth: "200px",
+                                    fontSize: "16px",
+                                    color: "#101219",
+                                    cursor: "pointer",
+                                    maxWidth: "140px",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis",
                                     whiteSpace: "nowrap",
-                                    fontSize: "14px",
-                                    color: "#000",
-                                    fontWeight: 400,
+                                    textAlign: "center",
+                                    marginLeft: "5px",
                                   }}
                                 >
-                                  {row.subjects}
+                                  {row.email}
                                 </span>
                                 <IconButton
                                   size="small"
@@ -586,25 +729,76 @@ const TutorDashboard = () => {
                                   style={{ padding: "2px" }}
                                 >
                                   <ContentCopyIcon
-                                    style={{ fontSize: "16px", color: "#666" }}
+                                    style={{
+                                      fontSize: "16px",
+                                      color: "#666",
+                                      marginRight: "5px",
+                                    }}
                                   />
                                 </IconButton>
                               </div>
                             </TableCell>
                             <TableCell
                               style={{
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
-                                border: "1px solid #e0e0e0",
+                                fontSize: "16px",
+                                color: "#101219",
+                                fontWeight: 400,
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                border: "1px solid #E0E3EB",
                               }}
                             >
-                              <div className="d-flex align-items-center justify-content-between"
-                                style={{
-                                  fontSize: "14px",
-                                  color: "#000",
-                                  fontWeight: 400,
-                                }}>
+                              <div className="d-flex align-items-center justify-content-between">
+                                <span
+                                  style={{
+                                    fontWeight: 400,
+                                    fontSize: "16px",
+                                    color: "#101219",
+                                    cursor: "pointer",
+                                    maxWidth: "120px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                    marginLeft: "5px",
+                                  }}
+                                >
+                                  {"+" + row.phone}
+                                </span>
+                                <IconButton
+                                  size="small"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCopy(row.subjects);
+                                  }}
+                                  style={{ padding: "2px" }}
+                                >
+                                  <ContentCopyIcon
+                                    style={{
+                                      fontSize: "16px",
+                                      color: "#666",
+                                      marginRight: "5px",
+                                    }}
+                                  />
+                                </IconButton>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              style={{
+                                fontSize: "16px",
+                                color: "#4D5874",
+                                fontWeight: 400,
+                                border: "1px solid #E0E3EB",
+                                padding: "0 8px",
+                                height: "48px",
+                                lineHeight: "48px",
+                                // height: 48,
+                              }}
+                            >
+                              <div
+                                className="d-flex align-items-center justify-content-between"
+                                style={{ marginLeft: "10px" }}
+                              >
                                 {row.date}
                               </div>
                             </TableCell>
@@ -614,11 +808,52 @@ const TutorDashboard = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
+                {pagination && (
+                  <TablePagination
+                    component="div"
+                    count={pagination.total || 0}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPageOptions={[]}
+                    labelRowsPerPage=""
+                    onRowsPerPageChange={() => {}}
+                    sx={{
+                      width: "100%",
+
+                      "& .MuiTablePagination-selectLabel": {
+                        display: "none",
+                      },
+
+                      "& .MuiTablePagination-input": {
+                        display: "none",
+                      },
+
+                      "& .MuiTablePagination-toolbar": {
+                        position: "relative",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      },
+
+                      "& .MuiTablePagination-displayedRows": {
+                        position: "absolute",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        margin: 0,
+                        whiteSpace: "nowrap",
+                      },
+
+                      "& .MuiTablePagination-actions": {
+                        marginLeft: "auto",
+                      },
+                    }}
+                  />
+                )}
               </div>
             </div>
           )}
         </div>
-      </div >
+      </div>
     </>
   );
 };

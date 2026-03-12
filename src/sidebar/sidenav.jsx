@@ -233,7 +233,7 @@ export default function SideNav() {
                                     sx={{
                                         py: 1.5,
                                         px: 2,
-                                        borderBottom: '1px solid #e0e0e0',
+                                        borderBottom: '1px solid #E0E3EB',
                                         justifyContent: 'flex-start'
                                     }}
                                     disabled
@@ -380,7 +380,6 @@ export default function SideNav() {
                                     return (
                                         <ListItem key={item.text} disablePadding sx={{ px: 1.5, mb: 0.5 }}>
                                             <ListItemButton
-                                                // ✅ CHANGED: handleItemClick instead of navigate(path)
                                                 onClick={() => handleItemClick(item)}
                                                 selected={isSelected}
                                                 sx={{

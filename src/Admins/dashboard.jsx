@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useAdminStore } from "../store/useAdminStore";
 import AddAdminModal from "./AddAdminModal";
 import DeleteAdminDialog from "./DeleteAdminDialog";
-import profileImg from '../assets/profile.PNG';
+import profileImg from "../assets/profile.PNG";
 import {
   Button,
   Table,
@@ -16,6 +16,7 @@ import {
   Paper,
   TextField,
   InputAdornment,
+  TablePagination,
   Select,
   MenuItem,
   FormControl,
@@ -35,6 +36,7 @@ import {
   Delete as DeleteIcon,
 } from "@mui/icons-material";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { formatDate } from "../utils/dateFormatter";
 
 const drawerWidth = 260;
 
@@ -48,18 +50,32 @@ const AdminsDashboard = () => {
     isDeletingAdmin,
     adminsError,
     clearErrors,
+    pagination,
   } = useAdminStore();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [rowsPerPage, setRowsPerPage] = useState(50);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [adminToDelete, setAdminToDelete] = useState(null);
+  const [page, setPage] = useState(0); // 0-indexed for MUI
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [dateInput, setDateInput] = useState("");
+  const datePickerRef = useRef(null);
 
   // Fetch admins on component mount
   useEffect(() => {
-    fetchAdmins();
-  }, [fetchAdmins]);
+    fetchAdmins(selectedDate);
+  }, [fetchAdmins, selectedDate]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   // Loading state
   if (isLoadingAdmins && admins.length === 0) {
@@ -71,6 +87,7 @@ const AdminsDashboard = () => {
             marginLeft: `${drawerWidth}px`,
             marginTop: "4rem",
             padding: "20px",
+            backgroundColor: "#F9F9FB",
           }}
         >
           <Box
@@ -99,6 +116,7 @@ const AdminsDashboard = () => {
             marginLeft: `${drawerWidth}px`,
             marginTop: "4rem",
             padding: "20px",
+            backgroundColor: "#F9F9FB",
           }}
         >
           <Alert
@@ -126,8 +144,9 @@ const AdminsDashboard = () => {
   // Filter admins
   const filteredAdmins = admins.filter((admin) => {
     const searchLower = searchTerm.toLowerCase();
-    const fullName = `${admin.firstName || ""} ${admin.lastName || ""
-      }`.toLowerCase();
+    const fullName = `${admin.firstName || ""} ${
+      admin.lastName || ""
+    }`.toLowerCase();
     return (
       fullName.includes(searchLower) ||
       admin.email?.toLowerCase().includes(searchLower) ||
@@ -173,6 +192,7 @@ const AdminsDashboard = () => {
     setDeleteDialogOpen(false);
     setAdminToDelete(null);
   };
+  console.log("pagination++++++++", pagination);
 
   return (
     <>
@@ -186,48 +206,51 @@ const AdminsDashboard = () => {
       >
         <div
           className="container-fluid"
-          style={{ minHeight: "100vh", padding: "20px", backgroundColor:'#F9F9FB' }}
+          style={{
+            minHeight: "100vh",
+            padding: "20px",
+            backgroundColor: "#F9F9FB",
+          }}
         >
-          <div className="row" style={{ padding: "20px" }}>
-            <div className="col-12">
-              {/* Header */}
-              <div
+          <div>
+            {/* Header */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: "20px",
+              }}
+            >
+              <h4
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: "20px",
+                  margin: 0,
+                  fontWeight: 600,
+                  fontSize: "24px",
+                  color: "#101219",
                 }}
               >
-                <h4
-                  style={{
-                    margin: 0,
-                    fontWeight: 600,
-                    fontSize: "24px",
-                    color: "#101219",
-                  }}
-                >
-                  Admins Management
-                </h4>
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={handleAddAdmin}
-                  style={{
-                    backgroundColor: "#1E9CBC",
-                    borderRadius: "8px",
-                    color: "white",
-                    textTransform: "none",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                  }}
-                >
-                  Add Admin
-                </Button>
-              </div>
+                Admins Management
+              </h4>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={handleAddAdmin}
+                style={{
+                  backgroundColor: "#1E9CBC",
+                  borderRadius: "8px",
+                  color: "white",
+                  textTransform: "none",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                }}
+              >
+                Add Admin
+              </Button>
+            </div>
 
-              {/* Stats Card */}
-              <div
+            {/* Stats Card */}
+            {/* <div
                 style={{
                   backgroundColor: "#EEFBFD",
                   borderRadius: "8px",
@@ -276,28 +299,58 @@ const AdminsDashboard = () => {
                     </Typography>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
-              {/* Search and Filter Row */}
-              <div className="row align-items-center mb-3">
-                <div className="col-md-6">
-                  <TextField
-                    placeholder="Search by name, email, or phone"
-                    variant="outlined"
-                    size="small"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <SearchIcon style={{ color: "#8A8AA3" }} />
-                        </InputAdornment>
-                      ),
-                    }}
-                    style={{ width: "300px" }}
-                  />
-                </div>
-                <div className="col-md-6 text-end">
+            {/* Search and Filter Row */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
+            >
+              <div>
+                {/* <TextField
+                  placeholder="Search by name, email, or phone"
+                  variant="outlined"
+                  size="small"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon style={{ color: "#8A8AA3" }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  style={{ width: "300px" }}
+                /> */}
+                <TextField
+                  placeholder="Search by name, email, or phone"
+                  variant="outlined"
+                  size="small"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  sx={{
+                    width: "300px",
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "16px",
+                      "& fieldset": {
+                        borderRadius: "16px",
+                      },
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon sx={{ color: "#8A8AA3" }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </div>
+              {/* <div className="col-md-6 text-end">
                   <FormControl size="small" style={{ minWidth: "80px" }}>
                     <Select
                       value={rowsPerPage}
@@ -323,198 +376,321 @@ const AdminsDashboard = () => {
                       <MenuItem value={200}>200</MenuItem>
                     </Select>
                   </FormControl>
-                </div>
-              </div>
-
-              {/* Admins Table */}
-              <TableContainer
-                component={Paper}
+                </div> */}
+              <div
                 style={{
-                  boxShadow: "none",
-                  // border: "1px solid #E0E3EB",
-                  // borderRadius: "8px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  border: "1px solid #ccc",
+                  borderRadius: "16px",
+                  padding: "4px 10px",
+                  backgroundColor: "transparent",
+                  marginBottom: "12px",
                 }}
               >
-                <Table style={{ border: "1px solid #e0e0e0" }}>
-                  <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
-                    <TableRow
+                <input
+                  ref={datePickerRef}
+                  type="date"
+                  style={{
+                    position: "absolute",
+                    opacity: 0,
+                    pointerEvents: "none",
+                    width: 0,
+                    height: 0,
+                  }}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val) {
+                      const [yyyy, mm, dd] = val.split("-");
+                      setDateInput(`${dd}/${mm}/${yyyy}`);
+                      setSelectedDate(val);
+                    }
+                  }}
+                />
+                <input
+                  type="text"
+                  placeholder="dd/mm/yyyy"
+                  value={dateInput}
+                  maxLength={10}
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/[^\d/]/g, "");
+                    if (val.length === 2 && dateInput.length === 1) val += "/";
+                    else if (val.length === 5 && dateInput.length === 4)
+                      val += "/";
+                    setDateInput(val);
+                    if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
+                      const [dd, mm, yyyy] = val.split("/");
+                      setSelectedDate(`${yyyy}-${mm}-${dd}`);
+                    } else {
+                      setSelectedDate("");
+                    }
+                  }}
+                  style={{
+                    fontSize: "14px",
+                    border: "none",
+                    outline: "none",
+                    backgroundColor: "transparent",
+                    width: "100px",
+                  }}
+                />
+                <button
+                  onClick={() => datePickerRef.current?.showPicker()}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "0",
+                    display: "flex",
+                    alignItems: "center",
+                    color: "#888",
+                  }}
+                  title="Open calendar"
+                >
+                  📅
+                </button>
+                {dateInput && (
+                  <button
+                    onClick={() => {
+                      setDateInput("");
+                      setSelectedDate("");
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                      color: "#aaa",
+                      padding: "0",
+                      lineHeight: 1,
+                    }}
+                    title="Clear date"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Admins Table */}
+            <TableContainer
+              component={Paper}
+              style={{
+                boxShadow: "none",
+                // border: "1px solid #E0E3EB",
+                // borderRadius: "8px",
+              }}
+            >
+              <Table>
+                <TableHead sx={{ backgroundColor: "#FFFFFF", height: 32 }}>
+                  <TableRow
+                    sx={{
+                      height: "32px",
+                      py: 0,
+                      px: 2,
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      color: "#4D5874",
+                      whiteSpace: "nowrap",
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    <TableCell
                       sx={{
-                        fontSize: "16px",
-                        fontWeight: 600,
-                        color: "#FFFFFF",
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
                       }}
                     >
-                      <TableCell>
-                        <Box
-                          sx={{
-                            fontWeight: 600,
-                            fontSize: "16px",
-                            color: "#FFFFFF",
-                            // alignItems: "center",
-                          }}
-                        >
-                          ID
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            fontWeight: 600,
-                            fontSize: "16px",
-                            color: "#FFFFFF",
-                          }}
-                        >
-                          Admin Details
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            fontWeight: 600,
-                            fontSize: "16px",
-                            color: "#FFFFFF",
-                          }}
-                        >
-                          Email
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            fontWeight: 600,
-                            fontSize: "16px",
-                            color: "#FFFFFF",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          Created Date
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            fontWeight: 600,
-                            fontSize: "16px",
-                            color: "#FFFFFF",
-                          }}
-                        >
-                          Status
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            fontWeight: 600,
-                            fontSize: "16px",
-                            color: "#FFFFFF",
-                          }}
-                        >
-                          Actions
-                        </Box>
+                      ID
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Admin Details
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Email
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Created Date
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Status
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        height: "32px",
+                        py: 0,
+                        px: 2,
+                        fontSize: "14px",
+                        fontWeight: 500,
+                        color: "#4D5874",
+                        whiteSpace: "nowrap",
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      Actions
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {displayedAdmins.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={6}
+                        style={{
+                          textAlign: "center",
+                          padding: "40px",
+                          color: "#666",
+                        }}
+                      >
+                        {searchTerm
+                          ? "No admins found matching your search"
+                          : "No admins found"}
                       </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {displayedAdmins.length === 0 ? (
-                      <TableRow>
+                  ) : (
+                    displayedAdmins.map((admin) => (
+                      <TableRow
+                        key={admin.id}
+                        style={{
+                          height: "48px",
+                          backgroundColor: "transparent",
+                        }}
+                      >
                         <TableCell
-                          colSpan={6}
                           style={{
-                            textAlign: "center",
-                            padding: "40px",
-                            color: "#666",
+                            fontSize: "16px",
+                            color: "#101219",
+                            fontWeight: 400,
+                            border: "1px solid #E0E3EB",
+                            padding: "0 8px",
+                            height: "48px",
+                            lineHeight: "48px",
                           }}
                         >
-                          {searchTerm
-                            ? "No admins found matching your search"
-                            : "No admins found"}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      displayedAdmins.map((admin) => (
-                        <TableRow
-                          key={admin.id}
-                          style={{
-                            height: '40px',
-                            backgroundColor: 'transparent'
-                          }}
-                        >
-                          <TableCell style={{
-                            padding: '0 8px',
-                            height: '30px',
-                            lineHeight: '30px',
-                            border: "1px solid #e0e0e0",
-                          }}>
-                            <Tooltip title={admin.id} arrow>
-                              <div
-                                style={{
-                                  fontWeight: 600,
-                                  fontSize: "14px",
-                                  color: "#000",
-                                  // border: "1px solid #e0e0e0",
-                                  py: 0,
-                                  // height: 48,
-                                  cursor: "pointer",
-                                  maxWidth: "60px",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {admin.id}
-                              </div>
-                            </Tooltip>
-                          </TableCell>
-                          <TableCell style={{
-                            padding: '0 8px',
-                            height: '30px',
-                            lineHeight: '30px',
-                            border: "1px solid #e0e0e0",
-                          }}>
+                          <Tooltip title={admin.id} arrow>
                             <div
                               style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "6px",
+                                fontWeight: 400,
+                                fontSize: "16px",
+                                color: "#000",
+                                // border: "1px solid #E0E3EB",
+                                py: 0,
+                                // height: 48,
+                                cursor: "pointer",
+                                maxWidth: "60px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
                               }}
                             >
-                              {/* <Avatar
+                              {admin.id}
+                            </div>
+                          </Tooltip>
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            fontSize: "16px",
+                            color: "#101219",
+                            fontWeight: 400,
+                            border: "1px solid #E0E3EB",
+                            padding: "0 8px",
+                            height: "48px",
+                            lineHeight: "48px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "6px",
+                            }}
+                          >
+                            {/* <Avatar
                                 src={
-                                  admin.image ||
-                                  "/placeholder.svg?height=40&width=40"
+                                  admin.image ? admin.image : profileImg
                                 }
                                 style={{ width: 25, height: 25 }}
                               >
                                 {admin.firstName?.charAt(0).toUpperCase()}
                               </Avatar> */}
-                              <div>
-                                <Tooltip
-                                  title={
-                                    admin.firstName + " " + admin.lastName ||
-                                    "N/A"
-                                  }
-                                  arrow
+                            <div>
+                              <Tooltip
+                                title={
+                                  admin.firstName + " " + admin.lastName ||
+                                  "N/A"
+                                }
+                                arrow
+                              >
+                                <div
+                                  // variant="body1"
+                                  style={{
+                                    fontSize: "16px",
+                                    fontWeight: 400,
+                                    color: "#000",
+                                    margin: 0,
+                                    cursor: "pointer",
+                                    maxWidth: "100px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                    textTransform: "capitalize",
+                                  }}
                                 >
-                                  <div
-                                    variant="body1"
-                                    style={{
-                                      fontSize: "14px",
-                                      fontWeight: 400,
-                                      color: "#000",
-                                      margin: 0,
-                                      cursor: "pointer",
-                                      maxWidth: "100px",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      whiteSpace: "nowrap",
-                                      textTransform:'capitalize'
-                                    }}
-                                  >
-                                    {admin.firstName + " " + admin.lastName ||
-                                      "N/A"}
-                                  </div>
-                                </Tooltip>
-                                {/* <Typography
+                                  {admin.firstName + " " + admin.lastName ||
+                                    "N/A"}
+                                </div>
+                              </Tooltip>
+                              {/* <Typography
                                   variant="body2"
                                   style={{
                                     fontSize: "14px",
@@ -524,99 +700,161 @@ const AdminsDashboard = () => {
                                 >
                                   Admin
                                 </Typography> */}
-                              </div>
                             </div>
-                          </TableCell>
-                          <TableCell style={{
-                            padding: '0 8px',
-                            height: '30px',
-                            lineHeight: '30px',
-                            border: "1px solid #e0e0e0",
-                          }}>
-                            <Tooltip title={admin.email || "N/A"} arrow>
-                              <div
-                                style={{
-                                  fontSize: "14px",
-                                  fontWeight: 400,
-                                  color: "#000",
-                                  // cursor: "pointer",
-                                  maxWidth: "150px",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {admin.email || "N/A"}
-                              </div>
-                            </Tooltip>
-                          </TableCell>
-                          <TableCell style={{
-                            padding: '0 8px',
-                            height: '30px',
-                            lineHeight: '30px',
-                            border: "1px solid #e0e0e0",
-                          }}>
-                            <span
+                          </div>
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            fontSize: "16px",
+                            color: "#101219",
+                            fontWeight: 400,
+                            border: "1px solid #E0E3EB",
+                            padding: "0 8px",
+                            height: "48px",
+                            lineHeight: "48px",
+                          }}
+                        >
+                          <Tooltip title={admin.email || "N/A"} arrow>
+                            <div
                               style={{
-                                fontSize: "14px",
+                                fontSize: "16px",
                                 fontWeight: 400,
                                 color: "#000",
+                                // cursor: "pointer",
+                                maxWidth: "150px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
                               }}
                             >
-                              {admin.createdAt
-                                ? new Date(admin.createdAt).toLocaleDateString()
-                                : "N/A"}
-                            </span>
-                          </TableCell>
-                          <TableCell style={{
-                            padding: '0 8px',
-                            height: '30px',
-                            lineHeight: '30px',
-                            border: "1px solid #e0e0e0",
-                          }}>
-                            <Chip
-                              label="Active"
+                              {admin.email || "N/A"}
+                            </div>
+                          </Tooltip>
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            fontSize: "16px",
+                            color: "#4D5874",
+                            fontWeight: 400,
+                            border: "1px solid #E0E3EB",
+                            padding: "0 8px",
+                            height: "48px",
+                            lineHeight: "48px",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: "16px",
+                              fontWeight: 400,
+                              color: "#4D5874",
+                            }}
+                          >
+                            {formatDate(admin.createdAt)}
+                          </span>
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            fontSize: "16px",
+                            color: "#101219",
+                            fontWeight: 400,
+                            border: "1px solid #E0E3EB",
+                            padding: "0 8px",
+                            height: "48px",
+                            lineHeight: "48px",
+                          }}
+                        >
+                          <Chip
+                            label="Active"
+                            size="small"
+                            style={{
+                              backgroundColor: "#EEFBF4",
+                              border: "1px solid #B2EECC",
+                              color: "#17663A",
+                              fontWeight: 400,
+                              fontSize: "14px",
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            fontSize: "16px",
+                            color: "#101219",
+                            fontWeight: 400,
+                            border: "1px solid #E0E3EB",
+                            padding: "0 8px",
+                            height: "48px",
+                            lineHeight: "48px",
+                          }}
+                        >
+                          <Tooltip title="Delete Admin">
+                            <IconButton
+                              onClick={() => handleDeleteClick(admin)}
+                              disabled={isDeletingAdmin}
                               size="small"
-                              style={{
-                                backgroundColor: "#EEFBF4",
-                                border: "1px solid #B2EECC",
-                                color: "#17663A",
-                                fontWeight: 400,
-                                fontSize: "14px",
+                              sx={{
+                                color: "#f44336",
+                                "&:hover": {
+                                  backgroundColor: "#ffebee",
+                                },
                               }}
-                            />
-                          </TableCell>
-                          <TableCell style={{
-                            padding: '0 8px',
-                            height: '30px',
-                            lineHeight: '30px',
-                            border: "1px solid #e0e0e0",
-                          }}>
-                            <Tooltip title="Delete Admin">
-                              <IconButton
-                                onClick={() => handleDeleteClick(admin)}
-                                disabled={isDeletingAdmin}
-                                size="small"
-                                sx={{
-                                  color: "#f44336",
-                                  "&:hover": {
-                                    backgroundColor: "#ffebee",
-                                  },
-                                }}
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {admins.length > 0 && (
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 20]}
+                component="div"
+                count={admins.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                sx={{
+                  width: "100%",
 
-              {/* Show total count */}
-              {admins.length > 0 && (
+                  "& .MuiTablePagination-toolbar": {
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    position: "relative",
+                  },
+
+                  /* LEFT: Rows per page (label + select) */
+                  "& .MuiTablePagination-selectLabel": {
+                    margin: 0,
+                  },
+
+                  /* CENTER: 1–2 of 2 */
+                  "& .MuiTablePagination-displayedRows": {
+                    position: "absolute",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    margin: 0,
+                    whiteSpace: "nowrap",
+                  },
+
+                  /* RIGHT: arrows */
+                  "& .MuiTablePagination-actions": {
+                    marginLeft: "auto",
+                  },
+
+                  "& .MuiTablePagination-spacer": {
+                    display: "none",
+                  },
+                }}
+              />
+            )}
+
+            {/* Show total count */}
+            {/* {admins.length > 0 && (
                 <div style={{ marginTop: "16px", textAlign: "center" }}>
                   <Typography variant="body2" style={{ color: "#666" }}>
                     Showing {Math.min(displayedAdmins.length, rowsPerPage)} of{" "}
@@ -624,8 +862,7 @@ const AdminsDashboard = () => {
                     {searchTerm && ` (filtered from ${admins.length} total)`}
                   </Typography>
                 </div>
-              )}
-            </div>
+              )} */}
           </div>
         </div>
       </div>

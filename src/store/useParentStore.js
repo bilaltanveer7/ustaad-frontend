@@ -15,11 +15,11 @@ export const useParentStore = create((set, get) => ({
   error: null,
 
   // Fetch all parents with API
-  fetchParents: async (page = 1, limit = 20, search = "") => {
+  fetchParents: async (page = 1, limit = 20, search = "", date = "") => {
     set({ isLoading: true, error: null });
 
     try {
-      const response = await getAllParents(page, limit, search);
+      const response = await getAllParents(page, limit, search, date);
 
       if (response.data && response.data.success) {
         set({

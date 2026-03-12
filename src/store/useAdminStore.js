@@ -11,6 +11,10 @@ import {
   getUserById,
   getUserDataById,
   approveUserOnboarding,
+  getDisputedContracts,
+  resolveDispute,
+  refundContract,
+  deleteUser,
 } from "../api/admin";
 
 export const useAdminStore = create((set, get) => ({
@@ -19,7 +23,9 @@ export const useAdminStore = create((set, get) => ({
 
   // Payment requests data
   paymentRequests: [],
+  paymentRequestsPagination: null,
   selectedPaymentRequest: null,
+  pagination: null,
 
   // Admins data
   admins: [],
@@ -43,6 +49,9 @@ export const useAdminStore = create((set, get) => ({
   isLoadingUserDetail: false,
   isLoadingUserData: false,
   isApprovingUser: false,
+  isLoadingDisputedContracts: false,
+  isDeletingUser: false,
+  deleteUserError: null,
 
   // Error states
   error: null,
@@ -53,6 +62,11 @@ export const useAdminStore = create((set, get) => ({
   userDetailError: null,
   userDataError: null,
   approveUserError: null,
+  disputedContractsError: null,
+  isRefundingContract: false,
+  refundContractError: null,
+  isRefundingContract: false,
+  refundContractError: null,
 
   // Fetch platform statistics
   fetchStats: async (days = null) => {
@@ -89,18 +103,34 @@ export const useAdminStore = create((set, get) => ({
   },
 
   // Fetch all payment requests
-  fetchPaymentRequests: async () => {
+  fetchPaymentRequests: async (
+    search = "",
+    status = "",
+    page = 1,
+    limit = 10,
+    date = ""
+  ) => {
     set({ isLoadingPaymentRequests: true, paymentRequestsError: null });
 
     try {
-      const response = await getAllPaymentRequests();
+      const response = await getAllPaymentRequests(
+        search,
+        status,
+        page,
+        limit,
+        date
+      );
 
       if (response.data && response.data.success) {
+        // Handle pagination structure (data.items) or direct array (data)
+        const requests = response.data.data?.items || response.data.data || [];
+
         set({
-          paymentRequests: response.data.data || [],
+          paymentRequests: Array.isArray(requests) ? requests : [],
+          paymentRequestsPagination: response.data.data?.pagination || null,
           isLoadingPaymentRequests: false,
         });
-        return { success: true, data: response.data.data };
+        return { success: true, data: requests };
       } else {
         const errorMessage =
           response.data?.message || "Failed to fetch payment requests";
@@ -469,6 +499,115 @@ export const useAdminStore = create((set, get) => ({
     }
   },
 
+  // Fetch disputed contracts
+  fetchDisputedContracts: async (query = "") => {
+    set({ isLoadingDisputedContracts: true, disputedContractsError: null });
+    try {
+      const response = await getDisputedContracts(query);
+
+      // Ensure we're setting an array, or items from response
+      const contracts = response?.data?.data?.items;
+
+      set({
+        disputedContracts: Array.isArray(contracts) ? contracts : [],
+        disputedContractsPagination: response?.data?.data?.pagination,
+        isLoadingDisputedContracts: false,
+      });
+    } catch (error) {
+      console.error("Fetch disputed contracts error:", error);
+      let errorMessage = "Failed to fetch disputed contracts";
+
+      if (error.response?.data?.errors) {
+        errorMessage = error.response.data.errors[0]?.message || errorMessage;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      set({
+        disputedContractsError: errorMessage,
+        isLoadingDisputedContracts: false,
+      });
+    }
+  },
+
+  isResolvingDispute: false,
+  resolveDisputeError: null,
+  resolveDisputeContract: async (contractId, finalStatus, adminNotes) => {
+    set({ isResolvingDispute: true, resolveDisputeError: null });
+    try {
+      await resolveDispute(contractId, { finalStatus, adminNotes });
+      set((state) => ({
+        isResolvingDispute: false,
+        // Optimistically update: remove the resolved contract from the list
+        disputedContracts: state.disputedContracts.filter(
+          (c) => c.id !== contractId
+        ),
+      }));
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      let errorMessage = "Failed to resolve dispute";
+      if (error.response?.data?.errors[0].message) {
+        errorMessage = error.response.data.errors[0].message;
+      }
+      set({
+        resolveDisputeError: errorMessage,
+        isResolvingDispute: false,
+      });
+      throw error;
+    }
+  },
+
+  isRefundingContract: false,
+  refundContractError: null,
+  refundContract: async (contractId) => {
+    set({ isRefundingContract: true, refundContractError: null });
+    try {
+      const response = await refundContract(contractId);
+      set({ isRefundingContract: false });
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error("Refund contract error:", error);
+      let errorMessage = "Failed to refund contract";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      set({
+        refundContractError: errorMessage,
+        isRefundingContract: false,
+      });
+      return { success: false, error: errorMessage };
+    }
+  },
+
+  // Delete user
+  deleteUserById: async (id) => {
+    set({ isDeletingUser: true, deleteUserError: null });
+    try {
+      const response = await deleteUser(id);
+      if (response.data && response.data.success) {
+        set({ isDeletingUser: false });
+        return { success: true, data: response.data.data };
+      } else {
+        const errorMessage = response.data?.message || "Failed to delete user";
+        set({ deleteUserError: errorMessage, isDeletingUser: false });
+        return { success: false, error: errorMessage };
+      }
+    } catch (error) {
+      console.error("Delete user error:", error);
+      let errorMessage = "Failed to delete user";
+
+      if (error.response?.data?.errors) {
+        errorMessage = error.response.data.errors[0]?.message || errorMessage;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      set({ deleteUserError: errorMessage, isDeletingUser: false });
+      return { success: false, error: errorMessage };
+    }
+  },
+
   // Manual setters
   setStats: (stats) => set({ stats }),
   setPaymentRequests: (paymentRequests) => set({ paymentRequests }),
@@ -502,7 +641,10 @@ export const useAdminStore = create((set, get) => ({
       pendingUsersError: null,
       userDetailError: null,
       userDataError: null,
+      userDataError: null,
       approveUserError: null,
+      disputedContractsError: null,
+      resolveDisputeError: null,
     }),
 
   // Clear all data
@@ -523,7 +665,10 @@ export const useAdminStore = create((set, get) => ({
       pendingUsersError: null,
       userDetailError: null,
       userDataError: null,
+      userDataError: null,
       approveUserError: null,
+      disputedContractsError: null,
+      resolveDisputeError: null,
     }),
 
   // Get payment request status options

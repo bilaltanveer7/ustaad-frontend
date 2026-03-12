@@ -71,26 +71,11 @@ import {
 } from "recharts";
 
 const drawerWidth = 260;
-const performanceData = [
-  { name: "Jan", value: 65 },
-  { name: "Feb", value: 75 },
-  { name: "Mar", value: 85 },
-  { name: "Apr", value: 70 },
-  { name: "May", value: 90 },
-  { name: "Jun", value: 80 },
-  { name: "Jul", value: 85 },
-  { name: "Aug", value: 75 },
-  { name: "Sep", value: 70 },
-  { name: "Oct", value: 60 },
-  { name: "Nov", value: 55 },
-  { name: "Dec", value: 45 },
-];
-
 // Sample data for the pie chart
 const jobData = [
   { name: "Active", value: 15, color: "#00bcd4" },
   { name: "Completed", value: 20, color: "#4caf50" },
-  { name: "Remaining", value: 738, color: "#e0e0e0" },
+  { name: "Remaining", value: 738, color: "#E0E3EB" },
 ];
 
 const Dashboard = () => {
@@ -245,11 +230,22 @@ const Dashboard = () => {
       ? stats.cancelledSubscriptions
       : null;
 
+  const createdSubscriptionsValue =
+    typeof stats?.createdSubscriptions === "number"
+      ? stats.createdSubscriptions
+      : null;
+  const disputeSubscriptionsValue =
+    typeof stats?.disputeSubscriptions === "number"
+      ? stats.disputeSubscriptions
+      : null;
+
   const computedJobData =
     hasSubscriptionsData &&
     typeof activeSubscriptionsValue === "number" &&
     typeof completedSubscriptionsValue === "number" &&
-    typeof cancelledSubscriptionsValue === "number"
+    typeof cancelledSubscriptionsValue === "number" &&
+    typeof createdSubscriptionsValue === "number" &&
+    typeof disputeSubscriptionsValue === "number"
       ? [
           { name: "Active", value: activeSubscriptionsValue, color: "#00bcd4" },
           {
@@ -261,6 +257,16 @@ const Dashboard = () => {
             name: "Cancelled",
             value: cancelledSubscriptionsValue,
             color: "#ff0505ff",
+          },
+          {
+            name: "Disputed",
+            value: disputeSubscriptionsValue,
+            color: "#ff9800", // Orange for disputed
+          },
+          {
+            name: "Created",
+            value: createdSubscriptionsValue,
+            color: "#9c27b0", // Purple for created
           },
         ]
       : jobData;
@@ -775,9 +781,9 @@ const Dashboard = () => {
                           color: "#101219",
                         }}
                       >
-                        Performance Team
+                        User Growth
                       </Typography>
-                      <FormControl
+                      {/* <FormControl
                         size="small"
                         variant="outlined"
                         sx={{
@@ -803,29 +809,42 @@ const Dashboard = () => {
                           <MenuItem value="Month">Month</MenuItem>
                           <MenuItem value="Year">Year</MenuItem>
                         </Select>
-                      </FormControl>
+                      </FormControl> */}
                     </Box>
                     <ResponsiveContainer width="100%" height={300}>
-                      <LineChart data={performanceData}>
+                      <LineChart
+                        data={
+                          stats?.graphData?.map((item) => ({
+                            name: new Date(item.date).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                day: "numeric",
+                              }
+                            ),
+                            total: item.total,
+                          })) || []
+                        }
+                      >
                         <XAxis
                           dataKey="name"
                           axisLine={false}
                           tickLine={false}
+                          tick={{ fontSize: 12, fill: "#4D5874" }}
                         />
                         <YAxis
-                          domain={[0, 100]}
                           axisLine={false}
                           tickLine={false}
-                          tickFormatter={(value) => `${value}%`}
+                          tick={{ fontSize: 12, fill: "#4D5874" }}
                         />
                         <Line
                           type="monotone"
-                          dataKey="value"
-                          stroke="#4caf50"
+                          dataKey="total"
+                          stroke="#1E9CBC"
                           strokeWidth={2}
-                          fill="#4caf50"
-                          fillOpacity={0.1}
-                          dot={false}
+                          dot={{ r: 4 }}
+                          activeDot={{ r: 6 }}
+                          name="Total Users"
                         />
                       </LineChart>
                     </ResponsiveContainer>
@@ -1116,7 +1135,8 @@ const Dashboard = () => {
                             gap: 0.5,
                           }}
                         >
-                          {getChangeType("totalContracts", "up") === "up" ? (
+                          {getChangeType("totalSubscriptions", "up") ===
+                          "up" ? (
                             <TrendingUp
                               sx={{ fontSize: 16, color: "#4caf50", mr: 0.5 }}
                             />
@@ -1128,14 +1148,15 @@ const Dashboard = () => {
                           <Typography
                             sx={{
                               color:
-                                getChangeType("totalContracts", "up") === "up"
+                                getChangeType("totalSubscriptions", "up") ===
+                                "up"
                                   ? "#38BC5C"
                                   : "#F31616",
                               fontWeight: 400,
                               fontSize: "14px",
                             }}
                           >
-                            {getChangeText("totalContracts", "+5.5%")}
+                            {getChangeText("totalSubscriptions", "+5.5%")}
                           </Typography>
                           {/* <Typography
                             sx={{
@@ -1211,7 +1232,7 @@ const Dashboard = () => {
                             sx={{
                               display: "flex",
                               alignItems: "center",
-                              mb: 1,
+                              // mb: 1,
                             }}
                           >
                             <Box
@@ -1307,6 +1328,70 @@ const Dashboard = () => {
                               {cancelledSubscriptionsValue != null
                                 ? cancelledSubscriptionsValue.toLocaleString()
                                 : "20"}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Box
+                              sx={{
+                                width: 8,
+                                height: 8,
+                                bgcolor: "#ff9800",
+                                borderRadius: "50%",
+                                mr: 1,
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontWeight: 400,
+                                fontSize: 12,
+                                color: "#4D5874",
+                              }}
+                            >
+                              Disputed
+                            </Typography>
+                            <Typography
+                              sx={{
+                                ml: 2,
+                                fontWeight: 500,
+                                fontSize: 12,
+                                color: "#101219",
+                              }}
+                            >
+                              {disputeSubscriptionsValue != null
+                                ? disputeSubscriptionsValue.toLocaleString()
+                                : "0"}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Box
+                              sx={{
+                                width: 8,
+                                height: 8,
+                                bgcolor: "#9c27b0",
+                                borderRadius: "50%",
+                                mr: 1,
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontWeight: 400,
+                                fontSize: 12,
+                                color: "#4D5874",
+                              }}
+                            >
+                              Created
+                            </Typography>
+                            <Typography
+                              sx={{
+                                ml: 2,
+                                fontWeight: 500,
+                                fontSize: 12,
+                                color: "#101219",
+                              }}
+                            >
+                              {createdSubscriptionsValue != null
+                                ? createdSubscriptionsValue.toLocaleString()
+                                : "0"}
                             </Typography>
                           </Box>
                         </Box>
@@ -1543,7 +1628,7 @@ const Dashboard = () => {
                           height: 48,
                           backgroundColor:
                             index % 2 === 0 ? "white" : "#fafafa",
-                          borderBottom: "1px solid #e0e0e0",
+                          borderBottom: "1px solid #E0E3EB",
                         }}
                       >
                         <TableCell
@@ -1552,7 +1637,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             py: 0,
                             height: 48,
                           }}
@@ -1564,7 +1649,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             py: 0,
                             height: 48,
                           }}
@@ -1602,7 +1687,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             py: 0,
                             height: 48,
                           }}
@@ -1619,7 +1704,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             py: 0,
                             height: 48,
                           }}
@@ -1636,7 +1721,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             height: 48,
                             paddingTop: 0,
                             paddingBottom: 0,
@@ -1706,7 +1791,7 @@ const Dashboard = () => {
                             borderTop: "none",
                             borderLeft: "none",
                             borderRight: "none",
-                            borderBottom: "1px solid #e0e0e0",
+                            borderBottom: "1px solid #E0E3EB",
                             height: 48,
                             paddingTop: 0,
                             paddingBottom: 0,

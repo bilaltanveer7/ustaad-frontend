@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
-import profileImg from '../assets/profile.PNG';
+import parentprofileImg from "../assets/parent_profile.PNG";
+import profileImg from "../assets/profile.PNG";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
   Avatar,
   Button,
@@ -35,9 +37,14 @@ import {
   CalendarToday as CalendarTodayIcon,
   ArrowUpward as ArrowUpwardIcon,
   ArrowDownward as ArrowDownwardIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 import { useParentStore } from "../store/useParentStore";
+import { useAdminStore } from "../store/useAdminStore";
+import { formatDate } from "../utils/dateFormatter";
 import DocumentModal from "../components/DocumentModal";
+import DeleteUserDialog from "../components/DeleteUserDialog";
+import config from "../utils/config";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const drawerWidth = 260;
@@ -54,6 +61,10 @@ const ParentsProfile = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const { deleteUserById, isDeletingUser, deleteUserError } = useAdminStore();
 
   // Form state for editable fields - will be populated from API
   const [profileData, setProfileData] = useState({
@@ -80,9 +91,7 @@ const ParentsProfile = () => {
 
       setProfileData({
         noOfHires: subscriptions?.length?.toString() || "0",
-        joiningDate: parent?.createdAt
-          ? new Date(parent.createdAt).toLocaleDateString()
-          : "",
+        joiningDate: parent?.createdAt ? formatDate(parent.createdAt) : "",
         children: children?.length?.toString() || "0",
         amountSpent: `${totalAmount.toFixed(2)}`,
         description: parent?.description || "No description available",
@@ -177,6 +186,7 @@ const ParentsProfile = () => {
     children = [],
     subscriptions = [],
     transactions = [],
+    childNotes = [],
   } = parentDetails || {};
 
   const handleSort = (key) => {
@@ -235,6 +245,18 @@ const ParentsProfile = () => {
     setSelectedDocument(null);
   };
 
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    const result = await deleteUserById(parentId);
+    if (result.success) {
+      setIsDeleteDialogOpen(false);
+      navigate("/admin/parents"); // Redirect to parents list after deletion
+    }
+  };
+
   const getSortIcon = (columnKey) => {
     if (sortConfig.key !== columnKey) {
       return (
@@ -287,48 +309,113 @@ const ParentsProfile = () => {
   };
 
   // Transform API data for display
-  const transactionsData = transactions.map((tx) => ({
-    id: tx.id,
-    payment: {
-      recipient:
-        tx.childName ||
-        (parent?.User?.firstName && parent?.User?.lastName
-          ? `${parent.User.firstName} ${parent.User.lastName}`
-          : parent?.User?.firstName || parent?.User?.lastName || "N/A"),
-      cost: `$${tx.amount?.toFixed(2) || "0.00"}`,
-    },
-    child: {
-      name: tx.childName || "N/A",
-      avatar: "/placeholder.svg?height=32&width=32",
-    },
-    paymentMethod: {
-      type: "stripe",
-      accountNumber: tx.invoiceId || "N/A",
-    },
-    transactionDate: tx.createdAt
-      ? new Date(tx.createdAt).toLocaleDateString()
-      : "N/A",
-    status: tx.status || "unknown",
-  }));
+  const transactionsData = transactions
+    .filter((tx) => {
+      if (activeTab !== 0 || !searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      return (
+        (tx.tutor?.name && tx.tutor.name.toLowerCase().includes(term)) ||
+        (tx.invoiceId && tx.invoiceId.toLowerCase().includes(term)) ||
+        (tx.amount && tx.amount.toString().includes(term))
+      );
+    })
+    .map((tx) => ({
+      id: tx.id,
+      payment: {
+        recipient:
+          tx.childName ||
+          (parent?.User?.firstName && parent?.User?.lastName
+            ? `${parent.User.firstName} ${parent.User.lastName}`
+            : parent?.User?.firstName || parent?.User?.lastName || "N/A"),
+        cost: `${tx.amount?.toFixed(2) || "0.00"}`,
+      },
+      tutorName: tx.tutor.name || "N/A",
+      child: {
+        name: tx.childName || "N/A",
+        avatar: "/placeholder.svg?height=32&width=32",
+      },
+      invoiceId: tx.invoiceId || "N/A",
+      paymentMethod: {
+        type: "stripe",
+        accountNumber: tx.invoiceId || "N/A",
+      },
+      transactionDate: tx.createdAt ? formatDate(tx.createdAt) : "N/A",
+      status: tx.status || "unknown",
+    }));
 
-  const childrenData = children.map((child) => ({
-    id: child.id,
-    childName: child.fullName || "N/A",
-    grade: child.grade || "N/A",
-    age: child.age || "N/A",
-    subjects: child.subjects?.join(", ") || "N/A",
-    tutorHired: subscriptions.some((sub) => sub.status === "active")
-      ? "Yes"
-      : "No",
-    currentTutors:
-      subscriptions
-        .filter((sub) => sub.status === "active")
-        .map((sub) => sub.tutor?.name || "Unknown")
-        .join(", ") || "-",
-  }));
+  // console.log("transactionsData", children);
 
-  // For now, we don't have notes data from the API, so we'll show a placeholder
-  const notesByTutorsData = [];
+  const childrenData = children
+    .filter((child) => {
+      if (activeTab !== 1 || !searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      const childName = (child.firstName + " " + child.lastName).toLowerCase();
+      return (
+        childName.includes(term) ||
+        (child.grade && child.grade.toLowerCase().includes(term)) ||
+        (child.curriculum && child.curriculum.toLowerCase().includes(term)) ||
+        (child.gender && child.gender.toLowerCase().includes(term))
+      );
+    })
+    .map((child) => {
+      const subscriptionSessionInfo = child.subscriptions?.length
+        ? child.subscriptions
+            .map(
+              (sub) =>
+                `${sub.Offer?.sessions || 0} / ${
+                  sub.tutorSessionsDetailCount || 0
+                }`
+            )
+            .join(", ")
+        : null;
+
+      return {
+        id: child.id,
+        childName: child.firstName + " " + child.lastName || "N/A",
+        grade: child.grade || "N/A",
+        age: child.age || "N/A",
+        gender: child.gender || "N/A",
+        curriculum: child.curriculum || "N/A",
+        subjects: child.subscriptions?.length
+          ? [
+              ...new Set(
+                child.subscriptions.flatMap((sub) => sub.Offer?.subject || [])
+              ),
+            ].join(", ") || "N/A"
+          : child.subjects?.join(", ") || "N/A",
+        tutorHired:
+          subscriptionSessionInfo ||
+          (subscriptions.some((sub) => sub.status === "active") ? "Yes" : "No"),
+        currentTutors:
+          subscriptions
+            .filter((sub) => sub.status === "active")
+            .map((sub) => sub.tutor?.name || "Unknown")
+            .join(", ") || "-",
+      };
+    });
+
+  // Map childNotes to the structure expected by the table
+  const notesByTutorsData =
+    childNotes?.map((note) => ({
+      id: note.id,
+      note: (
+        <>
+          <strong>{note.headline}</strong>
+          {note.description ? `: ${note.description}` : ""}
+        </>
+      ),
+      fromTutor: {
+        name: note.User
+          ? `${note.User.firstName} ${note.User.lastName}`
+          : "Unknown",
+        avatar: note.User?.image || "/placeholder.svg?height=32&width=32",
+      },
+      toChild: {
+        name: note.childName || "Unknown",
+        avatar: "/placeholder.svg?height=32&width=32", // Child avatar not in provided data
+      },
+      date: note.createdAt ? formatDate(note.createdAt) : "N/A",
+    })) || [];
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -339,76 +426,77 @@ const ParentsProfile = () => {
       case 0:
         return (
           <TableContainer
-            component={Paper}
             style={{
               boxShadow: "none",
               border: "1px solid #E0E3EB",
               borderRadius: "8px",
             }}
           >
-            <Table style={{ border: "1px solid #e0e0e0" }}>
-              <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
-                <TableRow
-                  sx={{
-                    fontSize: "16px",
-                    fontWeight: 600,
+            <Table style={{ border: "1px solid #E0E3EB" }}>
+              <TableHead
+                sx={{
+                  backgroundColor: "#1E9CBC",
+                  "& .MuiTableCell-root": {
+                    height: 32,
+                    py: 0,
+                    px: 2,
                     color: "#FFFFFF",
-                  }}
-                >
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    borderBottom: "none",
+                  },
+                }}
+              >
+                <TableRow sx={{ height: 32 }}>
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
-                        color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
+                        height: "100%",
                       }}
                     >
                       Payment To
                       {getSortIcon("name")}
                     </Box>
                   </TableCell>
-                  <TableCell onClick={() => handleSort("name")}>
+
+                  <TableCell onClick={() => handleSort("cost")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
-                        color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
+                        height: "100%",
                       }}
                     >
                       Budget
                       {getSortIcon("cost")}
                     </Box>
                   </TableCell>
-                  <TableCell onClick={() => handleSort("name")}>
+
+                  <TableCell onClick={() => handleSort("invoiceId")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
-                        color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
+                        height: "100%",
                       }}
                     >
-                      Bank IBAN
-                      {getSortIcon("paymentMethod")}
+                      Invoice ID
+                      {getSortIcon("invoiceId")}
                     </Box>
                   </TableCell>
-                  <TableCell onClick={() => handleSort("name")}>
+
+                  <TableCell onClick={() => handleSort("transactionDate")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
-                        color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
+                        height: "100%",
                       }}
                     >
                       Transaction Date
@@ -417,6 +505,7 @@ const ParentsProfile = () => {
                   </TableCell>
                 </TableRow>
               </TableHead>
+
               <TableBody>
                 {transactionsData.length === 0 ? (
                   <TableRow>
@@ -435,14 +524,20 @@ const ParentsProfile = () => {
                   transactionsData.map((row) => (
                     <TableRow
                       key={row.id}
-                      style={{ borderBottom: "1px solid #e0e0e0" }}
+                      style={{ borderBottom: "1px solid #E0E3EB" }}
                     >
-                      <TableCell style={{
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                        border: "1px solid #e0e0e0",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          paddingLeft: "15px",
+                        }}
+                      >
                         <img
                           src={profileImg}
                           alt="Teacher"
@@ -451,20 +546,26 @@ const ParentsProfile = () => {
                         <span
                           style={{
                             fontWeight: 400,
-                            fontSize: "14px",
-                            color: "#000",
-                            marginLeft: "5px",
+                            fontSize: "16px",
+                            color: "#101219",
+                            marginLeft: "10px",
                           }}
                         >
-                          {row.payment.name}
+                          {row.tutorName}
                         </span>
                       </TableCell>
-                      <TableCell style={{
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                        border: "1px solid #e0e0e0",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "14px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          paddingLeft: "15px",
+                        }}
+                      >
                         <span
                           style={{
                             fontWeight: 400,
@@ -475,12 +576,18 @@ const ParentsProfile = () => {
                           {row.payment.cost}
                         </span>
                       </TableCell>
-                      <TableCell style={{
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                        border: "1px solid #e0e0e0",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          paddingLeft: "15px",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -488,41 +595,16 @@ const ParentsProfile = () => {
                             justifyContent: "space-between",
                           }}
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "5px",
-                            }}
-                          >
-                            <img
-                              src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e2/75/5f/e2755f3b-22fc-2929-4619-2fe03c47e635/AppIcon-1x_U007emarketing-0-6-0-sRGB-85-220-0.png/256x256bb.jpg"
-                              alt="Meezan Bank"
-                              style={{
-                                width: 25,
-                                height: 25,
-                                borderRadius: "50%",
-                              }}
-                            />
-                            <span
-                              style={{
-                                fontWeight: 400,
-                                fontSize: "14px",
-                                color: "#000",
-                              }}
-                            >
-                              ****{row.paymentMethod.accountNumber.slice(-4)}
-                            </span>
-                          </div>
+                          {row.invoiceId}
                           <Tooltip title="Copy Account Number">
                             <IconButton
                               size="small"
-                              onClick={() =>
-                                handleCopy(row.paymentMethod.accountNumber)
-                              }
+                              onClick={() => handleCopy(row.invoiceId)}
                               style={{ padding: "1px", width: 20, height: 20 }}
                             >
-                              <ContentCopyIcon style={{ color: "#A6ADBF", fontSize: '16px' }} />
+                              <ContentCopyIcon
+                                style={{ color: "#A6ADBF", fontSize: "16px" }}
+                              />
                             </IconButton>
                           </Tooltip>
                         </div>
@@ -530,12 +612,16 @@ const ParentsProfile = () => {
                       <TableCell
                         style={{
                           fontWeight: 400,
-                          fontSize: "14px",
-                          color: "#000",
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          fontSize: "16px",
+                          color: "#4D5874",
+                          padding: "0 8px",
+                          height: "30px",
+                          lineHeight: "30px",
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.transactionDate}
@@ -551,19 +637,31 @@ const ParentsProfile = () => {
       case 1: // Children
         return (
           <TableContainer
-            component={Paper}
             style={{
               boxShadow: "none",
               border: "1px solid #E0E3EB",
               borderRadius: "8px",
             }}
           >
-            <Table style={{ border: "1px solid #e0e0e0" }}>
-              <TableHead sx={{ backgroundColor: "#1E9CBC", height: 32 }}>
+            <Table style={{ border: "1px solid #E0E3EB" }}>
+              <TableHead
+                sx={{
+                  backgroundColor: "#1E9CBC",
+                  "& .MuiTableCell-root": {
+                    height: 32,
+                    py: 0,
+                    px: 2,
+                    color: "#FFFFFF",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    borderBottom: "none",
+                  },
+                }}
+              >
                 <TableRow
                   sx={{
                     fontSize: "16px",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     color: "#FFFFFF",
                   }}
                 >
@@ -571,8 +669,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
+                        fontWeight: 500,
+                        fontSize: "14px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -586,8 +684,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
+                        fontWeight: 500,
+                        fontSize: "14px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -601,8 +699,8 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
+                        fontWeight: 500,
+                        fontSize: "14px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -616,30 +714,30 @@ const ParentsProfile = () => {
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
+                        fontWeight: 500,
+                        fontSize: "14px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
                       }}
                     >
-                      Subjects
-                      {getSortIcon("subjects")}
+                      Curriculum
+                      {getSortIcon("curriculum")}
                     </Box>
                   </TableCell>
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
+                        fontWeight: 500,
+                        fontSize: "14px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
                       }}
                     >
-                      Tutor Hired?
-                      {getSortIcon("tutorHired")}
+                      Gender
+                      {getSortIcon("gender")}
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -662,18 +760,22 @@ const ParentsProfile = () => {
                   childrenData.map((row) => (
                     <TableRow
                       key={row.id}
-                      style={{ borderBottom: "1px solid #e0e0e0" }}
+                      style={{ borderBottom: "1px solid #E0E3EB" }}
                     >
                       <TableCell
                         style={{
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
-                          textTransform: 'capitalize'
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "30px",
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          textTransform: "capitalize",
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.childName}
@@ -683,10 +785,14 @@ const ParentsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "30px",
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.age}
@@ -696,10 +802,14 @@ const ParentsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "30px",
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          paddingLeft: "15px",
                         }}
                       >
                         {row.grade}
@@ -709,41 +819,35 @@ const ParentsProfile = () => {
                           fontSize: "14px",
                           color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          // height: "30px",
+                          lineHeight: "30px",
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          paddingLeft: "15px",
                         }}
                       >
-                        <Tooltip title={row.subjects}>
-                          <span
-                            style={{
-                              display: "block",
-                              maxWidth: "150px",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {row.subjects}
-                          </span>
-                        </Tooltip>
+                        {row.curriculum}
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
-                          // color: "#000",
+                          fontSize: "16px",
+                          color: "#000",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
-                          color:
-                            row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
-                          // fontWeight: "400",
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          // color:
+                          // row.tutorHired === "Yes" ? "#4caf50" : "#f44336",
+                          // fontWeight: "500",
+                          textTransform: "capitalize",
+                          paddingLeft: "15px",
                         }}
                       >
-                        {row.tutorHired}
+                        {row.gender}
                       </TableCell>
                     </TableRow>
                   ))
@@ -763,16 +867,44 @@ const ParentsProfile = () => {
               borderRadius: "8px",
             }}
           >
-            <Table style={{ border: "1px solid #e0e0e0" }}>
-              <TableHead style={{ backgroundColor: "#1E9CBC" }}>
+            <Table style={{ border: "1px solid #E0E3EB" }}>
+              <TableHead
+                sx={{
+                  backgroundColor: "#1E9CBC",
+                  "& .MuiTableCell-root": {
+                    height: 32,
+                    py: 0,
+                    px: 2,
+                    color: "#FFFFFF",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    borderBottom: "none",
+                  },
+                }}
+              >
                 <TableRow
                   sx={{
-                    fontSize: "16px",
-                    fontWeight: 600,
+                    fontSize: "14px",
+                    fontWeight: 500,
                     color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("name")}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        fontWeight: 500,
+                        fontSize: "14px",
+                        color: "#FFFFFF",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Tutor Name
+                      {getSortIcon("note")}
+                    </Box>
+                  </TableCell>
+                  {/* <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
@@ -784,45 +916,61 @@ const ParentsProfile = () => {
                       }}
                     >
                       Tutor Name
-                      {getSortIcon("note")}
+                      {getSortIcon("fromTutor")}
                     </Box>
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
+                        fontWeight: 500,
+                        fontSize: "14px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
                       }}
                     >
                       Child Name
-                      {getSortIcon("fromTutor")}
+                      {getSortIcon("toChild")}
                     </Box>
                   </TableCell>
-                  <TableCell onClick={() => handleSort("name")}>
+
+                  {/* <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
+                        fontWeight: 500,
+                        fontSize: "14px",
+                        color: "#FFFFFF",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      Session Number
+                      {getSortIcon("session-number")}
+                    </Box>
+                  </TableCell> */}
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        fontWeight: 500,
+                        fontSize: "14px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
                       }}
                     >
                       Notes
-                      {getSortIcon("toChild")}
+                      {getSortIcon("notes")}
                     </Box>
                   </TableCell>
                   <TableCell onClick={() => handleSort("name")}>
                     <Box
                       sx={{
                         display: "flex",
-                        fontWeight: 600,
-                        fontSize: "16px",
+                        fontWeight: 500,
+                        fontSize: "14px",
                         color: "#FFFFFF",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -839,17 +987,20 @@ const ParentsProfile = () => {
                   notesByTutorsData.map((row) => (
                     <TableRow
                       key={row.id}
-                      style={{ borderBottom: "1px solid #e0e0e0" }}
+                      style={{ borderBottom: "1px solid #E0E3EB" }}
                     >
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                        border: "1px solid #e0e0e0",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          border: "1px solid #E0E3EB",
+                          paddingLeft: "15px",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -858,29 +1009,37 @@ const ParentsProfile = () => {
                           }}
                         >
                           <Avatar
-                            src={row.fromTutor.avatar || { profileImg }}
-                            style={{ width: 24, height: 24 }}
+                            src={row?.fromTutor?.avatar || profileImg}
+                            sx={{ width: 24, height: 24 }}
+                            imgProps={{
+                              onError: (e) => {
+                                e.target.src = parentprofileImg;
+                              },
+                            }}
                           />
                           <span
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               fontWeight: 400,
-                              color: "#000",
+                              color: "#101219",
                             }}
                           >
                             {row.fromTutor.name}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                        border: "1px solid #e0e0e0",
-                      }}>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          border: "1px solid #E0E3EB",
+                          paddingLeft: "15px",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -894,24 +1053,29 @@ const ParentsProfile = () => {
                           />
                           <span
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               fontWeight: 400,
-                              color: "#000",
+                              color: "#101219",
+                              textTransform: "capitalize",
                             }}
                           >
                             {row.toChild.name}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell style={{
-                        fontSize: "14px",
-                        color: "#000",
-                        fontWeight: 400,
-                        padding: '0 8px',
-                        height: '30px',
-                        lineHeight: '30px',
-                        border: "1px solid #e0e0e0",
-                      }}>
+
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          border: "1px solid #E0E3EB",
+                          paddingLeft: "15px",
+                        }}
+                      >
                         <div
                           style={{
                             display: "flex",
@@ -943,13 +1107,13 @@ const ParentsProfile = () => {
                           <Tooltip title={row.note} arrow>
                             <span
                               style={{
-                                fontSize: "14px",
+                                fontSize: "16px",
                                 fontWeight: 400,
-                                color: "#000",
-                                maxWidth: '200px',
-                                textOverflow: 'ellipsis',
-                                overflow: 'hidden',
-                                whiteSpace: 'nowrap',
+                                color: "#101219",
+                                maxWidth: "200px",
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
                               }}
                             >
                               {row.note}
@@ -959,13 +1123,13 @@ const ParentsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
-                          color: "#000",
+                          fontSize: "16px",
+                          color: "#4D5874",
                           fontWeight: 400,
-                          padding: '0 8px',
-                          height: '30px',
-                          lineHeight: '30px',
-                          border: "1px solid #e0e0e0",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          border: "1px solid #E0E3EB",
                         }}
                       >
                         {row.date}
@@ -994,6 +1158,30 @@ const ParentsProfile = () => {
         );
 
       case 3: // Documents
+        const docs = [];
+        if (parent) {
+          if (parent.idFrontUrl) {
+            const extension = parent.idFrontUrl.split(".").pop().toLowerCase();
+            docs.push({
+              id: "id-front",
+              name: "ID Front",
+              type: extension === "pdf" ? "PDF" : "Image",
+              url: `${config.parentDocumentUrl}${parent.idFrontUrl}`,
+              status: "Uploaded",
+            });
+          }
+          if (parent.idBackUrl) {
+            const extension = parent.idBackUrl.split(".").pop().toLowerCase();
+            docs.push({
+              id: "id-back",
+              name: "ID Back",
+              type: extension === "pdf" ? "PDF" : "Image",
+              url: `${config.parentDocumentUrl}${parent.idBackUrl}`,
+              status: "Uploaded",
+            });
+          }
+        }
+
         return (
           <TableContainer
             component={Paper}
@@ -1003,21 +1191,25 @@ const ParentsProfile = () => {
               borderRadius: "8px",
             }}
           >
-            <Table style={{ border: "1px solid #e0e0e0" }}>
-              <TableHead style={{ backgroundColor: "#1E9CBC" }}>
+            <Table style={{ border: "1px solid #E0E3EB" }}>
+              <TableHead
+                sx={{
+                  backgroundColor: "#1E9CBC",
+                  "& .MuiTableCell-root": {
+                    height: 32,
+                    py: 0,
+                    px: 2,
+                    color: "#FFFFFF",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    borderBottom: "none",
+                  },
+                }}>
                 <TableRow
                   sx={{
-                    "& th": {
-                      height: "32px",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      lineHeight: "32px",
-                      backgroundColor: "#1E9CBC",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      border: "1px solid #4db6ac",
-                    },
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "#FFFFFF",
                   }}
                 >
                   <TableCell onClick={() => handleSort("name")}>
@@ -1083,48 +1275,105 @@ const ParentsProfile = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell
-                    style={{
-                      fontSize: "16px",
-                      color: "#101219",
-                      fontWeight: 400,
-                      border: "1px solid #e0e0e0",
-                    }}
-                  >
-                    No documents available
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontSize: "16px",
-                      color: "#101219",
-                      fontWeight: 400,
-                      border: "1px solid #e0e0e0",
-                    }}
-                  >
-                    -
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontSize: "16px",
-                      color: "#101219",
-                      fontWeight: "400",
-                      border: "1px solid #e0e0e0",
-                    }}
-                  >
-                    -
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      fontSize: "16px",
-                      color: "#101219",
-                      fontWeight: 400,
-                      border: "1px solid #e0e0e0",
-                    }}
-                  >
-                    -
-                  </TableCell>
-                </TableRow>
+                {docs.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      style={{
+                        fontSize: "16px",
+                        color: "#101219",
+                        fontWeight: 400,
+                        border: "1px solid #E0E3EB",
+                        textAlign: "center",
+                        padding: "20px",
+                      }}
+                    >
+                      No documents available
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  docs.map((doc) => (
+                    <TableRow key={doc.id}
+                      style={{ borderBottom: "1px solid #E0E3EB" }}>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          border: "1px solid #E0E3EB",
+                        }}
+                      >
+                        {doc.name}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                        }}
+                      >
+                        {doc.type}
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                        }}
+                      >
+                        <Chip
+                          label={doc.status}
+                          size="small"
+                          style={{
+                            backgroundColor:
+                              doc.status === "Available" ? "#EEFBF4" : "#EEFBF4",
+                            border:
+                              doc.status === "Available"
+                                ? "1px solid #B2EECC"
+                                : "1px solid #B2EECC",
+                            color:
+                              doc.status === "Available"
+                                ? "#17663A"
+                                : "#17663A",
+                            fontWeight: 500,
+                            fontSize: "12px",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          fontSize: "16px",
+                          color: "#101219",
+                          fontWeight: 400,
+                          border: "1px solid #E0E3EB",
+                          padding: "0 8px",
+                          height: "42px",
+                          lineHeight: "42px",
+                        }}
+                      >
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDocumentView(doc)}
+                          sx={{ color: "#1E9CBC" }}
+                        >
+                          <VisibilityIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -1134,6 +1383,7 @@ const ParentsProfile = () => {
         return null;
     }
   };
+
   return (
     <>
       <SideNav />
@@ -1159,7 +1409,7 @@ const ParentsProfile = () => {
                 }}
               >
                 <IconButton
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate('/parent-dashboard')}
                   style={{
                     marginRight: "10px",
                     color: "#A6ADBF",
@@ -1176,7 +1426,7 @@ const ParentsProfile = () => {
                     color: "#101219",
                   }}
                 >
-                  {(parent?.id || parentId)?.slice(0, 4).toUpperCase()}
+                  {parent?.User?.userId}
                 </h4>
               </div>
 
@@ -1192,27 +1442,32 @@ const ParentsProfile = () => {
               >
                 <div className="row align-items-start">
                   {/* Left Column */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div className="col-md-8">
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <div>
                       {/* Profile Picture and Name */}
                       <div
                         style={{
                           display: "flex",
                           alignItems: "center",
                           gap: "15px",
-                          marginTop: '-15px'
+                          marginTop: "-15px",
                         }}
                       >
                         <div style={{ position: "relative" }}>
                           {/* <Avatar
                           src={
-                            parent?.User?.image ||
-                            "/placeholder.svg?height=60&width=60"
+                            parent?.User?.image || profileImg
                           }
                           style={{ width: 60, height: 60 }}
                         /> */}
                           <Avatar
-                            src={parent?.User?.image ? parent.User.image : profileImg}
+                            src={
+                              parent?.User?.image
+                                ? parent.User.image
+                                : parentprofileImg
+                            }
                             sx={{ width: 60, height: 60 }}
                           />
                           <div
@@ -1248,21 +1503,51 @@ const ParentsProfile = () => {
                               " " +
                               parent?.User?.lastName || "N/A"}
                           </h5>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: "#666" }}
-                          >
-                            Email:  {parent?.User?.email || "No email"}
+                          <Typography variant="body2" sx={{ color: "#666" }}>
+                            Email: {parent?.User?.email || "No email"}
                           </Typography>
                           {parent?.User?.phone && (
-
                             <Typography variant="body2" sx={{ color: "#666" }}>
-                              Contact:  {parent?.User?.phone}
+                              Contact: +{parent?.User?.phone}
                             </Typography>
                           )}
                         </div>
                       </div>
-
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                      }}
+                    >
+                      <Chip
+                        label="Verified"
+                        size="small"
+                        style={{
+                          backgroundColor: "#EEFBF4",
+                          border: "1px solid #17663A",
+                          color: "#17663A",
+                          fontWeight: 400,
+                          fontSize: "14px",
+                          padding: "4px 8px",
+                          borderRadius: "8px",
+                          height: 35,
+                        }}
+                      />
+                      <Button
+                        variant="contained"
+                        onClick={handleDeleteClick}
+                        style={{
+                          backgroundColor: "#f44336",
+                          borderRadius: "8px",
+                          color: "white",
+                          textTransform: "none",
+                          fontSize: "14px",
+                          height: 35,
+                        }}
+                      >
+                        Delete User
+                      </Button>
                     </div>
                     <Chip
                       label="Verified"
@@ -1328,7 +1613,7 @@ const ParentsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
-                            cursor: 'default',
+                            cursor: "default",
                           },
                         }}
                       />
@@ -1362,7 +1647,7 @@ const ParentsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
-                            cursor: 'default'
+                            cursor: "default",
                           },
                           endAdornment: (
                             <InputAdornment position="end">
@@ -1407,7 +1692,7 @@ const ParentsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
-                            cursor: 'default'
+                            cursor: "default",
                           },
                         }}
                       />
@@ -1441,7 +1726,7 @@ const ParentsProfile = () => {
                             fontSize: "14px",
                             color: "#80878A",
                             backgroundColor: "#F7FDFE",
-                            cursor: 'default'
+                            cursor: "default",
                           },
                         }}
                       />
@@ -1478,11 +1763,11 @@ const ParentsProfile = () => {
                         // width:'100%',
                         fontSize: "14px",
                         fontWeight: 400,
-                        color: "#30417D",
+                        color: "#80878A",
                         borderRadius: "8px",
                         backgroundColor: "#FFFFFF",
                         lineHeight: "1.5",
-                        cursor: 'default'
+                        cursor: "default",
                       },
                     }}
                   />
@@ -1508,7 +1793,8 @@ const ParentsProfile = () => {
                     border: "1px solid #D1D1DB",
                     borderRadius: "8px",
                     marginBottom: "20px",
-                    width: "40%",
+                    width: "100%",
+                    maxWidth: "545px",
                   }}
                 >
                   <Tabs
@@ -1539,15 +1825,19 @@ const ParentsProfile = () => {
                   >
                     <Tab label={`Transactions (${transactions.length})`} />
                     <Tab label={`Children (${children.length})`} />
-                    <Tab label={`Notes by Tutors (0)`} />
-                    <Tab label="Documents (0)" />
+                    <Tab label={`Notes by Tutors (${childNotes.length})`} />
+                    <Tab
+                      label={`Documents (${(parent?.idFrontUrl ? 1 : 0) +
+                        (parent?.idBackUrl ? 1 : 0)
+                        })`}
+                    />
                   </Tabs>
                 </Box>
 
                 {/* Search and Filter Row */}
                 <div className="row align-items-center mb-3">
                   <div className="col-md-6">
-                    <TextField
+                    {/* <TextField
                       placeholder="Search by Name"
                       variant="outlined"
                       size="small"
@@ -1561,6 +1851,37 @@ const ParentsProfile = () => {
                         ),
                       }}
                       style={{ width: "230px" }}
+                    /> */}
+                    <TextField
+                      size="small"
+                      placeholder="Search by name"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon
+                              style={{ color: "#666", fontSize: "20px" }}
+                            />
+                          </InputAdornment>
+                        ),
+                        endAdornment: searchTerm && (
+                          <InputAdornment position="end">
+                            <IconButton
+                              size="small"
+                              onClick={() => setSearchTerm("")}
+                            >
+                              <CloseIcon style={{ fontSize: "18px" }} />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                        style: {
+                          backgroundColor: "white",
+                          borderRadius: "25px",
+                          fontSize: "14px",
+                        },
+                      }}
+                      medium
                     />
                   </div>
                   <div className="col-md-6 text-end">
@@ -1604,6 +1925,17 @@ const ParentsProfile = () => {
         open={isModalOpen}
         onClose={handleCloseModal}
         document={selectedDocument}
+      />
+      <DeleteUserDialog
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+        userName={
+          parent?.User?.firstName + " " + parent?.User?.lastName || "N/A"
+        }
+        userId={parent?.User?.userId}
+        isDeleting={isDeletingUser}
+        error={deleteUserError}
       />
     </>
   );

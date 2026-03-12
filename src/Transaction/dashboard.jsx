@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SideNav from "../sidebar/sidenav";
 import { useNavigate } from "react-router-dom";
 import { useAdminStore } from "../store/useAdminStore";
 import TransactionDetailsModal from "./TransactionDetailsModal";
+import profileImg from "../assets/profile.PNG";
+import { formatDate } from "../utils/dateFormatter";
 import {
   CircularProgress,
   Alert,
@@ -26,6 +28,7 @@ import {
   InputAdornment,
   IconButton,
   Chip,
+  TablePagination,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -56,10 +59,13 @@ const TransactionDashboard = () => {
     paymentRequests,
     fetchPaymentRequests,
     updatePaymentStatus,
+    paymentRequestsPagination,
     isLoadingPaymentRequests,
     paymentRequestsError,
     isUpdatingPaymentRequest,
   } = useAdminStore();
+
+  console.log("paymentRequestsPagination", paymentRequestsPagination);
 
   const [selected, setSelected] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -67,23 +73,99 @@ const TransactionDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransactionId, setSelectedTransactionId] = useState(null);
 
-  // Fetch payment requests on component mount
+  const statusOptions = [
+    "ALL",
+    "PENDING",
+    "REQUESTED",
+    "PAID",
+    "IN_REVIEW",
+    "REJECTED",
+  ];
+  const [selectedStatus, setSelectedStatus] = useState("ALL");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [dateInput, setDateInput] = useState("");
+  const datePickerRef = useRef(null);
+
+  // Pagination state
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Fetch payment requests on component mount or when filters change
   useEffect(() => {
-    fetchPaymentRequests();
-  }, [fetchPaymentRequests]);
+    const delayDebounceFn = setTimeout(() => {
+      const statusParam = selectedStatus === "ALL" ? "" : selectedStatus;
+      // API expects 1-based index for page
+      fetchPaymentRequests(
+        searchValue,
+        statusParam,
+        page + 1,
+        rowsPerPage,
+        selectedDate
+      );
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [
+    fetchPaymentRequests,
+    searchValue,
+    selectedStatus,
+    page,
+    rowsPerPage,
+    selectedDate,
+  ]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   // Transform API data to match table format
   const tableData = paymentRequests.map((request) => ({
     id: request.id,
-    type: "Payment Request", // All are payment requests from tutors
-    amount: `$${request.amount || 0}`,
-    payment_method: "Bank Transfer", // Default payment method
+    type: "Payment Request",
+    amount: `${request.amount || 0}`,
     status: request.status,
-    tutorId: request.tutorId,
-    subscriptionId: request.subscriptionId,
-    date: new Date(request.createdAt).toLocaleDateString() || "N/A",
-    updatedAt: new Date(request.updatedAt).toLocaleDateString() || "N/A",
+    tutorName: request.User
+      ? `${request.User.firstName} ${request.User.lastName}`
+      : "Unknown",
+    email: request.User?.email || "N/A",
+    phone: request.User?.phone || "N/A",
+    date: formatDate(request.createdAt),
+    updatedAt: formatDate(request.updatedAt),
   }));
+
+  // console.log("PAYMENT+++++REQUEST^^^$$$$$$$$$", paymentRequests);
+
+  const handleCopy = async (text) => {
+    if (text === undefined || text === null || text === "N/A") return;
+    const value = String(text);
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(value);
+        return;
+      }
+    } catch (err) {
+      // Fallback
+    }
+    // Fallback logic
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    } catch (err) {
+      console.warn("Copy failed:", err);
+    }
+  };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
@@ -121,6 +203,11 @@ const TransactionDashboard = () => {
     // Refresh the payment requests list to get updated data
     fetchPaymentRequests();
   };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   return (
     <>
       <SideNav />
@@ -146,9 +233,9 @@ const TransactionDashboard = () => {
             <div className="col-12">
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
-                  <IconButton size="small" style={{ marginRight: "10px" }}>
+                  {/* <IconButton size="small" style={{ marginRight: "10px" }}>
                     <ArrowBackIcon />
-                  </IconButton>
+                  </IconButton> */}
                   <h4
                     className="mb-0 me-3"
                     style={{
@@ -159,7 +246,7 @@ const TransactionDashboard = () => {
                   >
                     Transaction
                   </h4>
-                  <div
+                  {/* <div
                     className="d-flex align-items-center text-muted"
                     style={{
                       fontSize: "14px",
@@ -173,14 +260,17 @@ const TransactionDashboard = () => {
                       style={{ fontSize: "16px", marginRight: "5px" }}
                     />
                     Updated Now
-                  </div>
+                  </div> */}
                 </div>
                 <div style={{ width: "300px" }}>
                   <TextField
                     size="small"
-                    placeholder="Search"
+                    placeholder="Search by Name"
                     value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={(e) => {
+                      setSearchValue(e.target.value);
+                      setPage(0);
+                    }}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -193,7 +283,10 @@ const TransactionDashboard = () => {
                         <InputAdornment position="end">
                           <IconButton
                             size="small"
-                            onClick={() => setSearchValue("")}
+                            onClick={() => {
+                              setSearchValue("");
+                              setPage(0);
+                            }}
                           >
                             <CloseIcon style={{ fontSize: "18px" }} />
                           </IconButton>
@@ -216,6 +309,31 @@ const TransactionDashboard = () => {
             style={{ backgroundColor: "#F9F9FB", padding: "1rem" }}
           >
             <div className="col-12">
+              <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+                {statusOptions.map((status) => (
+                  <Chip
+                    key={status}
+                    label={status}
+                    clickable
+                    onClick={() => {
+                      setSelectedStatus(status);
+                      setPage(0);
+                    }}
+                    sx={{
+                      borderRadius: "16px",
+                      fontWeight: 500,
+                      backgroundColor:
+                        selectedStatus === status ? "#1E9CBC" : "#FFFFFF",
+                      color: selectedStatus === status ? "#fff" : "#000",
+                      border: "1px solid #E0E3EB",
+                      "&:hover": {
+                        backgroundColor:
+                          selectedStatus === status ? "#1E9CBC" : "#F5F5F5",
+                      },
+                    }}
+                  />
+                ))}
+              </Box>
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
                   <span
@@ -231,31 +349,7 @@ const TransactionDashboard = () => {
                   >
                     {selected.length} Selected
                   </span>
-                  {/* <Button
-                    variant="outlined"
-                    startIcon={<FilterIcon />}
-                    style={{
-                      textTransform: "none",
-                      fontSize: "14px",
-                      color: "#4D5874",
-                      border: "1px solid #E0E3EB",
-                      backgroundColor: "#FFFFFF",
-                      marginRight: "20px",
-                    }}
-                  >
-                    Filter
-                    <Chip
-                      label="4"
-                      size="small"
-                      style={{
-                        marginLeft: "8px",
-                        backgroundColor: "#FEECEC",
-                        color: "#F31616",
-                        fontSize: "12px",
-                        height: "20px",
-                      }}
-                    />
-                  </Button> */}
+
                   <span
                     style={{
                       fontWeight: 400,
@@ -265,31 +359,122 @@ const TransactionDashboard = () => {
                   >
                     {tableData.length} Results
                   </span>
-                  {/* <span
-                     style={{
-                       fontWeight: 400,
-                       fontSize: "12px",
-                       color: "#999",
-                       marginLeft: "10px",
-                     }}
-                   >
-                     Click "View" to see transaction details
-                   </span> */}
                 </div>
-                {/* <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  style={{
-                    backgroundColor: "#1E9CBC",
-                    color: "white",
-                    textTransform: "none",
-                    fontSize: "14px",
-                    borderRadius: "6px",
-                    padding: "8px 16px",
-                  }}
-                >
-                  Add New
-                </Button> */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      border: "1px solid #ccc",
+                      borderRadius: "16px",
+                      padding: "4px 10px",
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    <input
+                      ref={datePickerRef}
+                      type="date"
+                      style={{
+                        position: "absolute",
+                        opacity: 0,
+                        pointerEvents: "none",
+                        width: 0,
+                        height: 0,
+                      }}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val) {
+                          const [yyyy, mm, dd] = val.split("-");
+                          setDateInput(`${dd}/${mm}/${yyyy}`);
+                          setSelectedDate(val);
+                        }
+                      }}
+                    />
+                    <input
+                      type="text"
+                      placeholder="dd/mm/yyyy"
+                      value={dateInput}
+                      maxLength={10}
+                      onChange={(e) => {
+                        let val = e.target.value.replace(/[^\d/]/g, "");
+                        if (val.length === 2 && dateInput.length === 1)
+                          val += "/";
+                        else if (val.length === 5 && dateInput.length === 4)
+                          val += "/";
+                        setDateInput(val);
+                        if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
+                          const [dd, mm, yyyy] = val.split("/");
+                          setSelectedDate(`${yyyy}-${mm}-${dd}`);
+                        } else {
+                          setSelectedDate("");
+                        }
+                      }}
+                      style={{
+                        fontSize: "14px",
+                        border: "none",
+                        outline: "none",
+                        backgroundColor: "transparent",
+                        width: "100px",
+                      }}
+                    />
+                    <button
+                      onClick={() => datePickerRef.current?.showPicker()}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "0",
+                        display: "flex",
+                        alignItems: "center",
+                        color: "#888",
+                      }}
+                      title="Open calendar"
+                    >
+                      📅
+                    </button>
+                    {dateInput && (
+                      <button
+                        onClick={() => {
+                          setDateInput("");
+                          setSelectedDate("");
+                        }}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "14px",
+                          color: "#aaa",
+                          padding: "0",
+                          lineHeight: 1,
+                        }}
+                        title="Clear date"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                  <div>
+                    <FormControl size="small" style={{ minWidth: "80px" }}>
+                      <Select
+                        value={rowsPerPage}
+                        onChange={handleRowsPerPageChange}
+                        displayEmpty
+                        sx={{
+                          borderRadius: "16px",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderRadius: "16px",
+                          },
+                        }}
+                      >
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={25}>25</MenuItem>
+                        <MenuItem value={50}>50</MenuItem>
+                        <MenuItem value={100}>100</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -350,23 +535,27 @@ const TransactionDashboard = () => {
                 <TableContainer component={Paper}>
                   <Table>
                     <TableHead>
-                      <TableRow sx={{ height: 32, bgcolor: "#1E9CBC" }}>
+                      <TableRow sx={{ height: 32, bgcolor: "#FFFFFF" }}>
                         {[
-                          { label: "Transaction ID", key: "type" },
+                          { label: "Tutor Name", key: "tutorName" },
+                          { label: "Email", key: "email" },
+                          { label: "Phone", key: "phone" },
                           { label: "Amount", key: "amount" },
-                          { label: "Payment Method", key: "payment_method" },
                           { label: "Status", key: "status" },
-                          { label: "Tutor ID", key: "tutorId" },
                           { label: "Date", key: "date" },
                           { label: "Actions", key: "actions" },
                         ].map(({ label, key }) => (
                           <TableCell
                             key={key}
                             sx={{
-                              fontSize: "16px",
-                              fontWeight: 600,
-                              color: "#FFFFFF",
-                              whiteSpace: 'nowrap'
+                              height: "32px",
+                              py: 0,
+                              px: 2,
+                              fontSize: "14px",
+                              fontWeight: 500,
+                              color: "#4D5874",
+                              whiteSpace: "nowrap",
+                              verticalAlign: "middle",
                             }}
                             onClick={() => handleSort(key)}
                           >
@@ -394,98 +583,101 @@ const TransactionDashboard = () => {
                               key={row.id}
                               selected={isItemSelected}
                               sx={{
-                                height: '40px',
-                                backgroundColor: 'transparent',
-                                borderBottom: "1px solid #e0e0e0",
+                                height: "48px",
+                                backgroundColor:
+                                  index % 2 === 0 ? "#F9F9FB" : "#FFFFFF",
+                                "&:hover": {
+                                  backgroundColor: "#F1F3F7",
+                                },
                               }}
                             >
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
+                                  fontSize: "16px",
                                   color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
-                                  border: "1px solid #e0e0e0",
+                                  padding: "0 8px",
+                                  height: "48px",
+                                  lineHeight: "48px",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 <div className="d-flex align-items-center gap-2">
-                                  <div
-                                    style={{
-                                      width: 24,
-                                      height: 24,
-                                      borderRadius: "50%",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      backgroundColor:
-                                        row.type === "Withdraw"
-                                          ? "#FEECEC"
-                                          : "#EEFCF3",
-                                    }}
-                                  >
-                                    {row.type === "Withdraw" ? (
-                                      <ArrowDownwardIcon
-                                        style={{
-                                          color: "#F31616",
-                                          fontSize: "16px",
-                                          fontWeight: "bold",
-                                        }}
-                                      />
-                                    ) : (
-                                      <ArrowUpwardIcon
-                                        style={{
-                                          color: "#38BC5C",
-                                          fontSize: "16px",
-                                          fontWeight: "bold",
-                                        }}
-                                      />
-                                    )}
-                                  </div>
-                                  <span>{row.type}</span>
+                                  {/* <Avatar
+                                    src="/placeholder.svg"
+                                    sx={{ width: 24, height: 24 }}
+                                  /> */}
+                                  <Avatar
+                                    src={profileImg || "/placeholder.svg"}
+                                    sx={{ width: 24, height: 24 }}
+                                  />
+                                  <span>{row.tutorName}</span>
                                 </div>
                               </TableCell>
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
+                                  fontSize: "16px",
                                   color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
-                                  border: "1px solid #e0e0e0",
+                                  padding: "0 8px",
+                                  height: "48px",
+                                  lineHeight: "48px",
+                                  border: "1px solid #E0E3EB",
+                                }}
+                              >
+                                {row.email}
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: 400,
+                                  fontSize: "16px",
+                                  color: "#000",
+                                  padding: "0 8px",
+                                  height: "48px",
+                                  lineHeight: "48px",
+                                  border: "1px solid #E0E3EB",
+                                }}
+                              >
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <span>+{row.phone}</span>
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => handleCopy(row.phone)}
+                                  >
+                                    <ContentCopyIcon
+                                      style={{
+                                        fontSize: "14px",
+                                        color: "#666",
+                                      }}
+                                    />
+                                  </IconButton>
+                                </div>
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  fontWeight: 400,
+                                  fontSize: "16px",
+                                  color: "#000",
+                                  padding: "0 8px",
+                                  height: "48px",
+                                  lineHeight: "48px",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 <div className="d-flex align-items-center justify-content-between">
                                   {row.amount}
                                 </div>
                               </TableCell>
-                              <TableCell
-                                style={{
-                                  fontWeight: 400,
-                                  fontSize: "14px",
-                                  color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
-                                  border: "1px solid #e0e0e0",
-                                }}
-                              >
-                                <div className="d-flex align-items-center justify-content-between">
-                                  {row.payment_method}
-                                </div>
-                              </TableCell>
 
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
+                                  fontSize: "16px",
                                   color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
-                                  border: "1px solid #e0e0e0",
+                                  padding: "0 8px",
+                                  height: "48px",
+                                  lineHeight: "48px",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 <div className="d-flex align-items-center justify-content-start gap-2">
@@ -493,18 +685,23 @@ const TransactionDashboard = () => {
                                   {row.status === "PAID" && (
                                     <div
                                       style={{
-                                        backgroundColor: "#EEFCF3",
+                                        // backgroundColor: "#EEFCF3",
                                         color: "#38BC5C",
+                                        // border:'1px solid #38BC5C',
                                         display: "flex",
                                         alignItems: "center",
-                                        padding: "0px 8px",
-                                        borderRadius: "12px",
+                                        padding: "0px 4px",
+                                        borderRadius: "6px",
                                         fontWeight: 500,
                                         fontSize: "12px",
+                                        // textTransform: "capitalize",
                                       }}
                                     >
                                       <CheckCircleIcon
-                                        style={{ fontSize: "18px", marginRight: 4 }}
+                                        style={{
+                                          fontSize: "18px",
+                                          marginRight: 4,
+                                        }}
                                       />
                                       PAID
                                     </div>
@@ -512,18 +709,22 @@ const TransactionDashboard = () => {
                                   {row.status === "REJECTED" && (
                                     <div
                                       style={{
-                                        backgroundColor: "#FEECEC",
+                                        // backgroundColor: "#FEECEC",
                                         color: "#F31616",
+                                        // border:'1px solid #F31616',
                                         display: "flex",
                                         alignItems: "center",
-                                        padding: "4px 8px",
+                                        padding: "0px 4px",
                                         borderRadius: "6px",
                                         fontWeight: 500,
                                         fontSize: "14px",
                                       }}
                                     >
                                       <CancelIcon
-                                        style={{ fontSize: "18px", marginRight: 4 }}
+                                        style={{
+                                          fontSize: "18px",
+                                          marginRight: 4,
+                                        }}
                                       />
                                       REJECTED
                                     </div>
@@ -531,79 +732,63 @@ const TransactionDashboard = () => {
                                   {row.status === "PENDING" && (
                                     <div
                                       style={{
-                                        backgroundColor: "#F0F2F5",
+                                        // backgroundColor: "#F0F2F5",
                                         color: "#7D879C",
+                                        // border:'1px solid #7D879C',
                                         display: "flex",
                                         alignItems: "center",
-                                        padding: "4px 8px",
+                                        padding: "0px 4px",
                                         borderRadius: "6px",
                                         fontWeight: 500,
                                         fontSize: "14px",
                                       }}
                                     >
                                       <PauseCircleFilledIcon
-                                        style={{ fontSize: "18px", marginRight: 4 }}
+                                        style={{
+                                          fontSize: "18px",
+                                          marginRight: 4,
+                                        }}
                                       />
                                       PENDING
                                     </div>
                                   )}
                                   {(row.status === "IN_REVIEW" ||
                                     row.status === "REQUESTED") && (
-                                      <div
+                                    <div
+                                      style={{
+                                        // backgroundColor: "#EEF3FF",
+                                        color: "#235DFF",
+                                        // border:'1px solid #235DFF',
+                                        display: "flex",
+                                        alignItems: "center",
+                                        padding: "0px 4px",
+                                        borderRadius: "6px",
+                                        fontWeight: 500,
+                                        fontSize: "14px",
+                                        // textTransform:''
+                                      }}
+                                    >
+                                      <InfoIcon
                                         style={{
-                                          backgroundColor: "#EEF3FF",
-                                          color: "#235DFF",
-                                          display: "flex",
-                                          alignItems: "center",
-                                          padding: "4px 8px",
-                                          borderRadius: "6px",
-                                          fontWeight: 500,
-                                          fontSize: "14px",
-                                          // textTransform:''
+                                          fontSize: "18px",
+                                          marginRight: 4,
                                         }}
-                                      >
-                                        <InfoIcon
-                                          style={{
-                                            fontSize: "18px",
-                                            marginRight: 4,
-                                          }}
-                                        />
-                                        {row.status}
-                                      </div>
-                                    )}
+                                      />
+                                      {row.status}
+                                    </div>
+                                  )}
                                 </div>
                               </TableCell>
-                              <TableCell style={{
-                                padding: '0 8px',
-                                height: '30px',
-                                lineHeight: '30px',
-                                border: "1px solid #e0e0e0",
-                              }}>
-                                <div className="d-flex align-items-center justify-content-between">
-                                  <span
-                                    style={{
-                                      fontWeight: 400,
-                                      fontSize: "14px",
-                                      color: "#000",
-                                      // fontFamily: "monospace",
-                                      // backgroundColor: "#f5f5f5",
-                                      // padding: "2px 6px",
-                                      // borderRadius: "4px",
-                                    }}
-                                  >
-                                    {row.tutorId?.substring(0, 8) || "N/A"}
-                                  </span>
-                                </div>
-                              </TableCell>
+
                               <TableCell
                                 style={{
                                   fontWeight: 400,
-                                  fontSize: "14px",
-                                  color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
-                                  border: "1px solid #e0e0e0",
+                                  fontSize: "16px",
+                                  color: "#4D5874",
+                                  padding: "0 8px",
+                                  height: "48px",
+                                  lineHeight: "48px",
+                                  border: "1px solid #E0E3EB",
                                 }}
                               >
                                 <div className="d-flex align-items-center justify-content-between">
@@ -615,27 +800,29 @@ const TransactionDashboard = () => {
                                 style={{
                                   fontWeight: 400,
                                   fontSize: "16px",
-                                  color: "#000",
-                                  padding: '0 8px',
-                                  height: '30px',
-                                  lineHeight: '30px',
-                                  border: "1px solid #e0e0e0",
+                                  color: "#101219",
+                                  padding: "0 8px",
+                                  height: "48px",
+                                  lineHeight: "48px",
+                                  border: "1px solid #E0E3EB",
                                   textAlign: "center",
                                 }}
                               >
                                 <Button
                                   variant="outlined"
                                   size="small"
-                                  startIcon={<VisibilityIcon />}
+                                  startIcon={
+                                    <VisibilityIcon sx={{ color: "#1E9CBC" }} />
+                                  }
                                   onClick={() => handleViewTransaction(row.id)}
                                   sx={{
                                     textTransform: "none",
                                     fontSize: "12px",
                                     minWidth: "80px",
-                                    borderColor: "#1976D2",
-                                    color: "#1976D2",
+                                    borderColor: "#1E9CBC",
+                                    color: "#1E9CBC2",
                                     "&:hover": {
-                                      borderColor: "#1565C0",
+                                      borderColor: "#1E9CBC",
                                       backgroundColor: "#E3F2FD",
                                     },
                                   }}
@@ -662,6 +849,85 @@ const TransactionDashboard = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
+                {paymentRequestsPagination && (
+                  // <TablePagination
+                  //   rowsPerPageOptions={[5, 10, 25]}
+                  //   component="div"
+                  //   count={paymentRequestsPagination.total || 0}
+                  //   rowsPerPage={rowsPerPage}
+                  //   page={page}
+                  //   onPageChange={handleChangePage}
+                  //   onRowsPerPageChange={handleChangeRowsPerPage}
+                  //   sx={{
+                  //     width: "100%",
+
+                  //     "& .MuiTablePagination-toolbar": {
+                  //       display: "flex",
+                  //       alignItems: "center",
+                  //     },
+
+                  //     /* Remove spacer completely */
+                  //     "& .MuiTablePagination-spacer": {
+                  //       flex: "0 0 auto",
+                  //     },
+
+                  //     /* Left side */
+                  //     "& .MuiTablePagination-selectLabel": {
+                  //       margin: 0,
+                  //     },
+
+                  //     /* Center properly using flex grow */
+                  //     "& .MuiTablePagination-displayedRows": {
+                  //       margin: "0 auto",
+                  //       whiteSpace: "nowrap",
+                  //     },
+
+                  //     /* Right side arrows */
+                  //     "& .MuiTablePagination-actions": {
+                  //       marginLeft: "auto",
+                  //     },
+                  //   }}
+                  // />
+                  <TablePagination
+                    component="div"
+                    count={paymentRequestsPagination.total || 0}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPageOptions={[]}
+                    labelRowsPerPage=""
+                    onRowsPerPageChange={() => {}}
+                    sx={{
+                      width: "100%",
+
+                      "& .MuiTablePagination-selectLabel": {
+                        display: "none",
+                      },
+
+                      "& .MuiTablePagination-input": {
+                        display: "none",
+                      },
+
+                      "& .MuiTablePagination-toolbar": {
+                        position: "relative",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      },
+
+                      "& .MuiTablePagination-displayedRows": {
+                        position: "absolute",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        margin: 0,
+                        whiteSpace: "nowrap",
+                      },
+
+                      "& .MuiTablePagination-actions": {
+                        marginLeft: "auto",
+                      },
+                    }}
+                  />
+                )}
               </div>
             </div>
           )}
@@ -671,7 +937,7 @@ const TransactionDashboard = () => {
       {/* Transaction Details Modal */}
       <TransactionDetailsModal
         open={isModalOpen}
-        onClose={handleCloseModal}
+        handleClose={handleCloseModal}
         transactionId={selectedTransactionId}
       />
     </>

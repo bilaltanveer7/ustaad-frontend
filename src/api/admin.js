@@ -21,9 +21,20 @@ export const getStats = async (days = null) => {
 };
 
 // Get all payment requests
-export const getAllPaymentRequests = async () => {
+export const getAllPaymentRequests = async (
+  search = "",
+  status = "",
+  page = 1,
+  limit = 10,
+  date = ""
+) => {
+  let url = `/admin/payment-requests?page=${page}&limit=${limit}&`;
+  if (search) url += `search=${search}&`;
+  if (status) url += `status=${status}&`;
+  if (date) url += `date=${date}&`;
+
   const data = await invoke({
-    url: `/admin/payment-requests`,
+    url: url,
     method: "GET",
   });
   return data;
@@ -101,6 +112,40 @@ export const approveUserOnboarding = async (userId) => {
     url: `/admin/users/approve-onboarding`,
     method: "PUT",
     data: { userId },
+  });
+  return data;
+};
+
+export const getDisputedContracts = async (query = "") => {
+  const data = await invoke({
+    url: `/admin/contracts/disputed${query}`,
+    method: "GET",
+  });
+  return data;
+};
+
+export const resolveDispute = async (contractId, data) => {
+  const response = await invoke({
+    url: `/admin/contracts/${contractId}/resolve`,
+    method: "PUT",
+    data: data,
+  });
+  return response;
+};
+
+export const refundContract = async (id) => {
+  const data = await invoke({
+    url: `/admin/contracts/refund`,
+    method: "POST",
+    data: { contractId: id },
+  });
+  return data;
+};
+
+export const deleteUser = async (id) => {
+  const data = await invoke({
+    url: `/admin/users/${id}`,
+    method: "DELETE",
   });
   return data;
 };
