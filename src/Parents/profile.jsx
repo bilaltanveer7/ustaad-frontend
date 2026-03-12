@@ -419,6 +419,7 @@ const ParentsProfile = () => {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
+    setSearchTerm("");
   };
 
   const renderTableContent = () => {
@@ -1204,7 +1205,8 @@ const ParentsProfile = () => {
                     fontWeight: 500,
                     borderBottom: "none",
                   },
-                }}>
+                }}
+              >
                 <TableRow
                   sx={{
                     fontSize: "14px",
@@ -1293,8 +1295,10 @@ const ParentsProfile = () => {
                   </TableRow>
                 ) : (
                   docs.map((doc) => (
-                    <TableRow key={doc.id}
-                      style={{ borderBottom: "1px solid #E0E3EB" }}>
+                    <TableRow
+                      key={doc.id}
+                      style={{ borderBottom: "1px solid #E0E3EB" }}
+                    >
                       <TableCell
                         style={{
                           fontSize: "16px",
@@ -1338,7 +1342,9 @@ const ParentsProfile = () => {
                           size="small"
                           style={{
                             backgroundColor:
-                              doc.status === "Available" ? "#EEFBF4" : "#EEFBF4",
+                              doc.status === "Available"
+                                ? "#EEFBF4"
+                                : "#EEFBF4",
                             border:
                               doc.status === "Available"
                                 ? "1px solid #B2EECC"
@@ -1409,7 +1415,7 @@ const ParentsProfile = () => {
                 }}
               >
                 <IconButton
-                  onClick={() => navigate('/parent-dashboard')}
+                  onClick={() => navigate("/parent-dashboard")}
                   style={{
                     marginRight: "10px",
                     color: "#A6ADBF",
@@ -1814,9 +1820,10 @@ const ParentsProfile = () => {
                     <Tab label={`Children (${children.length})`} />
                     <Tab label={`Notes by Tutors (${childNotes.length})`} />
                     <Tab
-                      label={`Documents (${(parent?.idFrontUrl ? 1 : 0) +
+                      label={`Documents (${
+                        (parent?.idFrontUrl ? 1 : 0) +
                         (parent?.idBackUrl ? 1 : 0)
-                        })`}
+                      })`}
                     />
                   </Tabs>
                 </Box>
