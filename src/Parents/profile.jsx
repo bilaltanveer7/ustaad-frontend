@@ -557,7 +557,7 @@ const ParentsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           color: "#101219",
                           fontWeight: 400,
                           border: "1px solid #E0E3EB",
@@ -570,7 +570,7 @@ const ParentsProfile = () => {
                         <span
                           style={{
                             fontWeight: 400,
-                            fontSize: "14px",
+                            fontSize: "16px",
                             color: "#000",
                           }}
                         >
@@ -765,7 +765,7 @@ const ParentsProfile = () => {
                     >
                       <TableCell
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           color: "#000",
                           fontWeight: 400,
                           padding: "0 8px",
@@ -783,7 +783,7 @@ const ParentsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           color: "#000",
                           fontWeight: 400,
                           padding: "0 8px",
@@ -800,7 +800,7 @@ const ParentsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           color: "#000",
                           fontWeight: 400,
                           padding: "0 8px",
@@ -817,7 +817,7 @@ const ParentsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           color: "#000",
                           fontWeight: 400,
                           padding: "0 8px",
@@ -1555,7 +1555,7 @@ const ParentsProfile = () => {
                         Delete User
                       </Button>
                     </div>
-                    <Chip
+                    {/* <Chip
                       label="Verified"
                       size="small"
                       style={{
@@ -1567,7 +1567,7 @@ const ParentsProfile = () => {
                         padding: "4px 8px",
                         borderRadius: "8px",
                       }}
-                    />
+                    /> */}
                   </div>
 
                   {/* Right Column - Edit Button */}
