@@ -32,6 +32,8 @@ import logo from "../assets/logo.png"
 import avatarImg from "../assets/Avatar.png"
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
+import { useAdminStore } from '../store/useAdminStore';
+import { formatDateTime } from '../utils/dateFormatter';
 import SchoolIcon from '@mui/icons-material/School';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -49,6 +51,14 @@ export default function SideNav() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [userAnchorEl, setUserAnchorEl] = React.useState(null);
     const [notificationAnchorEl, setNotificationAnchorEl] = React.useState(null);
+    const { notifications, fetchNotifications, isLoadingNotifications, markAsRead } = useAdminStore();
+
+    React.useEffect(() => {
+        fetchNotifications();
+    }, [fetchNotifications]);
+
+    // Calculate unread notifications count
+    const unreadCount = notifications.filter(n => !n.isRead).length;
 
     const handleAvatarClick = (event) => {
         setUserAnchorEl(event.currentTarget);
@@ -156,7 +166,7 @@ export default function SideNav() {
                                 }}
                                 color="inherit"
                             >
-                                <Badge variant="dot" color="success"
+                                <Badge variant="dot" color="success" invisible={unreadCount === 0}
                                     sx={{
                                         '& .MuiBadge-badge': {
                                             right: 4,
@@ -243,35 +253,69 @@ export default function SideNav() {
                                     </Typography>
                                 </MenuItem>
 
-                                {[
-                                    "New tutor joined the platform",
-                                    "Parent approved your profile",
-                                    "Payment received successfully",
-                                    "New message from parent"
-                                ].map((notification, index) => (
-                                    <MenuItem
-                                        key={index}
-                                        sx={{
-                                            py: 1.5,
-                                            px: 2,
-                                            borderBottom: index < 3 ? '1px solid #f0f0f0' : 'none',
-                                            '&:hover': { backgroundColor: '#f5f5f5' }
-                                        }}
-                                    >
-                                        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
-                                            <Box sx={{
-                                                width: 8,
-                                                height: 8,
-                                                borderRadius: '50%',
-                                                backgroundColor: '#4CAF50',
-                                                mt: 0.5
-                                            }} />
-                                            <Typography variant="body2" color="text.primary" sx={{ lineHeight: 1.3 }}>
-                                                {notification}
-                                            </Typography>
-                                        </Box>
+                                {notifications.length > 0 ? (
+                                    notifications.map((notification, index) => (
+                                        <MenuItem
+                                            key={notification.id || index}
+                                            sx={{
+                                                py: 1.5,
+                                                px: 2,
+                                                borderBottom: index < notifications.length - 1 ? '1px solid #f0f0f0' : 'none',
+                                                '&:hover': { backgroundColor: '#f5f5f5' }
+                                            }}
+                                        >
+                                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
+                                                <Box sx={{
+                                                    width: 8,
+                                                    height: 8,
+                                                    borderRadius: '50%',
+                                                    backgroundColor: notification.isRead ? '#E0E0E0' : '#4CAF50',
+                                                    mt: 0.8,
+                                                    flexShrink: 0
+                                                }} />
+                                                <Box sx={{ flexGrow: 1 }}>
+                                                    <Typography variant="subtitle2" color="text.primary" sx={{ fontWeight: notification.isRead ? 400 : 600, fontSize: '0.85rem' }}>
+                                                        {notification.title}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.3, mb: 0.5, fontSize: '0.8rem' }}>
+                                                        {notification.body}
+                                                    </Typography>
+                                                    <Typography variant="caption" color="text.disabled" sx={{ fontSize: '0.7rem' }}>
+                                                        {formatDateTime(notification.sentAt || notification.createdAt)}
+                                                    </Typography>
+                                                </Box>
+                                                {!notification.isRead && (
+                                                    <Button
+                                                        size="small"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            markAsRead(notification.id);
+                                                        }}
+                                                        sx={{
+                                                            fontSize: '0.65rem',
+                                                            minWidth: 'auto',
+                                                            py: 0,
+                                                            px: 1,
+                                                            ml: 1,
+                                                            color: '#1E9CBC',
+                                                            '&:hover': {
+                                                                backgroundColor: 'rgba(30, 156, 188, 0.04)'
+                                                            }
+                                                        }}
+                                                    >
+                                                        Read
+                                                    </Button>
+                                                )}
+                                            </Box>
+                                        </MenuItem>
+                                    ))
+                                ) : (
+                                    <MenuItem sx={{ py: 3, justifyContent: 'center' }} disabled>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {isLoadingNotifications ? 'Loading notifications...' : 'No new notifications'}
+                                        </Typography>
                                     </MenuItem>
-                                ))}
+                                )}
                             </Menu>
                         </Box>
                     </Box>

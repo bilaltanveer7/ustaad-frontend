@@ -90,8 +90,28 @@ const TransactionDashboard = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Filters ref to avoid stale closures in event handlers (like modal close)
+  const filtersRef = useRef({
+    selectedStatus,
+    searchValue,
+    page,
+    rowsPerPage,
+    selectedDate,
+  });
+
+  useEffect(() => {
+    filtersRef.current = {
+      selectedStatus,
+      searchValue,
+      page,
+      rowsPerPage,
+      selectedDate,
+    };
+  }, [selectedStatus, searchValue, page, rowsPerPage, selectedDate]);
+
   // Fetch payment requests on component mount or when filters change
   useEffect(() => {
+    // Basic debounce for filter/search changes
     const delayDebounceFn = setTimeout(() => {
       const statusParam = selectedStatus === "ALL" ? "" : selectedStatus;
       // API expects 1-based index for page
@@ -200,8 +220,18 @@ const TransactionDashboard = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedTransactionId(null);
-    // Refresh the payment requests list to get updated data
-    fetchPaymentRequests();
+
+    // Refresh the list with the GUARANTEED latest filters from ref
+    const {
+      selectedStatus: s,
+      searchValue: sv,
+      page: p,
+      rowsPerPage: r,
+      selectedDate: d,
+    } = filtersRef.current;
+
+    const statusParam = s === "ALL" ? "" : s;
+    fetchPaymentRequests(sv, statusParam, p + 1, r, d);
   };
 
   const handleRowsPerPageChange = (event) => {

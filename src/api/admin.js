@@ -149,3 +149,19 @@ export const deleteUser = async (id) => {
   });
   return data;
 };
+
+export const getNotifications = async (page = 1, limit = 20) => {
+  const data = await invoke({
+    url: `/admin/notifications?page=${page}&limit=${limit}`,
+    method: "GET",
+  });
+  return data;
+};
+
+export const markNotificationAsRead = async (id) => {
+  const data = await invoke({
+    url: `/admin/notifications/${id}/read`,
+    method: "PUT",
+  });
+  return data;
+};

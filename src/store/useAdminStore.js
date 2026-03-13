@@ -15,6 +15,8 @@ import {
   resolveDispute,
   refundContract,
   deleteUser,
+  getNotifications,
+  markNotificationAsRead,
 } from "../api/admin";
 
 export const useAdminStore = create((set, get) => ({
@@ -29,6 +31,12 @@ export const useAdminStore = create((set, get) => ({
 
   // Admins data
   admins: [],
+
+  // Notifications data
+  notifications: [],
+  notificationsPagination: null,
+  isLoadingNotifications: false,
+  notificationsError: null,
 
   // Pending users data
   pendingUsers: [],
@@ -155,6 +163,74 @@ export const useAdminStore = create((set, get) => ({
         isLoadingPaymentRequests: false,
       });
       return { success: false, error: errorMessage };
+    }
+  },
+
+  // Fetch all notifications
+  fetchNotifications: async (page = 1, limit = 20) => {
+    set({ isLoadingNotifications: true, notificationsError: null });
+
+    try {
+      const response = await getNotifications(page, limit);
+
+      if (response.data && response.data.success) {
+        set({
+          notifications: response.data.data.items || [],
+          notificationsPagination: response.data.data.pagination || null,
+          isLoadingNotifications: false,
+        });
+        return { success: true, data: response.data.data };
+      } else {
+        const errorMessage =
+          response.data?.message || "Failed to fetch notifications";
+        set({
+          notificationsError: errorMessage,
+          isLoadingNotifications: false,
+        });
+        return { success: false, error: errorMessage };
+      }
+    } catch (error) {
+      console.error("Fetch notifications error:", error);
+      let errorMessage = "Failed to fetch notifications";
+
+      if (error.response?.data?.errors) {
+        errorMessage = error.response.data.errors[0]?.message || errorMessage;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      set({
+        notificationsError: errorMessage,
+        isLoadingNotifications: false,
+      });
+      return { success: false, error: errorMessage };
+    }
+  },
+
+  // Mark notification as read
+  markAsRead: async (id) => {
+    try {
+      const response = await markNotificationAsRead(id);
+
+      if (response.data && response.data.success) {
+        // Update the notification in the local state
+        const updatedNotifications = get().notifications.map((n) =>
+          n.id === id
+            ? { ...n, isRead: true, readAt: new Date().toISOString() }
+            : n
+        );
+
+        set({ notifications: updatedNotifications });
+        return { success: true, data: response.data.data };
+      } else {
+        return {
+          success: false,
+          error: response.data?.message || "Failed to mark notification as read",
+        };
+      }
+    } catch (error) {
+      console.error("Mark notification as read error:", error);
+      return { success: false, error: "Failed to mark notification as read" };
     }
   },
 
@@ -617,6 +693,7 @@ export const useAdminStore = create((set, get) => ({
   setPendingUsers: (pendingUsers) => set({ pendingUsers }),
   setSelectedUser: (user) => set({ selectedUser: user }),
   setUserData: (userData) => set({ userData }),
+  setNotifications: (notifications) => set({ notifications }),
 
   // Clear selected items
   clearSelectedPaymentRequest: () => set({ selectedPaymentRequest: null }),
