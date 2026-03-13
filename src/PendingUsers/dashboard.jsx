@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SideNav from "../sidebar/sidenav";
 import { useAdminStore } from "../store/useAdminStore";
 import profileImg from "../assets/profile.PNG";
+import tutorImg from "../assets/tutor.png";
 import parentprofileImg from "../assets/parent_profile.PNG";
 import { formatDate } from "../utils/dateFormatter";
 import {
@@ -371,7 +372,8 @@ const PendingUsersDashboard = () => {
                           Tutors
                         </Typography>
                       </div>
-                      <PersonIcon sx={{ color: "#7B1FA2", fontSize: "40px" }} />
+                      {/* <PersonIcon sx={{ color: "#7B1FA2", fontSize: "40px" }} /> */}
+                      <img src={tutorImg} alt="" style={{height:35, width:35}} />
                     </Box>
                   </CardContent>
                 </Card>
@@ -735,6 +737,9 @@ const PendingUsersDashboard = () => {
                                 alignItems: "center",
                                 gap: "6px",
                               }}
+                              onClick={() =>
+                                handleUserClick(user.profileId, user.role)
+                              }
                             >
                               <PhoneIcon
                                 style={{ fontSize: "16px", color: "#1E9CBC" }}
@@ -908,7 +913,7 @@ const PendingUsersDashboard = () => {
               anchorOrigin={{ vertical: "top", horizontal: "center" }}
             >
               <Alert severity="warning" variant="filled">
-                On boarding is required
+                "Onboarding" is required
               </Alert>
             </Snackbar>
 

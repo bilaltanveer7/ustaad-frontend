@@ -247,12 +247,12 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
 
             {(selectedPaymentRequest.paymentRequest.status === "PAID" ||
               selectedPaymentRequest.paymentRequest.status === "REJECTED") && (
-              <Alert severity="info" sx={{ mb: 2 }}>
-                This transaction is finalized (
-                {selectedPaymentRequest.paymentRequest.status}). The status
-                cannot be changed.
-              </Alert>
-            )}
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  This transaction is finalized (
+                  {selectedPaymentRequest.paymentRequest.status}). The status
+                  cannot be changed.
+                </Alert>
+              )}
 
             {/* Transaction Overview Card */}
             <Box
@@ -303,11 +303,10 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                             color: getStatusColor(
                               selectedPaymentRequest.paymentRequest.status
                             ).color,
-                            border: `1px solid ${
-                              getStatusColor(
-                                selectedPaymentRequest.paymentRequest.status
-                              ).border
-                            }`,
+                            border: `1px solid ${getStatusColor(
+                              selectedPaymentRequest.paymentRequest.status
+                            ).border
+                              }`,
                             fontWeight: 500,
                           }}
                         />
@@ -386,74 +385,6 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                           )}
                         </Typography>
                       </Grid>
-
-                      <Grid item xs={12} md={6}>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                            mb: 2,
-                          }}
-                        >
-                          <AccountBalanceIcon
-                            sx={{ color: "#1E9CBC", fontSize: "20px" }}
-                          />
-                          <Typography
-                            // variant="body2"
-                            sx={{
-                              color: "#666",
-                              fontWeight: 600,
-                              fontSize: "18px",
-                            }}
-                          >
-                            Current Balance
-                          </Typography>
-                        </Box>
-                        {/* <Typography
-                          // variant="h4"
-                          sx={{
-                            fontWeight: 600,
-                            fontSize: "16px",
-                            color: "#101219",
-                          }}
-                        >
-                          {formatAmount(
-                            selectedPaymentRequest.accountInfo.balance
-                          )}
-                        </Typography> */}
-                        <Button
-                          variant="contained"
-                          size="small"
-                          startIcon={
-                            <CiWallet
-                              style={{
-                                color: "white",
-                                fontWeight: 900,
-                                fontSize: "20px",
-                              }}
-                            />
-                          }
-                          sx={{
-                            backgroundColor: "#121217",
-                            borderRadius: "8px",
-                            color: "white",
-                            textTransform: "none",
-                            fontSize: "14px",
-                            height: 35,
-                            px: 2,
-                            whiteSpace: "nowrap",
-                            "&:hover": {
-                              backgroundColor: "#121217",
-                            },
-                          }}
-                        >
-                          Rs{" "}
-                          {formatAmount(
-                            selectedPaymentRequest?.accountInfo?.balance
-                          )}
-                        </Button>
-                      </Grid>
                     </Grid>
                   </CardContent>
                 </Card>
@@ -508,9 +439,9 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                               isUpdating ||
                               isUpdatingPaymentRequest ||
                               selectedPaymentRequest.paymentRequest.status ===
-                                "PAID" ||
+                              "PAID" ||
                               selectedPaymentRequest.paymentRequest.status ===
-                                "REJECTED"
+                              "REJECTED"
                             }
                             sx={{
                               height: "37px",
@@ -553,9 +484,9 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                             !localStatus ||
                             localStatus === selectedPaymentRequest.status ||
                             selectedPaymentRequest.paymentRequest.status ===
-                              "PAID" ||
+                            "PAID" ||
                             selectedPaymentRequest.paymentRequest.status ===
-                              "REJECTED"
+                            "REJECTED"
                           }
                           sx={{
                             backgroundColor: "#1E9CBC",
@@ -586,187 +517,243 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
             </Box>
 
             {/* Details Grid */}
-            <Grid container spacing={3}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               {/* Tutor Information */}
+              <Box sx={{ width: '55%' }}>
+                <Card
+                  sx={{
+                    height: "100%",
+                    width: "100%",
+                    border: "1px solid #E0E3EB",
+                  }}
+                >
+                  <CardContent>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 2,
+                      }}
+                    >
+                      <PersonIcon sx={{ color: "#1E9CBC" }} />
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600, color: "#101219" }}
+                      >
+                        User Information
+                      </Typography>
+                    </Box>
+                    <Divider sx={{ mb: 2 }} />
 
-              <Card
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  border: "1px solid #E0E3EB",
-                }}
-              >
-                <CardContent>
-                  <Box
+                    <>
+                      <Box
+                        sx={{
+                          mb: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                        }}
+                      >
+                        <Typography
+                          // variant="body2"
+                          sx={{
+                            color: "#666",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          Name:
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#101219",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                          }}
+                        >
+                          {selectedPaymentRequest.accountInfo.name || "N/A"}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          mb: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                        }}
+                      >
+                        <Typography
+                          // variant="body2"
+                          sx={{
+                            color: "#666",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          Role:
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#101219",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                          }}
+                        >
+                          {capitalize(selectedPaymentRequest.accountInfo.role) ||
+                            "N/A"}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          mb: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                        }}
+                      >
+                        <Typography
+                          // variant="body2"
+                          sx={{
+                            color: "#666",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          Email:
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#101219",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                          }}
+                        >
+                          {selectedPaymentRequest.accountInfo.email || "N/A"}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          mb: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                        }}
+                      >
+                        <Typography
+                          // variant="body2"
+                          sx={{
+                            color: "#666",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          Bank Name:
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#101219",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                          }}
+                        >
+                          {selectedPaymentRequest.accountInfo.bankName || "N/A"}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          mb: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                        }}
+                      >
+                        <Typography
+                          // variant="body2"
+                          sx={{
+                            color: "#666",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          Bank Account Number:
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#101219",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                          }}
+                        >
+                          {selectedPaymentRequest.accountInfo.accountNumber ||
+                            "N/A"}
+                        </Typography>
+                      </Box>
+                    </>
+                  </CardContent>
+                </Card>
+              </Box>
+              <Box sx={{ width: '45%', alignSelf:'flex-start' }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-end",
+                    gap: 1,
+                    mb: 2,
+                  }}
+                >
+                  <AccountBalanceIcon
+                    sx={{ color: "#1E9CBC", fontSize: "20px" }}
+                  />
+                  <Typography
+                    // variant="body2"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                      mb: 2,
+                      color: "#666",
+                      fontWeight: 600,
+                      fontSize: "18px",
                     }}
                   >
-                    <PersonIcon sx={{ color: "#1E9CBC" }} />
-                    <Typography
-                      variant="h6"
-                      sx={{ fontWeight: 600, color: "#101219" }}
-                    >
-                      User Information
-                    </Typography>
-                  </Box>
-                  <Divider sx={{ mb: 2 }} />
-
-                  <>
-                    <Box
-                      sx={{
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
+                    Current Balance
+                  </Typography>
+                </Box>
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={
+                    <CiWallet
+                      style={{
+                        color: "white",
+                        fontWeight: 900,
+                        fontSize: "20px",
                       }}
-                    >
-                      <Typography
-                        // variant="body2"
-                        sx={{
-                          color: "#666",
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        Name:
-                      </Typography>
-                      <Typography
-                        sx={{
-                          color: "#101219",
-                          fontWeight: 500,
-                          fontSize: "14px",
-                        }}
-                      >
-                        {selectedPaymentRequest.accountInfo.name || "N/A"}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                      }}
-                    >
-                      <Typography
-                        // variant="body2"
-                        sx={{
-                          color: "#666",
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        Role:
-                      </Typography>
-                      <Typography
-                        sx={{
-                          color: "#101219",
-                          fontWeight: 500,
-                          fontSize: "14px",
-                        }}
-                      >
-                        {capitalize(selectedPaymentRequest.accountInfo.role) ||
-                          "N/A"}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                      }}
-                    >
-                      <Typography
-                        // variant="body2"
-                        sx={{
-                          color: "#666",
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        Email:
-                      </Typography>
-                      <Typography
-                        sx={{
-                          color: "#101219",
-                          fontWeight: 500,
-                          fontSize: "14px",
-                        }}
-                      >
-                        {selectedPaymentRequest.accountInfo.email || "N/A"}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                      }}
-                    >
-                      <Typography
-                        // variant="body2"
-                        sx={{
-                          color: "#666",
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        Bank Name:
-                      </Typography>
-                      <Typography
-                        sx={{
-                          color: "#101219",
-                          fontWeight: 500,
-                          fontSize: "14px",
-                        }}
-                      >
-                        {selectedPaymentRequest.accountInfo.bankName || "N/A"}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                      }}
-                    >
-                      <Typography
-                        // variant="body2"
-                        sx={{
-                          color: "#666",
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        Bank Account Number:
-                      </Typography>
-                      <Typography
-                        sx={{
-                          color: "#101219",
-                          fontWeight: 500,
-                          fontSize: "14px",
-                        }}
-                      >
-                        {selectedPaymentRequest.accountInfo.accountNumber ||
-                          "N/A"}
-                      </Typography>
-                    </Box>
-                  </>
-                </CardContent>
-              </Card>
-            </Grid>
+                    />
+                  }
+                  sx={{
+                    backgroundColor: "#121217",
+                    borderRadius: "8px",
+                    color: "white",
+                    textTransform: "none",
+                    fontSize: "14px",
+                    height: 35,
+                    px: 2,
+                    whiteSpace: "nowrap",
+                    "&:hover": {
+                      backgroundColor: "#121217",
+                    },
+                  }}
+                >
+                  Rs{" "}
+                  {formatAmount(
+                    selectedPaymentRequest?.accountInfo?.balance
+                  )}
+                </Button>
+              </Box>
+            </Box>
           </Box>
         ) : (
           <Box sx={{ p: 3, textAlign: "center" }}>

@@ -323,210 +323,209 @@ const TutorsProfile = () => {
   const experienceData =
     experience?.length > 0
       ? experience
-          ?.map((exp) => {
-            const startYear = exp.startDate
-              ? new Date(exp.startDate).getFullYear()
-              : null;
-            const endYear =
-              exp.endDate === "Present"
-                ? new Date().getFullYear()
-                : exp.endDate
+        ?.map((exp) => {
+          const startYear = exp.startDate
+            ? new Date(exp.startDate).getFullYear()
+            : null;
+          const endYear =
+            exp.endDate === "Present"
+              ? new Date().getFullYear()
+              : exp.endDate
                 ? new Date(exp.endDate).getFullYear()
                 : null;
-            const totalYears =
-              startYear !== null && endYear !== null
-                ? (endYear - startYear).toString()
-                : "N/A";
+          const totalYears =
+            startYear !== null && endYear !== null
+              ? (endYear - startYear).toString()
+              : "N/A";
 
-            return {
-              id: exp.id,
-              company: exp.company || "N/A",
-              title: exp.description || "N/A", // API uses 'description' for job title/role
-              designation: exp.designation || "N/A",
-              startYear: startYear ? startYear.toString() : "N/A",
-              endYear:
-                exp.endDate === "Present"
-                  ? "Present"
-                  : endYear
+          return {
+            id: exp.id,
+            company: exp.company || "N/A",
+            title: exp.description || "N/A", // API uses 'description' for job title/role
+            designation: exp.designation || "N/A",
+            startYear: startYear ? startYear.toString() : "N/A",
+            endYear:
+              exp.endDate === "Present"
+                ? "Present"
+                : endYear
                   ? endYear.toString()
                   : "N/A",
-              totalYears,
-            };
-          })
-          .filter((exp) => {
-            if (activeTab !== 1 || !searchTerm) return true;
-            const term = searchTerm.toLowerCase();
-            return (
-              exp.company.toLowerCase().includes(term) ||
-              exp.title.toLowerCase().includes(term) ||
-              exp.designation.toLowerCase().includes(term)
-            );
-          })
+            totalYears,
+          };
+        })
+        .filter((exp) => {
+          if (activeTab !== 1 || !searchTerm) return true;
+          const term = searchTerm.toLowerCase();
+          return (
+            exp.company.toLowerCase().includes(term) ||
+            exp.title.toLowerCase().includes(term) ||
+            exp.designation.toLowerCase().includes(term)
+          );
+        })
       : [];
 
   const educationData =
     education?.length > 0
       ? education
-          ?.map((edu) => {
-            const startYear = edu.startDate
-              ? new Date(edu.startDate).getFullYear()
-              : null;
-            const endYear =
-              edu.endDate === "Present"
-                ? new Date().getFullYear()
-                : edu.endDate
+        ?.map((edu) => {
+          const startYear = edu.startDate
+            ? new Date(edu.startDate).getFullYear()
+            : null;
+          const endYear =
+            edu.endDate === "Present"
+              ? new Date().getFullYear()
+              : edu.endDate
                 ? new Date(edu.endDate).getFullYear()
                 : null;
-            const totalYears =
-              startYear !== null && endYear !== null
-                ? (endYear - startYear).toString()
-                : "N/A";
+          const totalYears =
+            startYear !== null && endYear !== null
+              ? (endYear - startYear).toString()
+              : "N/A";
 
-            return {
-              id: edu.id,
-              institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
-              degree: edu.degree || "N/A",
-              description: edu.description || "N/A",
-              startDate: startYear ? startYear.toString() : "N/A",
-              endDate:
-                edu.endDate === "Present"
-                  ? "Present"
-                  : endYear
+          return {
+            id: edu.id,
+            institution: edu.institute || "N/A", // API uses 'institute' not 'institutionName'
+            degree: edu.degree || "N/A",
+            description: edu.description || "N/A",
+            startDate: startYear ? startYear.toString() : "N/A",
+            endDate:
+              edu.endDate === "Present"
+                ? "Present"
+                : endYear
                   ? endYear.toString()
                   : "N/A",
-              totalYears,
-            };
-          })
-          .filter((edu) => {
-            if (activeTab !== 3 || !searchTerm) return true;
-            const term = searchTerm.toLowerCase();
-            return (
-              edu.institution.toLowerCase().includes(term) ||
-              edu.degree.toLowerCase().includes(term) ||
-              edu.description.toLowerCase().includes(term)
-            );
-          })
+            totalYears,
+          };
+        })
+        .filter((edu) => {
+          if (activeTab !== 3 || !searchTerm) return true;
+          const term = searchTerm.toLowerCase();
+          return (
+            edu.institution.toLowerCase().includes(term) ||
+            edu.degree.toLowerCase().includes(term) ||
+            edu.description.toLowerCase().includes(term)
+          );
+        })
       : [];
 
   // Transform API transactions data for display
   const transactionsData = transactions
     ? // Handle both single object and array cases
-      (Array.isArray(transactions) ? transactions : [transactions])
-        .filter((tx) => {
-          if (activeTab !== 0 || !searchTerm) return true;
-          const term = searchTerm.toLowerCase();
-          const parentName = tx?.parent?.name || "";
-          const invoiceId = tx?.parentTransactions?.[0]?.invoiceId || "";
-          return (
-            parentName.toLowerCase().includes(term) ||
-            invoiceId.toLowerCase().includes(term) ||
-            (tx.amount && tx.amount.toString().includes(term))
-          );
-        })
-        .map((tx) => ({
-          id: tx.id,
-          payment: {
-            name: tutor?.User?.fullName || "Unknown",
-            cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
-          },
-          parent: tx?.parent?.name || "N/A",
-          invoiceId: tx?.parentTransactions[0]?.invoiceId || "N/A",
-          child: {
-            name: "Student", // API doesn't provide child info, using placeholder
-            avatar: "/placeholder.svg?height=32&width=32",
-          },
-          pay: tx.amount || 0,
-          paymentMethod: {
-            type: "bank",
-            accountNumber: tutor?.accountNumber || "N/A",
-          },
-          transactionDate: tx.createdAt ? formatDate(tx.createdAt) : "N/A",
-          status: tx.status || "UNKNOWN",
-        }))
+    (Array.isArray(transactions) ? transactions : [transactions])
+      .filter((tx) => {
+        if (activeTab !== 0 || !searchTerm) return true;
+        const term = searchTerm.toLowerCase();
+        const parentName = tx?.parent?.name || "";
+        const invoiceId = tx?.parentTransactions?.[0]?.invoiceId || "";
+        return (
+          parentName.toLowerCase().includes(term) ||
+          invoiceId.toLowerCase().includes(term) ||
+          (tx.amount && tx.amount.toString().includes(term))
+        );
+      })
+      .map((tx) => ({
+        id: tx.id,
+        payment: {
+          name: tutor?.User?.fullName || "Unknown",
+          cost: `Rs. ${tx.amount?.toLocaleString() || "0"}`,
+        },
+        parent: tx?.parent?.name || "N/A",
+        invoiceId: tx?.parentTransactions[0]?.invoiceId || "N/A",
+        child: {
+          name: "Student", // API doesn't provide child info, using placeholder
+          avatar: "/placeholder.svg?height=32&width=32",
+        },
+        pay: tx.amount || 0,
+        paymentMethod: {
+          type: "bank",
+          accountNumber: tutor?.accountNumber || "N/A",
+        },
+        transactionDate: tx.createdAt ? formatDate(tx.createdAt) : "N/A",
+        status: tx.status || "UNKNOWN",
+      }))
     : [];
 
   // Transform API documents data for display
   const documentsData = documents
     ? [
-        {
-          id: 1,
-          name: "Resume",
-          type: documents.resume
-            ? documents.resume.toLowerCase().endsWith(".pdf")
-              ? "PDF"
-              : "Image"
-            : "N/A",
-          url: `${config.tutorDocumentUrl}${documents.resume}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.resume ? "Available" : "Missing",
-        },
-        {
-          id: 2,
-          name: "ID Front",
-          type: documents.idFront
-            ? documents.idFront.toLowerCase().endsWith(".pdf")
-              ? "PDF"
-              : "Image"
-            : "N/A",
-          url: `${config.tutorDocumentUrl}${documents.idFront}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.idFront ? "Available" : "Missing",
-        },
-        {
-          id: 3,
-          name: "ID Back",
-          type: documents.idBack
-            ? documents.idBack.toLowerCase().endsWith(".pdf")
-              ? "PDF"
-              : "Image"
-            : "N/A",
-          url: `${config.tutorDocumentUrl}${documents.idBack}`,
-          uploadDate: "N/A", // Upload date not available in API
-          status: documents.idBack ? "Available" : "Missing",
-        },
-      ]
-        .filter((doc) => doc.url)
-        .filter((doc) => {
-          if (activeTab !== 2 || !searchTerm) return true;
-          const term = searchTerm.toLowerCase();
-          return (
-            doc.name.toLowerCase().includes(term) ||
-            doc.type.toLowerCase().includes(term) ||
-            doc.status.toLowerCase().includes(term)
-          );
-        })
+      {
+        id: 1,
+        name: "Resume",
+        type: documents.resume
+          ? documents.resume.toLowerCase().endsWith(".pdf")
+            ? "PDF"
+            : "Image"
+          : "N/A",
+        url: `${config.tutorDocumentUrl}${documents.resume}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.resume ? "Available" : "Missing",
+      },
+      {
+        id: 2,
+        name: "ID Front",
+        type: documents.idFront
+          ? documents.idFront.toLowerCase().endsWith(".pdf")
+            ? "PDF"
+            : "Image"
+          : "N/A",
+        url: `${config.tutorDocumentUrl}${documents.idFront}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.idFront ? "Available" : "Missing",
+      },
+      {
+        id: 3,
+        name: "ID Back",
+        type: documents.idBack
+          ? documents.idBack.toLowerCase().endsWith(".pdf")
+            ? "PDF"
+            : "Image"
+          : "N/A",
+        url: `${config.tutorDocumentUrl}${documents.idBack}`,
+        uploadDate: "N/A", // Upload date not available in API
+        status: documents.idBack ? "Available" : "Missing",
+      },
+    ]
+      .filter((doc) => doc.url)
+      .filter((doc) => {
+        if (activeTab !== 2 || !searchTerm) return true;
+        const term = searchTerm.toLowerCase();
+        return (
+          doc.name.toLowerCase().includes(term) ||
+          doc.type.toLowerCase().includes(term) ||
+          doc.status.toLowerCase().includes(term)
+        );
+      })
     : [];
 
   // Transform API notes data for display
   const notesData = notes
     ? notes
-        .filter((note) => {
-          if (activeTab !== 4 || !searchTerm) return true;
-          const term = searchTerm.toLowerCase();
-          const author =
-            note.author ||
-            (note.User
-              ? `${note.User.firstName || ""} ${note.User.lastName || ""}`
-              : "Admin");
-          return (
-            author.toLowerCase().includes(term) ||
-            (note.note && note.note.toLowerCase().includes(term)) ||
-            (note.description && note.description.toLowerCase().includes(term))
-          );
-        })
-        .map((note, index) => ({
-          id: note.id || index,
-          author:
-            note.author ||
-            (note.User
-              ? `${note.User.firstName || ""} ${
-                  note.User.lastName || ""
-                }`.trim()
-              : "Admin"),
-          avatar: note.User?.image || profileImg,
-          note: note.note || note.description || note.content || "N/A",
-          date: note.createdAt ? formatDate(note.createdAt) : "N/A",
-        }))
+      .filter((note) => {
+        if (activeTab !== 4 || !searchTerm) return true;
+        const term = searchTerm.toLowerCase();
+        const author =
+          note.author ||
+          (note.User
+            ? `${note.User.firstName || ""} ${note.User.lastName || ""}`
+            : "Admin");
+        return (
+          author.toLowerCase().includes(term) ||
+          (note.note && note.note.toLowerCase().includes(term)) ||
+          (note.description && note.description.toLowerCase().includes(term))
+        );
+      })
+      .map((note, index) => ({
+        id: note.id || index,
+        author:
+          note.author ||
+          (note.User
+            ? `${note.User.firstName || ""} ${note.User.lastName || ""
+              }`.trim()
+            : "Admin"),
+        avatar: note.User?.image || profileImg,
+        note: note.note || note.description || note.content || "N/A",
+        date: note.createdAt ? formatDate(note.createdAt) : "N/A",
+      }))
     : [];
 
   const childrenData = [
@@ -567,7 +566,7 @@ const TutorsProfile = () => {
 
   const renderTableContent = () => {
     switch (activeTab) {
-      case 0:
+      case 0: //transactions
         return (
           <TableContainer
             component={Paper}
@@ -854,7 +853,7 @@ const TutorsProfile = () => {
           </TableContainer>
         );
 
-      case 1:
+      case 1: //experience
         return (
           <TableContainer
             component={Paper}
@@ -988,7 +987,7 @@ const TutorsProfile = () => {
                 {experienceData.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={4}
+                      colSpan={6}
                       style={{
                         textAlign: "center",
                         padding: "40px",
@@ -1021,21 +1020,29 @@ const TutorsProfile = () => {
                           alt="Company"
                           style={{ width: 25, height: 25, borderRadius: "50%" }}
                         />
-                        <span
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: 400,
-                            color: "#101219",
-                            marginLeft: "10px",
-                          }}
-                        >
-                          {row.company}
-                        </span>
+                        <Tooltip title={row.company || ""} arrow>
+                          <span
+                            style={{
+                              fontSize: "16px",
+                              fontWeight: 400,
+                              color: "#101219",
+                              marginLeft: "10px",
+                              maxWidth: "100px",
+                              display: "inline-block",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              verticalAlign: "bottom",
+                              // cursor: "pointer",
+                            }}
+                          >
+                            {row.company || "N/A"}
+                          </span>
+                        </Tooltip>
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "16px",
-                          color: "#101219",
+                          fontSize: "14px",
                           fontWeight: 400,
                           // color: "#000",
                           padding: "0 8px",
@@ -1091,7 +1098,7 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
@@ -1108,7 +1115,7 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           color: "#000",
                           fontWeight: 400,
                           color: "#000",
@@ -1248,7 +1255,6 @@ const TutorsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#101219",
                           fontWeight: 400,
                           padding: "0 8px",
                           height: "42px",
@@ -1261,7 +1267,6 @@ const TutorsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#101219",
                           fontWeight: 400,
                           padding: "0 8px",
                           height: "42px",
@@ -1481,7 +1486,7 @@ const TutorsProfile = () => {
                 {educationData.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={5}
+                      colSpan={6}
                       style={{
                         textAlign: "center",
                         padding: "40px",
@@ -1500,7 +1505,6 @@ const TutorsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#101219",
                           fontWeight: 400,
                           padding: "0 8px",
                           height: "42px",
@@ -1524,7 +1528,6 @@ const TutorsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#101219",
                           fontWeight: 400,
                           padding: "0 8px",
                           height: "42px",
@@ -1538,7 +1541,6 @@ const TutorsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#101219",
                           fontWeight: 400,
                           padding: "0 8px",
                           height: "42px",
@@ -1587,7 +1589,7 @@ const TutorsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           color: "#000",
                           fontWeight: 400,
                           border: "1px solid #e0e0e0",
@@ -1895,8 +1897,8 @@ const TutorsProfile = () => {
                         {tutor?.User?.firstName && tutor?.User?.lastName
                           ? `${tutor.User.firstName} ${tutor.User.lastName}`
                           : tutor?.User?.firstName ||
-                            tutor?.User?.lastName ||
-                            "N/A"}
+                          tutor?.User?.lastName ||
+                          "N/A"}
                       </h5>
                       <Typography variant="body2" sx={{ color: "#666" }}>
                         Email: {tutor?.User?.email || "No email"}
@@ -2182,7 +2184,7 @@ const TutorsProfile = () => {
                       style: {
                         fontSize: "14px",
                         fontWeight: 400,
-                        color: "#30417D",
+                        color: "#80878A",
                         borderRadius: "8px",
                         backgroundColor: "#FFFFFF",
                         lineHeight: "1.5",
@@ -2249,7 +2251,7 @@ const TutorsProfile = () => {
                     <Tab label={`Experience (${experienceData.length})`} />
                     <Tab label={`Documents (${documentsData.length})`} />
                     <Tab label={`Education (${educationData.length})`} />
-                    <Tab label={`Notes (${notesData.length})`} />
+                    {/* <Tab label={`Notes (${notesData.length})`} /> */}
                   </Tabs>
                 </Box>
 

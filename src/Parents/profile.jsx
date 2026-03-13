@@ -557,7 +557,7 @@ const ParentsProfile = () => {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           color: "#101219",
                           fontWeight: 400,
                           border: "1px solid #E0E3EB",
@@ -569,9 +569,9 @@ const ParentsProfile = () => {
                       >
                         <span
                           style={{
-                            fontSize: "16px",
                             fontWeight: 400,
-                            color: "#101219",
+                            fontSize: "16px",
+                            color: "#000",
                           }}
                         >
                           {row.payment.cost}
@@ -766,7 +766,7 @@ const ParentsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#101219",
+                          color: "#000",
                           fontWeight: 400,
                           padding: "0 8px",
                           height: "42px",
@@ -784,7 +784,7 @@ const ParentsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#101219",
+                          color: "#000",
                           fontWeight: 400,
                           padding: "0 8px",
                           height: "42px",
@@ -801,7 +801,7 @@ const ParentsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#101219",
+                          color: "#000",
                           fontWeight: 400,
                           padding: "0 8px",
                           height: "42px",
@@ -818,7 +818,7 @@ const ParentsProfile = () => {
                       <TableCell
                         style={{
                           fontSize: "16px",
-                          color: "#101219",
+                          color: "#000",
                           fontWeight: 400,
                           padding: "0 8px",
                           // height: "30px",
@@ -1555,6 +1555,19 @@ const ParentsProfile = () => {
                         Delete User
                       </Button>
                     </div>
+                    {/* <Chip
+                      label="Verified"
+                      size="small"
+                      style={{
+                        backgroundColor: "#EEFBF4",
+                        border: "1px solid #17663A",
+                        color: "#17663A",
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        padding: "4px 8px",
+                        borderRadius: "8px",
+                      }}
+                    /> */}
                   </div>
 
                   {/* Right Column - Edit Button */}

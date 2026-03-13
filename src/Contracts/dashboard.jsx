@@ -105,9 +105,8 @@ const ContractDashboard = () => {
   // Fetch with pagination
   useEffect(() => {
     const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-    const query = `?page=${
-      page + 1
-    }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
+    const query = `?page=${page + 1
+      }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}&date=${selectedDate}`;
     fetchDisputedContracts(query);
   }, [
     fetchDisputedContracts,
@@ -128,9 +127,8 @@ const ContractDashboard = () => {
         handleCloseDetailsModal();
         // Refresh the list
         const typeParam = selectedStatus === "ALL" ? "all" : selectedStatus;
-        const query = `?page=${
-          page + 1
-        }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
+        const query = `?page=${page + 1
+          }&limit=${rowsPerPage}&search=${searchValue}&type=${typeParam}`;
         fetchDisputedContracts(query);
       }
     }
@@ -486,7 +484,7 @@ const ContractDashboard = () => {
                   ) : tableData.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={10} align="center">
-                        No disputed contracts found.
+                        No disputed contracts yet.
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -1073,7 +1071,7 @@ const ContractDashboard = () => {
                 onPageChange={handleChangePage}
                 rowsPerPageOptions={[]}
                 labelRowsPerPage=""
-                onRowsPerPageChange={() => {}}
+                onRowsPerPageChange={() => { }}
                 sx={{
                   width: "100%",
 
@@ -1148,7 +1146,7 @@ const ContractDashboard = () => {
               variant="outlined"
               color={
                 selectedContract.status?.toUpperCase() === "CANCELLED" ||
-                selectedContract.status?.toUpperCase() === "DISPUTE"
+                  selectedContract.status?.toUpperCase() === "DISPUTE"
                   ? "error"
                   : "success"
               }
@@ -1185,8 +1183,10 @@ const ContractDashboard = () => {
                       overflowY: "auto",
                     }}
                   >
-                    <Typography variant="body1">
-                      {selectedContract?.disputeReason}
+                    <Typography variant="body2" color={selectedContract?.disputeReason ? "inherit" : "text.secondary"}>
+                      {selectedContract?.disputeReason?.trim()
+                        ? selectedContract.disputeReason
+                        : "No reason added yet"}
                     </Typography>
                   </Box>
                 </Box>
@@ -1218,7 +1218,7 @@ const ContractDashboard = () => {
                       <strong>Email:</strong> {selectedContract?.parent?.email}
                     </Typography>
                     <Typography variant="body2">
-                      <strong>Phone:</strong> {selectedContract?.parent?.phone}
+                      <strong>Phone:</strong> +{selectedContract?.parent?.phone}
                     </Typography>
                   </Box>
                 </Box>
@@ -1250,7 +1250,7 @@ const ContractDashboard = () => {
                       <strong>Email:</strong> {selectedContract?.tutor?.email}
                     </Typography>
                     <Typography variant="body2">
-                      <strong>Phone:</strong> {selectedContract?.tutor?.phone}
+                      <strong>Phone:</strong> +{selectedContract?.tutor?.phone}
                     </Typography>
                   </Box>
                 </Box>
