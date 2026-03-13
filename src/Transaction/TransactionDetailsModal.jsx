@@ -247,12 +247,12 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
 
             {(selectedPaymentRequest.paymentRequest.status === "PAID" ||
               selectedPaymentRequest.paymentRequest.status === "REJECTED") && (
-                <Alert severity="info" sx={{ mb: 2 }}>
-                  This transaction is finalized (
-                  {selectedPaymentRequest.paymentRequest.status}). The status
-                  cannot be changed.
-                </Alert>
-              )}
+              <Alert severity="info" sx={{ mb: 2 }}>
+                This transaction is finalized (
+                {selectedPaymentRequest.paymentRequest.status}). The status
+                cannot be changed.
+              </Alert>
+            )}
 
             {/* Transaction Overview Card */}
             <Box
@@ -303,10 +303,11 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                             color: getStatusColor(
                               selectedPaymentRequest.paymentRequest.status
                             ).color,
-                            border: `1px solid ${getStatusColor(
-                              selectedPaymentRequest.paymentRequest.status
-                            ).border
-                              }`,
+                            border: `1px solid ${
+                              getStatusColor(
+                                selectedPaymentRequest.paymentRequest.status
+                              ).border
+                            }`,
                             fontWeight: 500,
                           }}
                         />
@@ -439,9 +440,9 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                               isUpdating ||
                               isUpdatingPaymentRequest ||
                               selectedPaymentRequest.paymentRequest.status ===
-                              "PAID" ||
+                                "PAID" ||
                               selectedPaymentRequest.paymentRequest.status ===
-                              "REJECTED"
+                                "REJECTED"
                             }
                             sx={{
                               height: "37px",
@@ -484,9 +485,9 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                             !localStatus ||
                             localStatus === selectedPaymentRequest.status ||
                             selectedPaymentRequest.paymentRequest.status ===
-                            "PAID" ||
+                              "PAID" ||
                             selectedPaymentRequest.paymentRequest.status ===
-                            "REJECTED"
+                              "REJECTED"
                           }
                           sx={{
                             backgroundColor: "#1E9CBC",
@@ -517,9 +518,9 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
             </Box>
 
             {/* Details Grid */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               {/* Tutor Information */}
-              <Box sx={{ width: '55%' }}>
+              <Box sx={{ width: "55%" }}>
                 <Card
                   sx={{
                     height: "100%",
@@ -602,8 +603,9 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                             fontSize: "14px",
                           }}
                         >
-                          {capitalize(selectedPaymentRequest.accountInfo.role) ||
-                            "N/A"}
+                          {capitalize(
+                            selectedPaymentRequest.accountInfo.role
+                          ) || "N/A"}
                         </Typography>
                       </Box>
                       <Box
@@ -698,7 +700,7 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                   </CardContent>
                 </Card>
               </Box>
-              <Box sx={{ width: '45%', alignSelf:'flex-start' }}>
+              <Box sx={{ width: "45%", alignSelf: "flex-start" }}>
                 <Box
                   sx={{
                     display: "flex",
@@ -749,7 +751,7 @@ const TransactionDetailsModal = ({ open, handleClose, transactionId }) => {
                 >
                   Rs{" "}
                   {formatAmount(
-                    selectedPaymentRequest?.accountInfo?.balance
+                    selectedPaymentRequest?.accountInfo?.availableBalance
                   )}
                 </Button>
               </Box>
