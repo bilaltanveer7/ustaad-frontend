@@ -736,10 +736,15 @@ const ContractDashboard = () => {
                                 }}
                               >
                                 {row.Offer?.subject
-                                  ?.map(
-                                    (s) =>
-                                      s.charAt(0).toUpperCase() +
-                                      s.slice(1).toLowerCase()
+                                  ?.map((s) =>
+                                    s
+                                      .split(" ")
+                                      .map(
+                                        (word) =>
+                                          word.charAt(0).toUpperCase() +
+                                          word.slice(1).toLowerCase()
+                                      )
+                                      .join(" ")
                                   )
                                   .join(", ") || ""}
                               </div>

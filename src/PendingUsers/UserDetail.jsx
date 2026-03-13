@@ -828,6 +828,8 @@ const UserDetail = () => {
   const renderParentInfo = () => {
     if (!userData?.parent) return null;
 
+    const user = userData.user;
+
     const parent = userData.parent;
 
     return (
@@ -855,7 +857,7 @@ const UserDetail = () => {
                           borderRadius: "4px",
                         }}
                       >
-                        {parent.id}
+                        {user.userId}
                       </Typography>
                     }
                   />
