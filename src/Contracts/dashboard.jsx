@@ -1040,12 +1040,14 @@ const ContractDashboard = () => {
                 </>
               )}
 
-              {/* CANCELLED STATUS */}
-              {selectedContract?.status?.toUpperCase() === "CANCELLED" && (
+              {/* CANCELLED OR COMPLETED STATUS (REFUNDABLE) */}
+              {(selectedContract?.status?.toUpperCase() === "CANCELLED" ||
+                selectedContract?.status?.toUpperCase() === "COMPLETED") &&
+                selectedContract?.isRefunded === false && (
                 <MenuItem
                   onClick={() => {
                     handleMenuClose();
-                    handleOpenResolutionModal(selectedContract, "REFUND");
+                    handleRefund();
                   }}
                   sx={{
                     color: "#fff",
