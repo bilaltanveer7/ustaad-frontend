@@ -562,6 +562,7 @@ const TutorsProfile = () => {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
+    setSearchTerm("");
   };
 
   const renderTableContent = () => {
@@ -1811,7 +1812,7 @@ const TutorsProfile = () => {
                 }}
               >
                 <IconButton
-                  onClick={() => navigate('/tutor-dashboard')}
+                  onClick={() => navigate("/tutor-dashboard")}
                   style={{
                     marginRight: "10px",
                     color: "#A6ADBF",
