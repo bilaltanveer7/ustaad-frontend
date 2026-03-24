@@ -1005,6 +1005,8 @@ const TutorsProfile = () => {
                     >
                       <TableCell
                         style={{
+                          width: "160px",
+                          maxWidth: "160px",
                           fontSize: "16px",
                           color: "#101219",
                           fontWeight: 400,
@@ -1012,14 +1014,14 @@ const TutorsProfile = () => {
                           padding: "0 8px",
                           height: "42px",
                           lineHeight: "42px",
-                          paddingLeft: "15px",
+                          // paddingLeft: "15px",
                         }}
                       >
-                        <img
+                        {/* <img
                           src={profileImg}
                           alt="Company"
                           style={{ width: 25, height: 25, borderRadius: "50%" }}
-                        />
+                        /> */}
                         <Tooltip title={row.company || ""} arrow>
                           <span
                             style={{
@@ -1027,7 +1029,7 @@ const TutorsProfile = () => {
                               fontWeight: 400,
                               color: "#101219",
                               marginLeft: "10px",
-                              maxWidth: "100px",
+                              maxWidth: "120px",
                               display: "inline-block",
                               whiteSpace: "nowrap",
                               overflow: "hidden",
@@ -1041,30 +1043,41 @@ const TutorsProfile = () => {
                         </Tooltip>
                       </TableCell>
                       <TableCell
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: 400,
-                          // color: "#000",
+                        sx={{
+                          width: "200px",
+                          maxWidth: "200px",
                           padding: "0 8px",
                           height: "42px",
-                          lineHeight: "42px",
                           border: "1px solid #E0E3EB",
                           paddingLeft: "15px",
                         }}
                       >
-                        <Tooltip title={row.title} arrow>
+                        <Tooltip
+                          title={row.title || ""}
+                          arrow
+                          slotProps={{
+                            tooltip: {
+                              sx: {
+                                maxWidth: "150px",
+                                fontSize: "12px",
+                              },
+                            },
+                          }}
+                        >
                           <span
                             style={{
+                              display: "inline-block",
+                              maxWidth: "100%",
                               fontSize: "16px",
                               color: "#101219",
                               fontWeight: 400,
-                              maxWidth: "250px",
-                              textOverflow: "ellipsis",
                               overflow: "hidden",
+                              textOverflow: "ellipsis",
                               whiteSpace: "nowrap",
+                              // cursor: "pointer",
                             }}
                           >
-                            {row.title}
+                            {row.title || "N/A"}
                           </span>
                         </Tooltip>
                       </TableCell>
@@ -1504,6 +1517,8 @@ const TutorsProfile = () => {
                     >
                       <TableCell
                         style={{
+                          width: '160px',
+                          maxWidth: '160px',
                           fontSize: "16px",
                           fontWeight: 400,
                           padding: "0 8px",
@@ -1515,10 +1530,14 @@ const TutorsProfile = () => {
                         <Tooltip title={row.institution} arrow>
                           <span
                             style={{
-                              maxWidth: "150px",
-                              textOverflow: "ellipsis",
+                              display: "inline-block",
+                              lineHeight: '42px',
+                              verticalAlign: 'middle',
+                              maxWidth: "140px",
                               overflow: "hidden",
+                              textOverflow: "ellipsis",
                               whiteSpace: "nowrap",
+                              // cursor: "pointer",
                             }}
                           >
                             {row.institution}
@@ -1526,16 +1545,42 @@ const TutorsProfile = () => {
                         </Tooltip>
                       </TableCell>
                       <TableCell
-                        style={{
+                        sx={{
                           fontSize: "16px",
                           fontWeight: 400,
                           padding: "0 8px",
                           height: "42px",
-                          lineHeight: "42px",
                           border: "1px solid #E0E3EB",
+                          maxWidth: "160px",
+                          width: "160px",
                         }}
                       >
-                        {row.degree}
+                        <Tooltip
+                          title={row.degree || ""}
+                          arrow
+                          slotProps={{
+                            tooltip: {
+                              sx: {
+                                maxWidth: "160px",
+                              },
+                            },
+                          }}
+                        >
+                          <span
+                            style={{
+                              display: "inline-block",
+                              lineHeight: '42px',
+                              verticalAlign: 'middle',
+                              maxWidth: "150px",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                              // cursor: "pointer",
+                            }}
+                          >
+                            {row.degree || "N/A"}
+                          </span>
+                        </Tooltip>
                       </TableCell>
 
                       <TableCell
@@ -1551,6 +1596,9 @@ const TutorsProfile = () => {
                         <span
                           style={{
                             maxWidth: "150px",
+                            display: "inline-block",
+                            lineHeight: '42px',
+                            verticalAlign: 'middle',
                             textOverflow: "ellipsis",
                             overflow: "hidden",
                             whiteSpace: "nowrap",

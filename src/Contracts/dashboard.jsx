@@ -192,6 +192,23 @@ const ContractDashboard = () => {
     setPage(0);
   };
 
+  const getStatusStyle = (status) => {
+    switch (status?.toLowerCase()) {
+      case "active":
+        return "#235DFF";
+      case "completed":
+        return "#38BC5C";
+      case "disputed":
+        return "orange";
+      case "cancelled":
+        return "#F31616";
+      case "refunded":
+        return "#A78BFA";
+      default:
+        return "#2e7d32";
+    }
+  };
+
   return (
     <>
       <SideNav />
@@ -484,7 +501,9 @@ const ContractDashboard = () => {
                   ) : tableData.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={10} align="center">
-                        No disputed contracts yet.
+                        {selectedStatus === "ALL"
+                          ? "No contracts found."
+                          : `No ${selectedStatus.toLowerCase()} contracts found.`}
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -791,7 +810,7 @@ const ContractDashboard = () => {
                           </TableCell>
 
                           <TableCell
-                            style={{
+                            sx={{
                               fontSize: "16px",
                               fontWeight: 600,
                               height: "48px",
@@ -800,9 +819,11 @@ const ContractDashboard = () => {
                           >
                             <span
                               style={{
-                                color: "#2e7d32",
-                                border: "1px solid #2e7d32",
+                                color: getStatusStyle(row.status),
+                                border: `1px solid ${getStatusStyle(row.status)}`,
                                 padding: "2px 8px",
+                                borderRadius: "6px",
+                                textTransform: "capitalize",
                               }}
                             >
                               {row.status}
@@ -1044,23 +1065,23 @@ const ContractDashboard = () => {
               {(selectedContract?.status?.toUpperCase() === "CANCELLED" ||
                 selectedContract?.status?.toUpperCase() === "COMPLETED") &&
                 selectedContract?.isRefunded === false && (
-                <MenuItem
-                  onClick={() => {
-                    handleMenuClose();
-                    handleRefund();
-                  }}
-                  sx={{
-                    color: "#fff",
-                    bgcolor: "#063455",
-                    "&:hover": { bgcolor: "#052c46" },
-                    borderRadius: "4px",
-                    mx: 1,
-                    my: 0.5,
-                  }}
-                >
-                  Refund
-                </MenuItem>
-              )}
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      handleRefund();
+                    }}
+                    sx={{
+                      color: "#fff",
+                      bgcolor: "#063455",
+                      "&:hover": { bgcolor: "#052c46" },
+                      borderRadius: "4px",
+                      mx: 1,
+                      my: 0.5,
+                    }}
+                  >
+                    Refund
+                  </MenuItem>
+                )}
             </Menu>
 
             {/* Pagination */}

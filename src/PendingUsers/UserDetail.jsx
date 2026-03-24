@@ -1127,7 +1127,7 @@ const UserDetail = () => {
                   >
                     Document Name
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     sx={{
                       fontWeight: 500,
                       fontSize: "14px",
@@ -1135,7 +1135,7 @@ const UserDetail = () => {
                     }}
                   >
                     Category
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell
                     sx={{
                       fontWeight: 500,
@@ -1182,7 +1182,7 @@ const UserDetail = () => {
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 1 }}
                       >
-                        <DocumentIcon sx={{ color: "#666", fontSize: 20 }} />
+                        {/* <DocumentIcon sx={{ color: "#666", fontSize: 20 }} /> */}
                         <Typography
                           sx={{
                             fontSize: "16px",
@@ -1194,7 +1194,7 @@ const UserDetail = () => {
                         </Typography>
                       </Box>
                     </TableCell>
-                    <TableCell
+                    {/* <TableCell
                       style={{
                         fontSize: "16px",
                         color: "#101219",
@@ -1214,7 +1214,7 @@ const UserDetail = () => {
                           fontSize: "12px",
                         }}
                       />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell
                       style={{
                         fontSize: "16px",
