@@ -42,8 +42,15 @@ import {
   ArrowDownward as ArrowDownwardIcon,
   UnfoldMore as UnfoldMoreIcon,
 } from "@mui/icons-material";
-import "bootstrap/dist/css/bootstrap.min.css";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import ReplayIcon from '@mui/icons-material/Replay';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ErrorIcon from "@mui/icons-material/Error";
+import InfoIcon from "@mui/icons-material/Info";
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { capitalize } from "../utils/helpers";
 import { formatDate } from "../utils/dateFormatter";
 
@@ -206,6 +213,43 @@ const ContractDashboard = () => {
         return "#A78BFA";
       default:
         return "#2e7d32";
+    }
+  };
+
+  const getStatusConfig = (status) => {
+    const normalized = status?.toLowerCase();
+
+    switch (normalized) {
+      case "active":
+        return {
+          color: "#235DFF",
+          icon: <AddCircleOutlineIcon sx={{ fontSize: 18, mr: 0.5 }} />,
+        };
+      case "completed":
+        return {
+          color: "#38BC5C",
+          icon: <CheckCircleIcon sx={{ fontSize: 18, mr: 0.5 }} />,
+        };
+      case "disputed":
+        return {
+          color: "orange",
+          icon: <PauseCircleFilledIcon sx={{ fontSize: 18, mr: 0.5 }} />,
+        };
+      case "cancelled":
+        return {
+          color: "#F31616",
+          icon: <CancelIcon sx={{ fontSize: 18, mr: 0.5 }} />,
+        };
+      case "refunded":
+        return {
+          color: "#A78BFA",
+          icon: <ReplayIcon sx={{ fontSize: 18, mr: 0.5 }} />,
+        };
+      default:
+        return {
+          color: "#2e7d32",
+          icon: null,
+        };
     }
   };
 
@@ -812,22 +856,30 @@ const ContractDashboard = () => {
                           <TableCell
                             sx={{
                               fontSize: "16px",
-                              fontWeight: 600,
+                              fontWeight: 400,
                               height: "48px",
                               textAlign: "center",
                             }}
                           >
-                            <span
-                              style={{
-                                color: getStatusStyle(row.status),
-                                border: `1px solid ${getStatusStyle(row.status)}`,
-                                padding: "2px 8px",
-                                borderRadius: "6px",
-                                textTransform: "capitalize",
-                              }}
-                            >
-                              {row.status}
-                            </span>
+                            {(() => {
+                              const { color, icon } = getStatusConfig(row.status);
+
+                              return (
+                                <span
+                                  style={{
+                                    color: color,
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    padding: "2px 8px",
+                                    borderRadius: "6px",
+                                    textTransform: "capitalize",
+                                  }}
+                                >
+                                  {icon}
+                                  {row.status}
+                                </span>
+                              );
+                            })()}
                           </TableCell>
 
                           <TableCell

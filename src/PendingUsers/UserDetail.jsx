@@ -84,7 +84,7 @@ const UserDetail = () => {
     clearUserData,
   } = useAdminStore();
 
-  console.log("role:", role);
+  console.log("role%%%%%%%%%%%%%%%%%%%:", role);
 
   const [activeTab, setActiveTab] = useState(0);
   const [selectedDocument, setSelectedDocument] = useState(null);
